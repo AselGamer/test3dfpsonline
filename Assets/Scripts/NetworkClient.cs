@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Networking.Transport;
 using UnityEngine;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class NetworkClient : MonoBehaviour
 {
@@ -32,6 +31,9 @@ public class NetworkClient : MonoBehaviour
         m_Connection = m_Driver.Connect(endpoint);
         Debug.Log("Connecting to server");
         empezar = true;
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
         
     }
 
@@ -122,18 +124,33 @@ public class NetworkClient : MonoBehaviour
             case Commands.PLAYER_SPAWN:
                 PlayerSpawnMsg psMsg = JsonUtility.FromJson<PlayerSpawnMsg>(recMsg);
                 var playerAux = Instantiate(playerPrefab, psMsg.pos, Quaternion.identity);
+                /*
                 if (psMsg.id.Equals(idPlayer))
                 {
                     playerAux.GetComponentInChildren<Camera>().enabled = true;
                 }
+                */
                 simulatedPlayers.Add(playerAux);
                 break;
             case Commands.PLAYER_POS:
                 PlayerPosMsg pPosMsg = JsonUtility.FromJson<PlayerPosMsg>(recMsg);
                 var playerAux2 = FindPlayerById(pPosMsg.id);
-                playerAux2.transform.position = pPosMsg.pos.position;
-                playerAux2.transform.rotation = pPosMsg.pos.rotation;
-                playerAux2.transform.GetChild(0).localEulerAngles = pPosMsg.cameraRotation;
+                if (playerAux2 != null)
+                {
+                    playerAux2.transform.position = pPosMsg.pos.position;
+                    playerAux2.transform.rotation = pPosMsg.pos.rotation;
+                    playerAux2.transform.GetChild(0).localEulerAngles = pPosMsg.cameraRotation;
+                }
+                break;
+            case Commands.PLAYER_JOIN:
+                PlayerJoinMsg pJoinMsg = JsonUtility.FromJson<PlayerJoinMsg>(recMsg);
+                for (int i = 0; i < pJoinMsg.playerPos.Count; i++)
+                {
+                    var playerAux3 = Instantiate(playerPrefab, pJoinMsg.playerPos[i], Quaternion.identity);
+                    simulatedPlayers.Add(playerAux3);
+                }
+
+                FindPlayerById(pJoinMsg.id).GetComponentInChildren<Camera>().enabled = true;
                 break;
             default:
                 break;

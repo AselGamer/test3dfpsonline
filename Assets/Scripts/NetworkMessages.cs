@@ -32,7 +32,8 @@ namespace NetworkMessages
         HANDSHAKE,
         PLAYER_INPUT,
         PLAYER_POS,
-        PLAYER_SPAWN
+        PLAYER_SPAWN,
+        PLAYER_JOIN
     }
 
     [System.Serializable]
@@ -98,6 +99,18 @@ namespace NetworkMessages
         {
             command = Commands.PLAYER_SPAWN;
             pos = Vector3.zero;
+        }
+    }
+
+    [System.Serializable]
+    public class PlayerJoinMsg : NetworkHeader
+    {
+        public string id;
+        public List<Vector3> playerPos;
+        public PlayerJoinMsg()
+        {
+            command = Commands.PLAYER_JOIN;
+            playerPos = new List<Vector3>();
         }
     }
 }

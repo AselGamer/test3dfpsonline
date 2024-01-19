@@ -213,7 +213,7 @@ MonoBehaviour:
   serverPort: 1234
   idPlayer: 
   empezar: 0
-  playerPrefab: {fileID: 3499185647281644733, guid: 1d6145e2a1c95e4429df6fdd62922f49, type: 3}
+  playerPrefab: {fileID: 3499185647281644733, guid: d1bfea9ea1fa0fb4782264d638acafd3, type: 3}
   simulatedPlayers: []
   sensitivity: 4
 --- !u!4 &2031347486

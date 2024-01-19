@@ -114,12 +114,28 @@ public class Server : MonoBehaviour
                 player.nombre = hsMsg.player.nombre;
                 m_Players.Add(player);
                 Debug.Log(m_Players.Count + " players connected");
+
                 PlayerSpawnMsg pSpawnMsg = new PlayerSpawnMsg();
                 pSpawnMsg.id = hsMsg.player.id;
                 var playerAux = Instantiate(playerPrefab);
                 pSpawnMsg.pos = playerAux.transform.position;
-                SendToAllClients(JsonUtility.ToJson(pSpawnMsg));
+                playerAux.transform.name = hsMsg.player.nombre;
+                foreach (var connection in m_Connections)
+                {
+                    if (connection != m_Connections[numJugador])
+                    {
+                        SendToClient(JsonUtility.ToJson(pSpawnMsg), connection);
+                    }
+                }
                 simulatedPlayers.Add(playerAux);
+
+                PlayerJoinMsg playerJoinMsg = new PlayerJoinMsg();
+                playerJoinMsg.id = hsMsg.player.id;
+                foreach (var simPlayer in simulatedPlayers)
+                {
+                    playerJoinMsg.playerPos.Add(simPlayer.transform.position);
+                }
+                SendToClient(JsonUtility.ToJson(playerJoinMsg), m_Connections[numJugador]);
                 break;
             case Commands.PLAYER_INPUT:
                 PlayerInputMsg pInputMsg = JsonUtility.FromJson<PlayerInputMsg>(recMsg);
