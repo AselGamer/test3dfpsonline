@@ -153,6 +153,9 @@ MonoBehaviour:
   camara: {fileID: 3791362954030846917}
   moveSpeed: 4
   jumpForce: 6
+  verticalInput: 0
+  horizontalInput: 0
+  leanInput: 0
 --- !u!1 &5431446421993346086
 GameObject:
   m_ObjectHideFlags: 0
@@ -225,7 +228,7 @@ Camera:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7382757134866792694}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
@@ -289,6 +292,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a38e445fcd1c204fb1fa8da701dc7a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sensitivity: 200
+  sensitivity: 4
   orientation: {fileID: 5990616121091245559}
   Zrotation: 0

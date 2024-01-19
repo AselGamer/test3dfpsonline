@@ -1,3 +1,4 @@
+using NetworkMessages;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,6 +18,13 @@ public class PlayerScript : MonoBehaviour
 
     private bool isGrounded = false;
 
+    public short verticalInput;
+    public short horizontalInput;
+
+    public short leanInput;
+
+    public short jumpInput;
+
     private Rigidbody rb;
     void Start()
     {
@@ -29,9 +37,10 @@ public class PlayerScript : MonoBehaviour
     {
         if (isGrounded)
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (jumpInput == 1)
             {
                 rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+                jumpInput = 0;
             }
         }
     }
@@ -39,10 +48,12 @@ public class PlayerScript : MonoBehaviour
 
     void FixedUpdate()
     {
+        /*
         float verticalInput = Input.GetKey("d") ? 1f : Input.GetKey("a") ? -1f : 0f;
         float horizontalInput = Input.GetKey("w") ? 1f : Input.GetKey("s") ? -1f : 0f;
 
         float leanInput = Input.GetKey("e") ? -1f : Input.GetKey("q") ? 1f : 0f;
+        */
 
         isGrounded = false;
 
@@ -55,7 +66,7 @@ public class PlayerScript : MonoBehaviour
 
         rotationZ = Mathf.Lerp(rotationZ, 20f * leanInput, 10f * Time.deltaTime);
 
-        //camara.GetComponent<CameraScript>().Zrotation = rotationZ;
+        camara.GetComponent<CameraScript>().Zrotation = rotationZ;
 
         Vector3 forward = camara.transform.forward;
         Vector3 right = camara.transform.right;
@@ -66,10 +77,18 @@ public class PlayerScript : MonoBehaviour
 
         Vector3 movement = moveDirection * moveSpeed * Time.deltaTime;
 
-        transform.rotation = Quaternion.Euler(0, 0, rotationZ);
+        transform.rotation = Quaternion.Euler(camara.rotation.x, camara.rotation.y, rotationZ);
 
         camara.GetComponent<CameraScript>().Zrotation = this.rotationZ;
 
         transform.Translate(movement);
+    }
+
+    public void UpdateMovementVariables(PlayerInputMsg pInputMsg)
+    {
+        verticalInput = pInputMsg.verticalInput;
+        horizontalInput = pInputMsg.horizontalInput;
+        leanInput = pInputMsg.leanInput;
+        jumpInput = pInputMsg.jumpInput;
     }
 }

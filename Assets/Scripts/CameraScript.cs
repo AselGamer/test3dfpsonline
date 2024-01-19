@@ -4,14 +4,15 @@ using UnityEngine;
 
 public class CameraScript : MonoBehaviour
 {
-    public float sensitivity;
-
     public Transform orientation;
 
     public float Zrotation;
 
     private float yRotation;
     private float xRotation;
+
+    public float mouseX;
+    public float mouseY;
 
     void Start()
     {
@@ -21,9 +22,6 @@ public class CameraScript : MonoBehaviour
     
     void Update()
     {
-        float mouseX = Input.GetAxisRaw("Mouse X") * sensitivity;
-        float mouseY = Input.GetAxisRaw("Mouse Y") * sensitivity;
-
         yRotation += mouseX;
         xRotation -= mouseY;
 
