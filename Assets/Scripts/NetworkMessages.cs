@@ -33,7 +33,8 @@ namespace NetworkMessages
         PLAYER_INPUT,
         PLAYER_POS,
         PLAYER_SPAWN,
-        PLAYER_JOIN
+        PLAYER_JOIN,
+        PLAYER_JUMP
     }
 
     [System.Serializable]
@@ -60,7 +61,6 @@ namespace NetworkMessages
         public short verticalInput;
         public short horizontalInput;
         public short leanInput;
-        public short jumpInput;
 
         public float mouseX;
         public float mouseY;
@@ -70,11 +70,21 @@ namespace NetworkMessages
             verticalInput = 0;
             horizontalInput = 0;
             leanInput = 0;
-            jumpInput = 0;
             mouseX = 0;
             mouseY = 0;
         }
     }
+
+    [System.Serializable]
+    public class PlayerJumpMsg : NetworkHeader
+    {
+        public string id;
+        public PlayerJumpMsg()
+        {
+            command = Commands.PLAYER_JUMP;
+        }
+    }
+
 
     [System.Serializable]
     public class PlayerPosMsg : NetworkHeader

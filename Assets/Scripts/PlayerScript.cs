@@ -23,7 +23,7 @@ public class PlayerScript : MonoBehaviour
 
     public short leanInput;
 
-    public short jumpInput;
+    public bool jumpInput;
 
     private Rigidbody rb;
     void Start()
@@ -35,14 +35,7 @@ public class PlayerScript : MonoBehaviour
 
     private void Update()
     {
-        if (isGrounded)
-        {
-            if (jumpInput == 1)
-            {
-                rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-                jumpInput = 0;
-            }
-        }
+        
     }
 
 
@@ -77,6 +70,13 @@ public class PlayerScript : MonoBehaviour
 
         Vector3 movement = moveDirection * moveSpeed * Time.deltaTime;
 
+        if (isGrounded && jumpInput)
+        {
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            jumpInput = false;
+        }
+
+
         transform.rotation = Quaternion.Euler(camara.rotation.x, camara.rotation.y, rotationZ);
 
         camara.GetComponent<CameraScript>().Zrotation = this.rotationZ;
@@ -89,6 +89,5 @@ public class PlayerScript : MonoBehaviour
         verticalInput = pInputMsg.verticalInput;
         horizontalInput = pInputMsg.horizontalInput;
         leanInput = pInputMsg.leanInput;
-        jumpInput = pInputMsg.jumpInput;
     }
 }

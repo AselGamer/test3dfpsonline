@@ -75,10 +75,7 @@ public class NetworkClient : MonoBehaviour
             }
             cmd = m_Connection.PopEvent(m_Driver, out stream);
         }
-    }
 
-    void FixedUpdate()
-    {
         if (!empezar || !m_Connection.IsCreated || idPlayer == string.Empty)
         {
             return;
@@ -87,7 +84,12 @@ public class NetworkClient : MonoBehaviour
         short horizontalInput = (short)(Input.GetKey("w") ? 1 : Input.GetKey("s") ? -1 : 0);
 
         short leanInput = (short)(Input.GetKey("e") ? -1 : Input.GetKey("q") ? 1 : 0);
-        short jumpInput = (short)(Input.GetKeyDown(KeyCode.Space) ? 1 : 0);
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            PlayerJumpMsg pJumpMsg = new PlayerJumpMsg();
+            pJumpMsg.id = idPlayer;
+            SendToServer(JsonUtility.ToJson(pJumpMsg));
+        }
 
         float mouseX = Input.GetAxisRaw("Mouse X") * sensitivity;
         float mouseY = Input.GetAxisRaw("Mouse Y") * sensitivity;
@@ -97,7 +99,6 @@ public class NetworkClient : MonoBehaviour
         pInputMsg.horizontalInput = horizontalInput;
         pInputMsg.verticalInput = verticalInput;
         pInputMsg.leanInput = leanInput;
-        pInputMsg.jumpInput = jumpInput;
         pInputMsg.mouseX = mouseX;
         pInputMsg.mouseY = mouseY;
         SendToServer(JsonUtility.ToJson(pInputMsg));

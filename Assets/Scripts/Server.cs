@@ -144,6 +144,10 @@ public class Server : MonoBehaviour
                 playerAux2.GetComponentInChildren<CameraScript>().mouseX = pInputMsg.mouseX;
                 playerAux2.GetComponentInChildren<CameraScript>().mouseY = pInputMsg.mouseY;
                 break;
+            case Commands.PLAYER_JUMP:
+                PlayerJumpMsg pJumpMsg = JsonUtility.FromJson<PlayerJumpMsg>(recMsg);
+                FindPlayerById(pJumpMsg.id).GetComponent<PlayerScript>().jumpInput = true;
+                break;
             default:
                 break;
         }
