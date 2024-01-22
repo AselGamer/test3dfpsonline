@@ -13,8 +13,9 @@ namespace NetworkObject
     [System.Serializable]
     public class NetworkPlayer : NetworkObject
     {
-        public Transform playerTransform;
+        public Vector3 pos;
         public string nombre;
+        public short[] arrGuns;
     }
 
     [System.Serializable]
@@ -104,11 +105,11 @@ namespace NetworkMessages
     public class PlayerSpawnMsg : NetworkHeader
     {
         public string id;
-        public Vector3 pos;
+        public NetworkObject.NetworkPlayer spawnPlayer;
         public PlayerSpawnMsg()
         {
             command = Commands.PLAYER_SPAWN;
-            pos = Vector3.zero;
+            spawnPlayer = new();
         }
     }
 
@@ -116,11 +117,11 @@ namespace NetworkMessages
     public class PlayerJoinMsg : NetworkHeader
     {
         public string id;
-        public List<Vector3> playerPos;
+        public List<NetworkObject.NetworkPlayer> playersList;
         public PlayerJoinMsg()
         {
             command = Commands.PLAYER_JOIN;
-            playerPos = new List<Vector3>();
+            playersList = new List<NetworkObject.NetworkPlayer>();
         }
     }
 }

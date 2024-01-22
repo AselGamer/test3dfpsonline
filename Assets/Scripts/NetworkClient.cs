@@ -1,6 +1,7 @@
 using NetworkMessages;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Collections;
 using Unity.Networking.Transport;
 using UnityEngine;
@@ -20,6 +21,10 @@ public class NetworkClient : MonoBehaviour
     public GameObject playerPrefab;
     public List<GameObject> simulatedPlayers;
     public float sensitivity;
+    public short[] arrGuns;
+
+    [Header("Guns Variables")]
+    public List<GameObject> guns;
 
     void Start()
     {
@@ -120,17 +125,14 @@ public class NetworkClient : MonoBehaviour
                 Debug.Log("Handshake message received!");
                 hsMsgSend.player.nombre = "Client " + hsMsg.player.id;
                 hsMsgSend.player.id = hsMsg.player.id;
+                hsMsgSend.player.arrGuns = arrGuns;
                 SendToServer(JsonUtility.ToJson(hsMsgSend));
                 break;
             case Commands.PLAYER_SPAWN:
                 PlayerSpawnMsg psMsg = JsonUtility.FromJson<PlayerSpawnMsg>(recMsg);
-                var playerAux = Instantiate(playerPrefab, psMsg.pos, Quaternion.identity);
-                /*
-                if (psMsg.id.Equals(idPlayer))
-                {
-                    playerAux.GetComponentInChildren<Camera>().enabled = true;
-                }
-                */
+                var playerAux = Instantiate(playerPrefab, psMsg.spawnPlayer.pos, Quaternion.identity);
+                playerAux.GetComponent<PlayerScriptClient>().gunInventory = GetLoadOut(psMsg.spawnPlayer.arrGuns);
+                playerAux.GetComponent<PlayerScriptClient>().LoadLoadOut();
                 simulatedPlayers.Add(playerAux);
                 break;
             case Commands.PLAYER_POS:
@@ -145,9 +147,11 @@ public class NetworkClient : MonoBehaviour
                 break;
             case Commands.PLAYER_JOIN:
                 PlayerJoinMsg pJoinMsg = JsonUtility.FromJson<PlayerJoinMsg>(recMsg);
-                for (int i = 0; i < pJoinMsg.playerPos.Count; i++)
+                for (int i = 0; i < pJoinMsg.playersList.Count; i++)
                 {
-                    var playerAux3 = Instantiate(playerPrefab, pJoinMsg.playerPos[i], Quaternion.identity);
+                    var playerAux3 = Instantiate(playerPrefab, pJoinMsg.playersList[i].pos, Quaternion.identity);
+                    playerAux3.GetComponent<PlayerScriptClient>().gunInventory = GetLoadOut(pJoinMsg.playersList[i].arrGuns);
+                    playerAux3.GetComponent<PlayerScriptClient>().LoadLoadOut();
                     simulatedPlayers.Add(playerAux3);
                 }
 
@@ -161,6 +165,22 @@ public class NetworkClient : MonoBehaviour
     public GameObject FindPlayerById(string idJugador)
     {
         return simulatedPlayers.Find(x => simulatedPlayers.IndexOf(x) == int.Parse(idJugador));
+    }
+
+    public GameObject[] GetLoadOut(short[] arrGuns)
+    {
+        GameObject[] gunsArr = new GameObject[3];
+        arrGuns.ToList().ForEach(x => gunsArr[arrGuns.ToList().IndexOf(x)] = guns[x]);
+
+        return gunsArr;
+    }
+
+    public short[] LoadOutToId(GameObject[] arrGuns)
+    {
+        short[] gunsArr = new short[3];
+        arrGuns.ToList().ForEach(x => gunsArr[arrGuns.ToList().IndexOf(x)] = (short)guns.IndexOf(x));
+
+        return gunsArr;
     }
 
     private void SendToServer(string message)

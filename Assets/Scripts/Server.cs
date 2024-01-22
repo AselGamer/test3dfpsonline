@@ -1,5 +1,6 @@
 using NetworkMessages;
 using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Networking.Transport;
@@ -18,6 +19,7 @@ public class Server : MonoBehaviour
     [Header("Player variables")]
     public GameObject playerPrefab;
     public List<GameObject> simulatedPlayers;
+    public List<GameObject> guns;
     void Start()
     {
         m_Driver = NetworkDriver.Create();
@@ -115,10 +117,14 @@ public class Server : MonoBehaviour
                 m_Players.Add(player);
                 Debug.Log(m_Players.Count + " players connected");
 
+                //Menssage to spawn new player
                 PlayerSpawnMsg pSpawnMsg = new PlayerSpawnMsg();
                 pSpawnMsg.id = hsMsg.player.id;
                 var playerAux = Instantiate(playerPrefab);
-                pSpawnMsg.pos = playerAux.transform.position;
+                playerAux.GetComponent<PlayerScript>().gunInventory = GetLoadOut(hsMsg.player.arrGuns);
+                playerAux.GetComponent<PlayerScript>().LoadLoadOut();
+                pSpawnMsg.spawnPlayer.pos = playerAux.transform.position;
+                pSpawnMsg.spawnPlayer.arrGuns = hsMsg.player.arrGuns;
                 playerAux.transform.name = hsMsg.player.nombre;
                 foreach (var connection in m_Connections)
                 {
@@ -129,11 +135,16 @@ public class Server : MonoBehaviour
                 }
                 simulatedPlayers.Add(playerAux);
 
+                //Menssage to new player
                 PlayerJoinMsg playerJoinMsg = new PlayerJoinMsg();
                 playerJoinMsg.id = hsMsg.player.id;
                 foreach (var simPlayer in simulatedPlayers)
                 {
-                    playerJoinMsg.playerPos.Add(simPlayer.transform.position);
+                    var auxPlayer = new NetworkObject.NetworkPlayer();
+                    auxPlayer.pos = simPlayer.transform.position;
+                    auxPlayer.nombre = simPlayer.transform.name;
+                    auxPlayer.arrGuns = LoadOutToId(simPlayer.GetComponent<PlayerScript>().gunInventory);
+                    playerJoinMsg.playersList.Add(auxPlayer);
                 }
                 SendToClient(JsonUtility.ToJson(playerJoinMsg), m_Connections[numJugador]);
                 break;
@@ -151,6 +162,22 @@ public class Server : MonoBehaviour
             default:
                 break;
         }
+    }
+
+    public GameObject[] GetLoadOut(short[] arrGuns)
+    {
+        GameObject[] gunsArr = new GameObject[arrGuns.Length];
+        arrGuns.ToList().ForEach(x => gunsArr[arrGuns.ToList().IndexOf(x)] = guns[x]);
+
+        return gunsArr;
+    }
+
+    public short[] LoadOutToId(GameObject[] arrGuns)
+    {
+        short[] gunsArr = new short[arrGuns.Length];
+        arrGuns.ToList().ForEach(x => gunsArr[arrGuns.ToList().IndexOf(x)] = (short)guns.IndexOf(x));
+
+        return gunsArr;
     }
 
     public GameObject FindPlayerById(string idJugador)

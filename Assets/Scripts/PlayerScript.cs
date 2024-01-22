@@ -6,13 +6,20 @@ using UnityEngine.EventSystems;
 
 public class PlayerScript : MonoBehaviour
 {
+    [Header("Player objects/prefabs")]
+
     public Transform camara;
-    
+
+    private GameObject activeGun;
+
+    public GameObject[] gunInventory;
+
+    public Transform gunPosition;
+
+    [Header("Controller variables")]
+
     public float moveSpeed;
     public float jumpForce;
-
-    private float rotationX;
-    private float rotationY;
 
     private float rotationZ;
 
@@ -32,12 +39,6 @@ public class PlayerScript : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
-
-    private void Update()
-    {
-        
-    }
-
 
     void FixedUpdate()
     {
@@ -78,5 +79,24 @@ public class PlayerScript : MonoBehaviour
         verticalInput = pInputMsg.verticalInput;
         horizontalInput = pInputMsg.horizontalInput;
         leanInput = pInputMsg.leanInput;
+    }
+
+    public void LoadLoadOut()
+    {
+        //Move to server script later
+        for (int i = 0; i < gunInventory.Length; i++)
+        {
+            if (gunInventory[i] != null)
+            {
+                var auxGun = Instantiate(gunInventory[i], gunPosition.transform.position, gunPosition.transform.rotation);
+                auxGun.transform.parent = transform;
+                auxGun.SetActive(false);
+                if (i == 0 && gunInventory[0] != null)
+                {
+                    auxGun.SetActive(true);
+                    activeGun = auxGun;
+                }
+            }
+        }
     }
 }

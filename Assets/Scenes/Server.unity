@@ -156,6 +156,9 @@ MonoBehaviour:
   m_Players: []
   playerPrefab: {fileID: 3499185647281644733, guid: 1d6145e2a1c95e4429df6fdd62922f49, type: 3}
   simulatedPlayers: []
+  guns:
+  - {fileID: 7693801664679414444, guid: dfa21d6a889e136479a2d63d63b5330b, type: 3}
+  - {fileID: 919132149155446097, guid: 99da1c1cae3a1c243beac94fb97d96cb, type: 3}
 --- !u!4 &232120206
 Transform:
   m_ObjectHideFlags: 0
