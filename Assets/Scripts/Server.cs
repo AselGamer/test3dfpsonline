@@ -91,7 +91,7 @@ public class Server : MonoBehaviour
             pPosMsg.id = simulatedPlayers.IndexOf(player).ToString();
             pPosMsg.pos.position = player.transform.position;
             pPosMsg.pos.rotation = player.transform.rotation;
-            pPosMsg.cameraRotation = player.transform.GetChild(0).transform.localEulerAngles;
+            pPosMsg.cameraRotation = player.transform.Find("Camara").transform.localEulerAngles;
             SendToAllClients(JsonUtility.ToJson(pPosMsg));
         }
     }

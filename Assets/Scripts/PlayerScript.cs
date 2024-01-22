@@ -41,18 +41,11 @@ public class PlayerScript : MonoBehaviour
 
     void FixedUpdate()
     {
-        /*
-        float verticalInput = Input.GetKey("d") ? 1f : Input.GetKey("a") ? -1f : 0f;
-        float horizontalInput = Input.GetKey("w") ? 1f : Input.GetKey("s") ? -1f : 0f;
-
-        float leanInput = Input.GetKey("e") ? -1f : Input.GetKey("q") ? 1f : 0f;
-        */
 
         isGrounded = false;
 
-        RaycastHit hit;
 
-        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down), out hit, 1.25f))
+        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down), 1.10f))
         {
             isGrounded = true;
         }
@@ -61,23 +54,19 @@ public class PlayerScript : MonoBehaviour
 
         camara.GetComponent<CameraScript>().Zrotation = rotationZ;
 
-        Vector3 forward = camara.transform.forward;
-        Vector3 right = camara.transform.right;
-        forward.y = 0;
-        right.y = 0;
-
-        Vector3 moveDirection = forward * horizontalInput + right * verticalInput;
+        Vector3 moveDirection = new Vector3(verticalInput, 0, horizontalInput);
 
         Vector3 movement = moveDirection * moveSpeed * Time.deltaTime;
 
-        if (isGrounded && jumpInput)
+        if (isGrounded && jumpInput && leanInput==0)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            jumpInput = false;
         }
 
+        jumpInput = false;
 
-        transform.rotation = Quaternion.Euler(camara.rotation.x, camara.rotation.y, rotationZ);
+
+        transform.rotation = Quaternion.Euler(0, camara.eulerAngles.y, camara.eulerAngles.z);
 
         camara.GetComponent<CameraScript>().Zrotation = this.rotationZ;
 

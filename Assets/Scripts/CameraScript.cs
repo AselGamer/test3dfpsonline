@@ -13,12 +13,6 @@ public class CameraScript : MonoBehaviour
 
     public float mouseX;
     public float mouseY;
-
-    void Start()
-    {
-        
-    }
-
     
     void Update()
     {

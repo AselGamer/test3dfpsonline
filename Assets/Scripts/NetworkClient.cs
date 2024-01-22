@@ -140,7 +140,7 @@ public class NetworkClient : MonoBehaviour
                 {
                     playerAux2.transform.position = pPosMsg.pos.position;
                     playerAux2.transform.rotation = pPosMsg.pos.rotation;
-                    playerAux2.transform.GetChild(0).localEulerAngles = pPosMsg.cameraRotation;
+                    playerAux2.transform.Find("Camara").localEulerAngles = pPosMsg.cameraRotation;
                 }
                 break;
             case Commands.PLAYER_JOIN:
