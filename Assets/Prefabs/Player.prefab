@@ -188,12 +188,14 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   gunPosition: {fileID: 3205177256211226675}
+  health: 100
   moveSpeed: 4
   jumpForce: 6
   verticalInput: 0
   horizontalInput: 0
   leanInput: 0
   jumpInput: 0
+  fireInput: 0
 --- !u!1 &5431446421993346086
 GameObject:
   m_ObjectHideFlags: 0
@@ -317,7 +319,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7382757134866792694}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!114 &1334434464757707719
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -16,6 +16,9 @@ public class PlayerScript : MonoBehaviour
 
     public Transform gunPosition;
 
+    [Header("Player variables")]
+    public int health;
+
     [Header("Controller variables")]
 
     public float moveSpeed;
@@ -31,6 +34,8 @@ public class PlayerScript : MonoBehaviour
     public short leanInput;
 
     public bool jumpInput;
+
+    public byte fireInput;
 
     private Rigidbody rb;
     void Start()
@@ -66,12 +71,19 @@ public class PlayerScript : MonoBehaviour
 
         jumpInput = false;
 
-
         transform.rotation = Quaternion.Euler(0, camara.eulerAngles.y, camara.eulerAngles.z);
 
         camara.GetComponent<CameraScript>().Zrotation = this.rotationZ;
 
         transform.Translate(movement);
+
+        if (activeGun != null)
+        {
+            if (fireInput == 1)
+            {
+                activeGun.GetComponent<GunScript>().Fire();
+            }
+        }
     }
 
     public void UpdateMovementVariables(PlayerInputMsg pInputMsg)
@@ -79,6 +91,7 @@ public class PlayerScript : MonoBehaviour
         verticalInput = pInputMsg.verticalInput;
         horizontalInput = pInputMsg.horizontalInput;
         leanInput = pInputMsg.leanInput;
+        fireInput = pInputMsg.fireInput;
     }
 
     public void LoadLoadOut()

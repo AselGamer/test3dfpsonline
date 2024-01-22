@@ -63,6 +63,8 @@ namespace NetworkMessages
         public short horizontalInput;
         public short leanInput;
 
+        public byte fireInput;
+
         public float mouseX;
         public float mouseY;
         public PlayerInputMsg()
@@ -71,6 +73,7 @@ namespace NetworkMessages
             verticalInput = 0;
             horizontalInput = 0;
             leanInput = 0;
+            fireInput = 0;
             mouseX = 0;
             mouseY = 0;
         }

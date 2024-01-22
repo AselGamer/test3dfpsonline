@@ -9,11 +9,14 @@ public class PlayerScriptClient : MonoBehaviour
 
     public GameObject[] gunInventory;
 
+    public GameObject[] gunInventoryScene;
+
     public Transform gunPosition;
 
     public void LoadLoadOut()
     {
         //Move to server script later
+        gunInventoryScene = new GameObject[gunInventory.Length];
         for (int i = 0; i < gunInventory.Length; i++)
         {
             if (gunInventory[i] != null)
@@ -26,6 +29,18 @@ public class PlayerScriptClient : MonoBehaviour
                     auxGun.SetActive(true);
                     activeGun = auxGun;
                 }
+                gunInventoryScene[i] = auxGun;
+            }
+        }
+    }
+
+    public void HideLoadOut()
+    {
+        foreach (var gun in gunInventoryScene)
+        {
+            if (gun != null)
+            {
+                gun.GetComponent<MeshRenderer>().enabled = false;
             }
         }
     }

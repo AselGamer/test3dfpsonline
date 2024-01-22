@@ -19,6 +19,7 @@ public class NetworkClient : MonoBehaviour
 
     [Header("Player variables")]
     public GameObject playerPrefab;
+    public GameObject interfaz;
     public List<GameObject> simulatedPlayers;
     public float sensitivity;
     public short[] arrGuns;
@@ -89,6 +90,9 @@ public class NetworkClient : MonoBehaviour
         short horizontalInput = (short)(Input.GetKey("w") ? 1 : Input.GetKey("s") ? -1 : 0);
 
         short leanInput = (short)(Input.GetKey("e") ? -1 : Input.GetKey("q") ? 1 : 0);
+
+        byte fireInput = (byte)(Input.GetMouseButton(0) ? 1 : 0);
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
             PlayerJumpMsg pJumpMsg = new PlayerJumpMsg();
@@ -104,6 +108,7 @@ public class NetworkClient : MonoBehaviour
         pInputMsg.horizontalInput = horizontalInput;
         pInputMsg.verticalInput = verticalInput;
         pInputMsg.leanInput = leanInput;
+        pInputMsg.fireInput = fireInput;
         pInputMsg.mouseX = mouseX;
         pInputMsg.mouseY = mouseY;
         SendToServer(JsonUtility.ToJson(pInputMsg));
@@ -154,8 +159,13 @@ public class NetworkClient : MonoBehaviour
                     playerAux3.GetComponent<PlayerScriptClient>().LoadLoadOut();
                     simulatedPlayers.Add(playerAux3);
                 }
-
-                FindPlayerById(pJoinMsg.id).GetComponentInChildren<Camera>().enabled = true;
+                Debug.Log(pJoinMsg.id);
+                FindPlayerById(pJoinMsg.id).GetComponent<PlayerScriptClient>().HideLoadOut();
+                var playerCamera = FindPlayerById(pJoinMsg.id).GetComponentInChildren<Camera>();
+                playerCamera.enabled = true;
+                interfaz.SetActive(true);
+                interfaz.GetComponent<Canvas>().worldCamera = playerCamera;
+                interfaz.GetComponent<Canvas>().planeDistance = 1f;
                 break;
             default:
                 break;
