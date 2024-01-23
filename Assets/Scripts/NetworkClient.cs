@@ -179,10 +179,12 @@ public class NetworkClient : MonoBehaviour
                 }
 
                 FindPlayerById(pJoinMsg.id).GetComponent<PlayerScriptClient>().HideLoadOut();
-                var playerCamera = FindPlayerById(pJoinMsg.id).GetComponentInChildren<Camera>();
+                var playerCamera = FindPlayerById(pJoinMsg.id).transform.Find("Camara").GetComponent<Camera>();
+                var uiCamera = playerCamera.transform.Find("UI Camara").GetComponent<Camera>();
                 playerCamera.enabled = true;
+                uiCamera.enabled = true;
                 interfaz.SetActive(true);
-                interfaz.GetComponent<Canvas>().worldCamera = playerCamera;
+                interfaz.GetComponent<Canvas>().worldCamera = uiCamera;
                 interfaz.GetComponent<Canvas>().planeDistance = 1f;
                 break;
 
