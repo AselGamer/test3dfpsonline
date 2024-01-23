@@ -45,6 +45,8 @@ public class NetworkClient : MonoBehaviour
 
     void OnDestroy()
     {
+        m_Driver.Disconnect(m_Connection);
+        m_Driver.ScheduleUpdate().Complete();
         m_Driver.Dispose();
     }
 
@@ -82,6 +84,11 @@ public class NetworkClient : MonoBehaviour
             cmd = m_Connection.PopEvent(m_Driver, out stream);
         }
 
+        PlayerMovement();
+    }
+
+    private void PlayerMovement()
+    {
         if (!empezar || !m_Connection.IsCreated || idPlayer == string.Empty)
         {
             return;
@@ -92,6 +99,19 @@ public class NetworkClient : MonoBehaviour
         short leanInput = (short)(Input.GetKey("e") ? -1 : Input.GetKey("q") ? 1 : 0);
 
         byte fireInput = (byte)(Input.GetMouseButton(0) ? 1 : 0);
+
+        float mouseScrollInput = Input.mouseScrollDelta.y * 0.1f;
+
+        byte switchGunInput = (byte)(Input.GetKeyDown(KeyCode.Alpha1) ? 1 : Input.GetKeyDown(KeyCode.Alpha2) ? 2 : Input.GetKeyDown(KeyCode.Alpha3) ? 3 : 0);
+
+        if (mouseScrollInput != 0 || switchGunInput != 0)
+        {
+            PlayerSwitchGunMsg pSwitchGunMsg = new PlayerSwitchGunMsg();
+            pSwitchGunMsg.id = idPlayer;
+            pSwitchGunMsg.mouseScrollInput = mouseScrollInput;
+            pSwitchGunMsg.switchGunInput = switchGunInput;
+            SendToServer(JsonUtility.ToJson(pSwitchGunMsg));
+        }
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -136,8 +156,7 @@ public class NetworkClient : MonoBehaviour
             case Commands.PLAYER_SPAWN:
                 PlayerSpawnMsg psMsg = JsonUtility.FromJson<PlayerSpawnMsg>(recMsg);
                 var playerAux = Instantiate(playerPrefab, psMsg.spawnPlayer.pos, Quaternion.identity);
-                playerAux.GetComponent<PlayerScriptClient>().gunInventory = GetLoadOut(psMsg.spawnPlayer.arrGuns);
-                playerAux.GetComponent<PlayerScriptClient>().LoadLoadOut();
+                playerAux.GetComponent<PlayerScriptClient>().LoadLoadOut(GetLoadOut(psMsg.spawnPlayer.arrGuns));
                 simulatedPlayers.Add(playerAux);
                 break;
             case Commands.PLAYER_POS:
@@ -155,17 +174,28 @@ public class NetworkClient : MonoBehaviour
                 for (int i = 0; i < pJoinMsg.playersList.Count; i++)
                 {
                     var playerAux3 = Instantiate(playerPrefab, pJoinMsg.playersList[i].pos, Quaternion.identity);
-                    playerAux3.GetComponent<PlayerScriptClient>().gunInventory = GetLoadOut(pJoinMsg.playersList[i].arrGuns);
-                    playerAux3.GetComponent<PlayerScriptClient>().LoadLoadOut();
+                    playerAux3.GetComponent<PlayerScriptClient>().LoadLoadOut(GetLoadOut(pJoinMsg.playersList[i].arrGuns));
                     simulatedPlayers.Add(playerAux3);
                 }
-                Debug.Log(pJoinMsg.id);
+
                 FindPlayerById(pJoinMsg.id).GetComponent<PlayerScriptClient>().HideLoadOut();
                 var playerCamera = FindPlayerById(pJoinMsg.id).GetComponentInChildren<Camera>();
                 playerCamera.enabled = true;
                 interfaz.SetActive(true);
                 interfaz.GetComponent<Canvas>().worldCamera = playerCamera;
                 interfaz.GetComponent<Canvas>().planeDistance = 1f;
+                break;
+
+            case Commands.PLAYER_SWITCH_GUN:
+                PlayerSwitchGunClient pSwitchGunMsg = JsonUtility.FromJson<PlayerSwitchGunClient>(recMsg);
+                var playerAux4 = FindPlayerById(pSwitchGunMsg.id);
+                playerAux4.GetComponent<PlayerScriptClient>().SwitchGun(pSwitchGunMsg.gunIndex);
+                break;
+            case Commands.PLAYER_DISCONNECT:
+                PlayerDisconnectMsg pDisconnectMsg = JsonUtility.FromJson<PlayerDisconnectMsg>(recMsg);
+                int id = int.Parse(pDisconnectMsg.id);
+                Destroy(simulatedPlayers[id]);
+                simulatedPlayers.RemoveAt(id);
                 break;
             default:
                 break;
@@ -179,18 +209,14 @@ public class NetworkClient : MonoBehaviour
 
     public GameObject[] GetLoadOut(short[] arrGuns)
     {
-        GameObject[] gunsArr = new GameObject[3];
-        arrGuns.ToList().ForEach(x => gunsArr[arrGuns.ToList().IndexOf(x)] = guns[x]);
+        GameObject[] returnGunsArr = new GameObject[arrGuns.Length];
+        for (int i = 0; i < arrGuns.Length; i++)
+        {
+            
+            returnGunsArr[i] = guns[arrGuns[i]];
+        }
 
-        return gunsArr;
-    }
-
-    public short[] LoadOutToId(GameObject[] arrGuns)
-    {
-        short[] gunsArr = new short[3];
-        arrGuns.ToList().ForEach(x => gunsArr[arrGuns.ToList().IndexOf(x)] = (short)guns.IndexOf(x));
-
-        return gunsArr;
+        return returnGunsArr;
     }
 
     private void SendToServer(string message)

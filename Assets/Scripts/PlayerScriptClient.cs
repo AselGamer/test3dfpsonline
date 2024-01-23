@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,27 +8,32 @@ public class PlayerScriptClient : MonoBehaviour
     [Header("Player objects/prefabs")]
     private GameObject activeGun;
 
-    public GameObject[] gunInventory;
+    private int activeGunIndex = -1;
+
+    public GameObject camara;
 
     public GameObject[] gunInventoryScene;
 
     public Transform gunPosition;
 
-    public void LoadLoadOut()
+    public Transform viewModelPosition;
+
+    public void LoadLoadOut(GameObject[] gunInvAdd)
     {
         //Move to server script later
-        gunInventoryScene = new GameObject[gunInventory.Length];
-        for (int i = 0; i < gunInventory.Length; i++)
+        gunInventoryScene = new GameObject[gunInvAdd.Length];
+        for (int i = 0; i < gunInvAdd.Length; i++)
         {
-            if (gunInventory[i] != null)
+            if (gunInvAdd[i] != null)
             {
-                var auxGun = Instantiate(gunInventory[i], gunPosition.transform.position, gunPosition.transform.rotation);
-                auxGun.transform.parent = transform;
+                var auxGun = Instantiate(gunInvAdd[i], gunPosition.transform.position, gunPosition.transform.rotation);
+                auxGun.transform.parent = camara.transform;
                 auxGun.SetActive(false);
-                if (i == 0 && gunInventory[0] != null)
+                if (activeGun == null)
                 {
                     auxGun.SetActive(true);
                     activeGun = auxGun;
+                    activeGunIndex = i;
                 }
                 gunInventoryScene[i] = auxGun;
             }
@@ -40,8 +46,17 @@ public class PlayerScriptClient : MonoBehaviour
         {
             if (gun != null)
             {
-                gun.GetComponent<MeshRenderer>().enabled = false;
+                gun.transform.position = viewModelPosition.position;
             }
         }
+
+    }
+
+    internal void SwitchGun(int gunIndex)
+    {
+        gunInventoryScene[activeGunIndex].SetActive(false);
+        activeGunIndex = gunIndex;
+        gunInventoryScene[activeGunIndex].SetActive(true);
+        activeGun = gunInventoryScene[activeGunIndex];
     }
 }

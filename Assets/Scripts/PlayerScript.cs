@@ -1,4 +1,5 @@
 using NetworkMessages;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,8 @@ public class PlayerScript : MonoBehaviour
     public Transform camara;
 
     private GameObject activeGun;
+
+    public int activeGunIndex = -1;
 
     public GameObject[] gunInventory;
 
@@ -77,11 +80,11 @@ public class PlayerScript : MonoBehaviour
 
         transform.Translate(movement);
 
-        if (activeGun != null)
+        if (activeGun.TryGetComponent<GunScript>(out GunScript gunScript))
         {
             if (fireInput == 1)
             {
-                activeGun.GetComponent<GunScript>().Fire();
+                gunScript.Fire();
             }
         }
     }
@@ -94,21 +97,68 @@ public class PlayerScript : MonoBehaviour
         fireInput = pInputMsg.fireInput;
     }
 
-    public void LoadLoadOut()
+    public void LoadLoadOut(GameObject[] gunInvAdd)
     {
         //Move to server script later
+        gunInventory = new GameObject[gunInvAdd.Length];
+
         for (int i = 0; i < gunInventory.Length; i++)
         {
-            if (gunInventory[i] != null)
+            if (gunInvAdd[i] != null)
             {
-                var auxGun = Instantiate(gunInventory[i], gunPosition.transform.position, gunPosition.transform.rotation);
-                auxGun.transform.parent = transform;
+                var auxGun = Instantiate(gunInvAdd[i], gunPosition.transform.position, gunPosition.transform.rotation);
+                auxGun.transform.parent = camara.transform;
                 auxGun.SetActive(false);
-                if (i == 0 && gunInventory[0] != null)
+                if (activeGun == null)
                 {
                     auxGun.SetActive(true);
                     activeGun = auxGun;
+                    activeGunIndex = i;
                 }
+                gunInventory[i] = auxGun;
+            }
+        }
+    }
+
+    internal void SwitchGun(PlayerSwitchGunMsg pSwitchGunMsg)
+    {
+        if (activeGunIndex != -1)
+        {
+            if (pSwitchGunMsg.switchGunInput != 0 && pSwitchGunMsg.switchGunInput <= gunInventory.Length)
+            {
+                gunInventory[activeGunIndex].SetActive(false);
+                activeGunIndex = pSwitchGunMsg.switchGunInput - 1;
+                gunInventory[activeGunIndex].SetActive(true);
+                activeGun = gunInventory[activeGunIndex];
+            }
+            
+            if (pSwitchGunMsg.mouseScrollInput != 0)
+            {
+                gunInventory[activeGunIndex].SetActive(false);
+                if (pSwitchGunMsg.mouseScrollInput == 1)
+                {
+                    if (activeGunIndex == gunInventory.Length - 1)
+                    {
+                        activeGunIndex = 0;
+                    }
+                    else
+                    {
+                        activeGunIndex++;
+                    }
+                }
+                else
+                {
+                    if (activeGunIndex == 0)
+                    {
+                        activeGunIndex = gunInventory.Length - 1;
+                    }
+                    else
+                    {
+                        activeGunIndex--;
+                    }
+                }
+                gunInventory[activeGunIndex].SetActive(true);
+                activeGun = gunInventory[activeGunIndex];
             }
         }
     }

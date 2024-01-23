@@ -35,7 +35,9 @@ namespace NetworkMessages
         PLAYER_POS,
         PLAYER_SPAWN,
         PLAYER_JOIN,
-        PLAYER_JUMP
+        PLAYER_JUMP,
+        PLAYER_SWITCH_GUN,
+        PLAYER_DISCONNECT
     }
 
     [System.Serializable]
@@ -125,6 +127,43 @@ namespace NetworkMessages
         {
             command = Commands.PLAYER_JOIN;
             playersList = new List<NetworkObject.NetworkPlayer>();
+        }
+    }
+
+    [System.Serializable]
+    public class PlayerSwitchGunMsg : NetworkHeader
+    {
+        public string id;
+        public byte switchGunInput;
+        public float mouseScrollInput;
+        public PlayerSwitchGunMsg()
+        {
+            command = Commands.PLAYER_SWITCH_GUN;
+            switchGunInput = 0;
+            mouseScrollInput = 0;
+        }
+    }
+
+    [System.Serializable]
+    public class PlayerSwitchGunClient : NetworkHeader
+    {
+        public string id;
+        public int gunIndex;
+        public PlayerSwitchGunClient()
+        {
+            command = Commands.PLAYER_SWITCH_GUN;
+            gunIndex = 0;
+        }
+    }
+
+    [System.Serializable]
+    public class PlayerDisconnectMsg : NetworkHeader
+    {
+        public string id;
+        public PlayerDisconnectMsg()
+        {
+            command = Commands.PLAYER_DISCONNECT;
+            id = "";
         }
     }
 }

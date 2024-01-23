@@ -81,7 +81,17 @@ public class Server : MonoBehaviour
                 else if (cmd == NetworkEvent.Type.Disconnect)
                 {
                     Debug.Log("Client disconnected from server");
-                    m_Connections[i] = default(NetworkConnection);
+                    m_Driver.Disconnect(m_Connections[i]);
+                    m_Connections.RemoveAtSwapBack(i);
+                    m_Players.RemoveAt(i);
+                    Destroy(simulatedPlayers[i]);
+                    simulatedPlayers.RemoveAt(i);
+                    --i;
+                    cmd = NetworkEvent.Type.Empty;
+                    PlayerDisconnectMsg pDisconnectMsg = new PlayerDisconnectMsg();
+                    pDisconnectMsg.id = i.ToString();
+                    SendToAllClients(JsonUtility.ToJson(pDisconnectMsg));
+                    continue;
                 }
                 cmd = m_Driver.PopEventForConnection(m_Connections[i], out stream);
             }
@@ -114,6 +124,7 @@ public class Server : MonoBehaviour
                 NetworkObject.NetworkPlayer player = new NetworkObject.NetworkPlayer();
                 player.id = hsMsg.player.id;
                 player.nombre = hsMsg.player.nombre;
+                player.arrGuns = hsMsg.player.arrGuns;
                 m_Players.Add(player);
                 Debug.Log(m_Players.Count + " players connected");
 
@@ -121,8 +132,7 @@ public class Server : MonoBehaviour
                 PlayerSpawnMsg pSpawnMsg = new PlayerSpawnMsg();
                 pSpawnMsg.id = hsMsg.player.id;
                 var playerAux = Instantiate(playerPrefab);
-                playerAux.GetComponent<PlayerScript>().gunInventory = GetLoadOut(hsMsg.player.arrGuns);
-                playerAux.GetComponent<PlayerScript>().LoadLoadOut();
+                playerAux.GetComponent<PlayerScript>().LoadLoadOut(GetLoadOut(hsMsg.player.arrGuns));
                 pSpawnMsg.spawnPlayer.pos = playerAux.transform.position;
                 pSpawnMsg.spawnPlayer.arrGuns = hsMsg.player.arrGuns;
                 playerAux.transform.name = hsMsg.player.nombre;
@@ -138,14 +148,7 @@ public class Server : MonoBehaviour
                 //Menssage to new player
                 PlayerJoinMsg playerJoinMsg = new PlayerJoinMsg();
                 playerJoinMsg.id = hsMsg.player.id;
-                foreach (var simPlayer in simulatedPlayers)
-                {
-                    var auxPlayer = new NetworkObject.NetworkPlayer();
-                    auxPlayer.pos = simPlayer.transform.position;
-                    auxPlayer.nombre = simPlayer.transform.name;
-                    auxPlayer.arrGuns = LoadOutToId(simPlayer.GetComponent<PlayerScript>().gunInventory);
-                    playerJoinMsg.playersList.Add(auxPlayer);
-                }
+                playerJoinMsg.playersList = m_Players;
                 SendToClient(JsonUtility.ToJson(playerJoinMsg), m_Connections[numJugador]);
                 break;
             case Commands.PLAYER_INPUT:
@@ -159,6 +162,16 @@ public class Server : MonoBehaviour
                 PlayerJumpMsg pJumpMsg = JsonUtility.FromJson<PlayerJumpMsg>(recMsg);
                 FindPlayerById(pJumpMsg.id).GetComponent<PlayerScript>().jumpInput = true;
                 break;
+            case Commands.PLAYER_SWITCH_GUN:
+                PlayerSwitchGunMsg pSwitchGunMsg = JsonUtility.FromJson<PlayerSwitchGunMsg>(recMsg);
+                var playerScriptAux = FindPlayerById(pSwitchGunMsg.id).GetComponent<PlayerScript>();
+                playerScriptAux.SwitchGun(pSwitchGunMsg);
+
+                PlayerSwitchGunClient pSwitchGunMsgSend = new PlayerSwitchGunClient();
+                pSwitchGunMsgSend.id = pSwitchGunMsg.id;
+                pSwitchGunMsgSend.gunIndex = playerScriptAux.activeGunIndex;
+                SendToAllClients(JsonUtility.ToJson(pSwitchGunMsgSend));
+                break;
             default:
                 break;
         }
@@ -168,14 +181,6 @@ public class Server : MonoBehaviour
     {
         GameObject[] gunsArr = new GameObject[arrGuns.Length];
         arrGuns.ToList().ForEach(x => gunsArr[arrGuns.ToList().IndexOf(x)] = guns[x]);
-
-        return gunsArr;
-    }
-
-    public short[] LoadOutToId(GameObject[] arrGuns)
-    {
-        short[] gunsArr = new short[arrGuns.Length];
-        arrGuns.ToList().ForEach(x => gunsArr[arrGuns.ToList().IndexOf(x)] = (short)guns.IndexOf(x));
 
         return gunsArr;
     }
@@ -198,6 +203,11 @@ public class Server : MonoBehaviour
 
     private void SendToClient(string message, NetworkConnection c)
     {
+        if (!c.IsCreated)
+        {
+            return;
+        }
+
         DataStreamWriter writer;
         m_Driver.BeginSend(pipeline, c, out writer);
         NativeArray<byte> bytes = new NativeArray<byte>(System.Text.Encoding.ASCII.GetBytes(message), Allocator.Temp);
