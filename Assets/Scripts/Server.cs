@@ -22,6 +22,8 @@ public class Server : MonoBehaviour
     [Header("Player variables")]
     public GameObject playerPrefab;
     public Dictionary<string, GameObject> simulatedPlayers;
+    //This code is cringe
+    public Dictionary<string, NetworkConnection> playerConnection;
     public List<GameObject> guns;
     void Start()
     {
@@ -29,6 +31,7 @@ public class Server : MonoBehaviour
         m_Connections = new NativeList<NetworkConnection>(16, Allocator.Persistent);
         var endpoint = NetworkEndpoint.AnyIpv4.WithPort(serverPort);
         simulatedPlayers = new Dictionary<string, GameObject>();
+        playerConnection = new Dictionary<string, NetworkConnection>();
         pipeline = m_Driver.CreatePipeline(typeof(FragmentationPipelineStage),
             typeof(ReliableSequencedPipelineStage));
         if (m_Driver.Bind(endpoint) != 0)
@@ -86,14 +89,17 @@ public class Server : MonoBehaviour
                 else if (cmd == NetworkEvent.Type.Disconnect)
                 {
                     Debug.Log("Client disconnected from server");
+                    
                     m_Driver.Disconnect(m_Connections[i]);
                     m_Connections.RemoveAtSwapBack(i);
+                    var idDisconnect = m_Players[i].id;
                     m_Players.RemoveAt(i);
-                    var playerAux = simulatedPlayers[i+""];
-                    simulatedPlayers.Remove(i + "");
+                    var playerAux = simulatedPlayers[idDisconnect];
+                    simulatedPlayers.Remove(idDisconnect);
                     Destroy(playerAux);
                     PlayerDisconnectMsg pDisconnectMsg = new PlayerDisconnectMsg();
-                    pDisconnectMsg.id = i.ToString();
+                    pDisconnectMsg.id = idDisconnect;
+                    playerConnection.Remove(idDisconnect);
                     cmd = NetworkEvent.Type.Empty;
                     SendToAllClients(JsonUtility.ToJson(pDisconnectMsg));
                     --i;
@@ -125,10 +131,8 @@ public class Server : MonoBehaviour
             }
             pInventoryMsg.health = player.GetComponent<PlayerScript>().health;
 
-            SendToClient(JsonUtility.ToJson(pInventoryMsg), m_Connections[int.Parse(playerId)]);
+            SendToClient(JsonUtility.ToJson(pInventoryMsg), playerConnection[playerId]);
         }
-
-        
     }
 
     private void OnData(DataStreamReader stream, int numJugador)
@@ -150,6 +154,8 @@ public class Server : MonoBehaviour
                 player.arrGuns = hsMsg.player.arrGuns;
                 m_Players.Add(player);
                 Debug.Log(m_Players.Count + " players connected");
+
+                playerConnection.Add(hsMsg.player.id, m_Connections[numJugador]);
 
                 //Menssage to spawn new player
                 PlayerSpawnMsg pSpawnMsg = new PlayerSpawnMsg();
