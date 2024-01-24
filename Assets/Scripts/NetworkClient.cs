@@ -20,7 +20,7 @@ public class NetworkClient : MonoBehaviour
     [Header("Player variables")]
     public GameObject playerPrefab;
     public GameObject interfaz;
-    public List<GameObject> simulatedPlayers;
+    public Dictionary<string, GameObject> simulatedPlayers;
     public float sensitivity;
     public short[] arrGuns;
 
@@ -32,6 +32,7 @@ public class NetworkClient : MonoBehaviour
         m_Driver = NetworkDriver.Create();
         m_Connection = default(NetworkConnection);
         var endpoint = NetworkEndpoint.Parse(serverIp, serverPort);
+        simulatedPlayers = new Dictionary<string, GameObject>();
         pipeline = m_Driver.CreatePipeline(typeof(FragmentationPipelineStage),
             typeof(ReliableSequencedPipelineStage));
         m_Connection = m_Driver.Connect(endpoint);
@@ -157,7 +158,7 @@ public class NetworkClient : MonoBehaviour
                 PlayerSpawnMsg psMsg = JsonUtility.FromJson<PlayerSpawnMsg>(recMsg);
                 var playerAux = Instantiate(playerPrefab, psMsg.spawnPlayer.pos, Quaternion.identity);
                 playerAux.GetComponent<PlayerScriptClient>().LoadLoadOut(GetLoadOut(psMsg.spawnPlayer.arrGuns));
-                simulatedPlayers.Add(playerAux);
+                simulatedPlayers.Add(psMsg.id, playerAux);
                 break;
             case Commands.PLAYER_POS:
                 PlayerPosMsg pPosMsg = JsonUtility.FromJson<PlayerPosMsg>(recMsg);
@@ -175,7 +176,8 @@ public class NetworkClient : MonoBehaviour
                 {
                     var playerAux3 = Instantiate(playerPrefab, pJoinMsg.playersList[i].pos, Quaternion.identity);
                     playerAux3.GetComponent<PlayerScriptClient>().LoadLoadOut(GetLoadOut(pJoinMsg.playersList[i].arrGuns));
-                    simulatedPlayers.Add(playerAux3);
+                    simulatedPlayers.Add(pJoinMsg.playersList[i].id, playerAux3);
+                    Debug.Log(pJoinMsg.playersList[i].id);
                 }
 
                 FindPlayerById(pJoinMsg.id).GetComponent<PlayerScriptClient>().HideLoadOut();
@@ -196,17 +198,28 @@ public class NetworkClient : MonoBehaviour
             case Commands.PLAYER_DISCONNECT:
                 PlayerDisconnectMsg pDisconnectMsg = JsonUtility.FromJson<PlayerDisconnectMsg>(recMsg);
                 int id = int.Parse(pDisconnectMsg.id);
-                Destroy(simulatedPlayers[id]);
-                simulatedPlayers.RemoveAt(id);
+                Debug.Log("Player " + id + " disconnected");
+                var playerAux5 = simulatedPlayers[id+""];
+                simulatedPlayers.Remove(id+"");
+                Destroy(playerAux5);
+                break;
+            case Commands.PLAYER_INVENTORY:
+                PlayerInventoryMsg pInventoryMsg = JsonUtility.FromJson<PlayerInventoryMsg>(recMsg);
+                var uiScript = interfaz.GetComponent<UIScript>();
+                uiScript.ammoInMag = pInventoryMsg.ammoInMag;
+                uiScript.ammoCount = pInventoryMsg.ammoCount;
+                uiScript.health = pInventoryMsg.health;
                 break;
             default:
                 break;
         }
     }
 
+    //Can be removed later
     public GameObject FindPlayerById(string idJugador)
     {
-        return simulatedPlayers.Find(x => simulatedPlayers.IndexOf(x) == int.Parse(idJugador));
+        simulatedPlayers.TryGetValue(idJugador, out GameObject player);
+        return player;
     }
 
     public GameObject[] GetLoadOut(short[] arrGuns)

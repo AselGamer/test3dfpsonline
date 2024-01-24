@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Networking.Transport;
 using UnityEngine;
+using Unity.Jobs;
+using System;
 
 public class Server : MonoBehaviour
 {
@@ -14,17 +16,19 @@ public class Server : MonoBehaviour
     private NativeList<NetworkConnection> m_Connections;
     public List<NetworkObject.NetworkPlayer> m_Players;
     private static int nextId = 0;
-    public NetworkPipeline pipeline;
+    public static NetworkPipeline pipeline;
+    JobHandle m_ServerJobHandle;
 
     [Header("Player variables")]
     public GameObject playerPrefab;
-    public List<GameObject> simulatedPlayers;
+    public Dictionary<string, GameObject> simulatedPlayers;
     public List<GameObject> guns;
     void Start()
     {
         m_Driver = NetworkDriver.Create();
         m_Connections = new NativeList<NetworkConnection>(16, Allocator.Persistent);
         var endpoint = NetworkEndpoint.AnyIpv4.WithPort(serverPort);
+        simulatedPlayers = new Dictionary<string, GameObject>();
         pipeline = m_Driver.CreatePipeline(typeof(FragmentationPipelineStage),
             typeof(ReliableSequencedPipelineStage));
         if (m_Driver.Bind(endpoint) != 0)
@@ -41,6 +45,7 @@ public class Server : MonoBehaviour
     {
         if (m_Driver.IsCreated)
         {
+            m_ServerJobHandle.Complete();
             m_Driver.Dispose();
             m_Connections.Dispose();
         }
@@ -84,28 +89,46 @@ public class Server : MonoBehaviour
                     m_Driver.Disconnect(m_Connections[i]);
                     m_Connections.RemoveAtSwapBack(i);
                     m_Players.RemoveAt(i);
-                    Destroy(simulatedPlayers[i]);
-                    simulatedPlayers.RemoveAt(i);
-                    --i;
-                    cmd = NetworkEvent.Type.Empty;
+                    var playerAux = simulatedPlayers[i+""];
+                    simulatedPlayers.Remove(i + "");
+                    Destroy(playerAux);
                     PlayerDisconnectMsg pDisconnectMsg = new PlayerDisconnectMsg();
                     pDisconnectMsg.id = i.ToString();
+                    cmd = NetworkEvent.Type.Empty;
                     SendToAllClients(JsonUtility.ToJson(pDisconnectMsg));
+                    --i;
                     continue;
                 }
                 cmd = m_Driver.PopEventForConnection(m_Connections[i], out stream);
             }
         }
 
-        foreach (var player in simulatedPlayers)
+        foreach (var playerKvp in simulatedPlayers)
         {
             PlayerPosMsg pPosMsg = new PlayerPosMsg();
-            pPosMsg.id = simulatedPlayers.IndexOf(player).ToString();
+            var player = playerKvp.Value;
+            var playerId = playerKvp.Key;
+            pPosMsg.id = playerId;
             pPosMsg.pos.position = player.transform.position;
             pPosMsg.pos.rotation = player.transform.rotation;
             pPosMsg.cameraRotation = player.transform.Find("Camara").transform.localEulerAngles;
             SendToAllClients(JsonUtility.ToJson(pPosMsg));
+
+            PlayerInventoryMsg pInventoryMsg = new PlayerInventoryMsg();
+            pInventoryMsg.id = playerId;
+            var playerScriptAux = player.GetComponent<PlayerScript>();
+            pInventoryMsg.gunIndex = playerScriptAux.activeGunIndex;
+            if (playerScriptAux.activeGun.transform.TryGetComponent<GunScript>(out GunScript gunScript))
+            {
+                pInventoryMsg.ammoCount = gunScript.ammoCount;
+                pInventoryMsg.ammoInMag = gunScript.ammoInMag;
+            }
+            pInventoryMsg.health = player.GetComponent<PlayerScript>().health;
+
+            SendToClient(JsonUtility.ToJson(pInventoryMsg), m_Connections[int.Parse(playerId)]);
         }
+
+        
     }
 
     private void OnData(DataStreamReader stream, int numJugador)
@@ -143,7 +166,7 @@ public class Server : MonoBehaviour
                         SendToClient(JsonUtility.ToJson(pSpawnMsg), connection);
                     }
                 }
-                simulatedPlayers.Add(playerAux);
+                simulatedPlayers.Add(hsMsg.player.id, playerAux);
 
                 //Menssage to new player
                 PlayerJoinMsg playerJoinMsg = new PlayerJoinMsg();
@@ -154,6 +177,10 @@ public class Server : MonoBehaviour
             case Commands.PLAYER_INPUT:
                 PlayerInputMsg pInputMsg = JsonUtility.FromJson<PlayerInputMsg>(recMsg);
                 var playerAux2 = FindPlayerById(pInputMsg.id);
+                if (playerAux2 == null)
+                {
+                    return;
+                }
                 playerAux2.GetComponent<PlayerScript>().UpdateMovementVariables(pInputMsg);
                 playerAux2.GetComponentInChildren<CameraScript>().mouseX = pInputMsg.mouseX;
                 playerAux2.GetComponentInChildren<CameraScript>().mouseY = pInputMsg.mouseY;
@@ -187,7 +214,7 @@ public class Server : MonoBehaviour
 
     public GameObject FindPlayerById(string idJugador)
     {
-        return simulatedPlayers.Find(x => simulatedPlayers.IndexOf(x) == int.Parse(idJugador));
+        return simulatedPlayers[idJugador];
     }
 
     void OnConnect(NetworkConnection c)

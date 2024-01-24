@@ -36,6 +36,7 @@ namespace NetworkMessages
         PLAYER_SPAWN,
         PLAYER_JOIN,
         PLAYER_JUMP,
+        PLAYER_INVENTORY,
         PLAYER_SWITCH_GUN,
         PLAYER_DISCONNECT
     }
@@ -164,6 +165,25 @@ namespace NetworkMessages
         {
             command = Commands.PLAYER_DISCONNECT;
             id = "";
+        }
+    }
+
+    [System.Serializable]
+    public class PlayerInventoryMsg : NetworkHeader
+    {
+        public string id;
+        public int gunIndex;
+        public int ammoCount;
+        public int ammoInMag;
+        public int health;
+
+        public PlayerInventoryMsg()
+        {
+            command = Commands.PLAYER_INVENTORY;
+            gunIndex = 0;
+            ammoCount = 0;
+            ammoInMag = 0;
+            health = 0;
         }
     }
 }

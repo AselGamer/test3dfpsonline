@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class PlayerScriptClient : MonoBehaviour
 {
+
     [Header("Player objects/prefabs")]
     private GameObject activeGun;
 

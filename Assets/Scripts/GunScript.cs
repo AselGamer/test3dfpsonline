@@ -8,6 +8,7 @@ public class GunScript : MonoBehaviour
 
     public int ammoCount;
     public int magSize;
+    public int ammoInMag;
     public int damage;
     public float fireRate;
     public float reloadTime;

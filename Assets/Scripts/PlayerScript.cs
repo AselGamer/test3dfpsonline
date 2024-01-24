@@ -11,7 +11,7 @@ public class PlayerScript : MonoBehaviour
 
     public Transform camara;
 
-    private GameObject activeGun;
+    public GameObject activeGun;
 
     public int activeGunIndex = -1;
 
