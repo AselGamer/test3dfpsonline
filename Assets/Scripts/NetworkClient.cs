@@ -27,6 +27,11 @@ public class NetworkClient : MonoBehaviour
     [Header("Guns Variables")]
     public List<GameObject> guns;
 
+    [Header("Bullet hole pool")]
+    public GameObject bulletHolePrefab;
+    public int bulletHolePoolSize = 30;
+    public List<GameObject> bulletHolePool;
+
     void Start()
     {
         m_Driver = NetworkDriver.Create();
@@ -38,6 +43,15 @@ public class NetworkClient : MonoBehaviour
         m_Connection = m_Driver.Connect(endpoint);
         Debug.Log("Connecting to server");
         empezar = true;
+
+        for (int i = 0; i < bulletHolePoolSize; i++)
+        {
+            var auxBulletHole = Instantiate(bulletHolePrefab);
+            auxBulletHole.SetActive(false);
+            bulletHolePool.Add(auxBulletHole);
+        }
+
+        StartCoroutine(DestroyBulletHole());
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -177,7 +191,6 @@ public class NetworkClient : MonoBehaviour
                     var playerAux3 = Instantiate(playerPrefab, pJoinMsg.playersList[i].pos, Quaternion.identity);
                     playerAux3.GetComponent<PlayerScriptClient>().LoadLoadOut(GetLoadOut(pJoinMsg.playersList[i].arrGuns));
                     simulatedPlayers.Add(pJoinMsg.playersList[i].id, playerAux3);
-                    Debug.Log(pJoinMsg.playersList[i].id);
                 }
 
                 FindPlayerById(pJoinMsg.id).GetComponent<PlayerScriptClient>().HideLoadOut();
@@ -189,7 +202,6 @@ public class NetworkClient : MonoBehaviour
                 interfaz.GetComponent<Canvas>().worldCamera = uiCamera;
                 interfaz.GetComponent<Canvas>().planeDistance = 1f;
                 break;
-
             case Commands.PLAYER_SWITCH_GUN:
                 PlayerSwitchGunClient pSwitchGunMsg = JsonUtility.FromJson<PlayerSwitchGunClient>(recMsg);
                 var playerAux4 = FindPlayerById(pSwitchGunMsg.id);
@@ -209,6 +221,10 @@ public class NetworkClient : MonoBehaviour
                 uiScript.ammoInMag = pInventoryMsg.ammoInMag;
                 uiScript.ammoCount = pInventoryMsg.ammoCount;
                 uiScript.health = pInventoryMsg.health;
+                break;
+            case Commands.CREATE_BULLET_HOLE:
+                CreateBulletHoleMsg cBulletHoleMsg = JsonUtility.FromJson<CreateBulletHoleMsg>(recMsg);
+                CreateBulletHole(cBulletHoleMsg.hit);
                 break;
             default:
                 break;
@@ -241,5 +257,31 @@ public class NetworkClient : MonoBehaviour
         NativeArray<byte> bytes = new NativeArray<byte>(System.Text.Encoding.ASCII.GetBytes(message), Allocator.Temp);
         writer.WriteBytes(bytes);
         m_Driver.EndSend(writer);
+    }
+
+    public void CreateBulletHole(NetworkObject.NetworkTransform hit)
+    {
+        var bulletHole = bulletHolePool.Find(x => !x.activeSelf);
+        if (bulletHole != null)
+        {
+            bulletHole.transform.position = hit.position;
+            bulletHole.transform.rotation = hit.rotation;
+            bulletHole.SetActive(true);
+        }
+    }
+
+    public IEnumerator DestroyBulletHole()
+    {
+        while (true)
+        {
+            foreach (var bulletHole in bulletHolePool)
+            {
+                if (bulletHole.activeSelf)
+                {
+                    bulletHole.SetActive(false);
+                }
+            }
+            yield return new WaitForSeconds(5f);
+        }
     }
 }

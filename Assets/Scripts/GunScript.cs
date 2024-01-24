@@ -6,6 +6,10 @@ public class GunScript : MonoBehaviour
 {
     public Transform firePoint;
 
+    public GameObject bulletHolePrefab;
+
+    public Server server;
+
     public int ammoCount;
     public int magSize;
     public int ammoInMag;
@@ -15,18 +19,25 @@ public class GunScript : MonoBehaviour
 
     private float nextTimeToFire = 0f;
 
-    public void Start()
+    private void Start()
     {
         ammoCount = magSize;
+        server = GameObject.Find("Server").GetComponent<Server>();
     }
 
-    public void Fire()
+    public virtual void Fire()
     {
         if (Time.time >= nextTimeToFire)
         {
-            RaycastHit hit;
-            Physics.Raycast(firePoint.position, firePoint.forward, out hit, Mathf.Infinity);
-            Debug.DrawRay(firePoint.position, firePoint.forward * hit.distance, Color.blue, 0.5f);
+            if (Physics.Raycast(firePoint.position, firePoint.forward, out RaycastHit hit, Mathf.Infinity))
+            {
+                //Change to pool and move to client
+                if (hit.transform.tag != "Player")
+                {
+                    server.CreateBulletHole(hit);
+                }
+            }
+            
 
             nextTimeToFire = Time.time + 1f / fireRate;
         }

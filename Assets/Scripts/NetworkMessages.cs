@@ -38,7 +38,8 @@ namespace NetworkMessages
         PLAYER_JUMP,
         PLAYER_INVENTORY,
         PLAYER_SWITCH_GUN,
-        PLAYER_DISCONNECT
+        PLAYER_DISCONNECT,
+        CREATE_BULLET_HOLE,
     }
 
     [System.Serializable]
@@ -184,6 +185,17 @@ namespace NetworkMessages
             ammoCount = 0;
             ammoInMag = 0;
             health = 0;
+        }
+    }
+
+    [System.Serializable]
+    public class CreateBulletHoleMsg : NetworkHeader
+    {
+        public NetworkObject.NetworkTransform hit;
+        public CreateBulletHoleMsg()
+        {
+            command = Commands.CREATE_BULLET_HOLE;
+            hit = new NetworkObject.NetworkTransform();
         }
     }
 }

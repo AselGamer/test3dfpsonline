@@ -47,7 +47,7 @@ GameObject:
   - component: {fileID: 7700888080518246450}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -182,6 +182,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   camara: {fileID: 3791362954030846917}
+  activeGun: {fileID: 0}
+  activeGunIndex: -1
   gunInventory:
   - {fileID: 7693801664679414444, guid: dfa21d6a889e136479a2d63d63b5330b, type: 3}
   - {fileID: 0}

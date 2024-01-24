@@ -25,6 +25,12 @@ public class Server : MonoBehaviour
     //This code is cringe
     public Dictionary<string, NetworkConnection> playerConnection;
     public List<GameObject> guns;
+
+    [Header("Bullet hole pool")]
+    public GameObject bulletHolePrefab;
+    public int bulletHolePoolSize;
+    public List<GameObject> bulletHolePool;
+
     void Start()
     {
         m_Driver = NetworkDriver.Create();
@@ -34,6 +40,16 @@ public class Server : MonoBehaviour
         playerConnection = new Dictionary<string, NetworkConnection>();
         pipeline = m_Driver.CreatePipeline(typeof(FragmentationPipelineStage),
             typeof(ReliableSequencedPipelineStage));
+
+        for (int i = 0; i < bulletHolePoolSize; i++)
+        {
+            var auxBulletHole = Instantiate(bulletHolePrefab);
+            auxBulletHole.SetActive(false);
+            bulletHolePool.Add(auxBulletHole);
+        }
+
+        StartCoroutine(DestroyBulletHole());
+
         if (m_Driver.Bind(endpoint) != 0)
         {
             Debug.Log("Failed to bind to port " + serverPort);
@@ -89,7 +105,7 @@ public class Server : MonoBehaviour
                 else if (cmd == NetworkEvent.Type.Disconnect)
                 {
                     Debug.Log("Client disconnected from server");
-                    
+                    //Might need to handle when a player crashes on join
                     m_Driver.Disconnect(m_Connections[i]);
                     m_Connections.RemoveAtSwapBack(i);
                     var idDisconnect = m_Players[i].id;
@@ -253,6 +269,36 @@ public class Server : MonoBehaviour
         foreach (var connection in m_Connections)
         {
             SendToClient(message, connection);
+        }
+    }
+
+    public void CreateBulletHole(RaycastHit hit)
+    {
+        var bulletHole = bulletHolePool.Find(x => !x.activeSelf);
+        if (bulletHole != null)
+        {
+            bulletHole.transform.position = hit.point + (hit.normal * .01f);
+            bulletHole.transform.rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
+            bulletHole.SetActive(true);
+            CreateBulletHoleMsg bHoleMsg = new CreateBulletHoleMsg();
+            bHoleMsg.hit.position = bulletHole.transform.position;
+            bHoleMsg.hit.rotation = bulletHole.transform.rotation;
+            SendToAllClients(JsonUtility.ToJson(bHoleMsg));
+        }
+    }
+
+    public IEnumerator DestroyBulletHole()
+    {
+        while (true)
+        {
+            foreach (var bulletHole in bulletHolePool)
+            {
+                if (bulletHole.activeSelf)
+                {
+                    bulletHole.SetActive(false);
+                }
+            }
+            yield return new WaitForSeconds(5f);
         }
     }
 }

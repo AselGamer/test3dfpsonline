@@ -129,8 +129,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   firePoint: {fileID: 4583071987479549965}
+  bulletHolePrefab: {fileID: 3605365342191440416, guid: 35f8cdaa04ae1084bb01e99f9c015c56, type: 3}
   ammoCount: 150
   magSize: 18
+  ammoInMag: 0
   damage: 5
   fireRate: 3
   reloadTime: 4

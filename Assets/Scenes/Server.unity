@@ -155,10 +155,12 @@ MonoBehaviour:
   serverPort: 1234
   m_Players: []
   playerPrefab: {fileID: 3499185647281644733, guid: 1d6145e2a1c95e4429df6fdd62922f49, type: 3}
-  simulatedPlayers: []
   guns:
   - {fileID: 7693801664679414444, guid: dfa21d6a889e136479a2d63d63b5330b, type: 3}
-  - {fileID: 919132149155446097, guid: 99da1c1cae3a1c243beac94fb97d96cb, type: 3}
+  - {fileID: 776240931455975157, guid: 8d0fdb4e4440db64e81b5606ba50fb6d, type: 3}
+  bulletHolePrefab: {fileID: 3605365342191440416, guid: 35f8cdaa04ae1084bb01e99f9c015c56, type: 3}
+  bulletHolePoolSize: 30
+  bulletHolePool: []
 --- !u!4 &232120206
 Transform:
   m_ObjectHideFlags: 0

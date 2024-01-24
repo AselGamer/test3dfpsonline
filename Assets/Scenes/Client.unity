@@ -288,12 +288,14 @@ MonoBehaviour:
   empezar: 0
   playerPrefab: {fileID: 3499185647281644733, guid: d1bfea9ea1fa0fb4782264d638acafd3, type: 3}
   interfaz: {fileID: 565321454}
-  simulatedPlayers: []
   sensitivity: 4
   arrGuns: 00000100
   guns:
-  - {fileID: 7693801664679414444, guid: dfa21d6a889e136479a2d63d63b5330b, type: 3}
+  - {fileID: 919132149155446097, guid: 2011e880fe7255e4baec34d83dc5f9fa, type: 3}
   - {fileID: 919132149155446097, guid: 99da1c1cae3a1c243beac94fb97d96cb, type: 3}
+  bulletHolePrefab: {fileID: 3605365342191440416, guid: 35f8cdaa04ae1084bb01e99f9c015c56, type: 3}
+  bulletHolePoolSize: 30
+  bulletHolePool: []
 --- !u!4 &2031347486
 Transform:
   m_ObjectHideFlags: 0
