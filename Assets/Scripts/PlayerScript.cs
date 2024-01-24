@@ -162,4 +162,20 @@ public class PlayerScript : MonoBehaviour
             }
         }
     }
+
+    public void TakeDamage(float damage, float distance)
+    {
+        //TODO: Add this to the weapon script
+        float closeRange = 5f; 
+        float farRange = 20f;
+
+        float closeRangeBonus = Mathf.Clamp01(1f - distance / closeRange);
+
+        float farRangePenalty = Mathf.Clamp01(distance / farRange);
+
+        // Calculate the final damage
+        float finalDamage = damage * (1f + closeRangeBonus) * (1f - farRangePenalty);
+
+        health -= (int)finalDamage;
+    }
 }

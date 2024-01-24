@@ -36,11 +36,12 @@ public class GunScript : MonoBehaviour
                 {
                     server.CreateBulletHole(hit);
                 }
+                else 
+                {
+                    hit.collider.gameObject.GetComponent<PlayerScript>().TakeDamage(damage, hit.distance);
+                }
             }
-            
-
             nextTimeToFire = Time.time + 1f / fireRate;
         }
-
     }
 }

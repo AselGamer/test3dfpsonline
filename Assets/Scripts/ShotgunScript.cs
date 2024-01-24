@@ -27,6 +27,10 @@ public class ShotgunScript : GunScript
                     {
                         server.CreateBulletHole(hit);
                     }
+                    else 
+                    {
+                        hit.collider.gameObject.GetComponent<PlayerScript>().TakeDamage(damage, hit.distance);
+                    }
                 }
 
                 Debug.DrawRay(firePoint.position, firePoint.forward * 20f, Color.magenta, 0.5f);
