@@ -20,9 +20,12 @@ public class NetworkClient : MonoBehaviour
     [Header("Player variables")]
     public GameObject playerPrefab;
     public GameObject interfaz;
+    public GameObject interfazMuerte;
+    public Transform deathCamPos;
     public Dictionary<string, GameObject> simulatedPlayers;
     public float sensitivity;
     public short[] arrGuns;
+    public bool muerto = false;
 
     [Header("Guns Variables")]
     public List<GameObject> guns;
@@ -104,7 +107,7 @@ public class NetworkClient : MonoBehaviour
 
     private void PlayerMovement()
     {
-        if (!empezar || !m_Connection.IsCreated || idPlayer == string.Empty)
+        if (!empezar || !m_Connection.IsCreated || idPlayer == string.Empty || muerto)
         {
             return;
         }
@@ -180,6 +183,12 @@ public class NetworkClient : MonoBehaviour
             case Commands.PLAYER_POS:
                 PlayerPosMsg pPosMsg = JsonUtility.FromJson<PlayerPosMsg>(recMsg);
                 var playerAux2 = FindPlayerById(pPosMsg.id);
+
+                if (muerto && pPosMsg.id == idPlayer)
+                {
+                    return;
+                }
+
                 if (playerAux2 != null)
                 {
                     playerAux2.transform.position = pPosMsg.pos.position;
@@ -204,6 +213,9 @@ public class NetworkClient : MonoBehaviour
                 interfaz.SetActive(true);
                 interfaz.GetComponent<Canvas>().worldCamera = uiCamera;
                 interfaz.GetComponent<Canvas>().planeDistance = 1f;
+
+                interfazMuerte.GetComponent<Canvas>().worldCamera = uiCamera;
+                interfazMuerte.GetComponent<Canvas>().planeDistance = 1f;
                 break;
             case Commands.PLAYER_SWITCH_GUN:
                 PlayerSwitchGunClient pSwitchGunMsg = JsonUtility.FromJson<PlayerSwitchGunClient>(recMsg);
@@ -228,6 +240,33 @@ public class NetworkClient : MonoBehaviour
             case Commands.CREATE_BULLET_HOLE:
                 CreateBulletHoleMsg cBulletHoleMsg = JsonUtility.FromJson<CreateBulletHoleMsg>(recMsg);
                 CreateBulletHole(cBulletHoleMsg.hit);
+                break;
+            case Commands.PLAYER_KILL:
+                PlayerKillMsg pKillMsg = JsonUtility.FromJson<PlayerKillMsg>(recMsg);
+                playerAux5 = simulatedPlayers[pKillMsg.id];
+                playerAux5.transform.position = deathCamPos.position;
+                playerAux5.transform.rotation = deathCamPos.rotation;
+                if (pKillMsg.id == idPlayer)
+                {
+                    muerto = true;
+                    interfaz.SetActive(false);
+                    interfazMuerte.SetActive(true);
+                    playerAux5.GetComponent<Rigidbody>().useGravity = false;
+                    interfazMuerte.transform.Find("TxtRespawn").GetComponent<TMPro.TextMeshProUGUI>().text = "Espera "+ pKillMsg.respCountDown + " segundos para respawnear";
+                }
+                else 
+                {
+                    playerAux5.SetActive(false);
+                }
+
+                if (pKillMsg.respCountDown == 0)
+                {
+                    playerAux5.GetComponent<Rigidbody>().useGravity = true;
+                    playerAux5.SetActive(true);
+                    interfazMuerte.SetActive(false);
+                    interfaz.SetActive(true);
+                    muerto = false;
+                }
                 break;
             default:
                 break;

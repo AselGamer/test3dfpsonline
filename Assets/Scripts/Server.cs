@@ -22,6 +22,7 @@ public class Server : MonoBehaviour
     [Header("Player variables")]
     public GameObject playerPrefab;
     public Dictionary<string, GameObject> simulatedPlayers;
+    public Dictionary<GameObject, string> simulatedPlayersInverse;
     //This code is cringe
     public Dictionary<string, NetworkConnection> playerConnection;
     public List<GameObject> guns;
@@ -37,6 +38,7 @@ public class Server : MonoBehaviour
         m_Connections = new NativeList<NetworkConnection>(16, Allocator.Persistent);
         var endpoint = NetworkEndpoint.AnyIpv4.WithPort(serverPort);
         simulatedPlayers = new Dictionary<string, GameObject>();
+        simulatedPlayersInverse = new Dictionary<GameObject, string>();
         playerConnection = new Dictionary<string, NetworkConnection>();
         pipeline = m_Driver.CreatePipeline(typeof(FragmentationPipelineStage),
             typeof(ReliableSequencedPipelineStage));
@@ -112,6 +114,7 @@ public class Server : MonoBehaviour
                     m_Players.RemoveAt(i);
                     var playerAux = simulatedPlayers[idDisconnect];
                     simulatedPlayers.Remove(idDisconnect);
+                    simulatedPlayersInverse.Remove(playerAux);
                     Destroy(playerAux);
                     PlayerDisconnectMsg pDisconnectMsg = new PlayerDisconnectMsg();
                     pDisconnectMsg.id = idDisconnect;
@@ -135,6 +138,14 @@ public class Server : MonoBehaviour
             pPosMsg.pos.rotation = player.transform.rotation;
             pPosMsg.cameraRotation = player.transform.Find("Camara").transform.localEulerAngles;
             SendToAllClients(JsonUtility.ToJson(pPosMsg));
+
+            var playerScript = player.GetComponent<PlayerScript>();
+
+            if (playerScript.health <= 0 && !playerScript.dead)
+            {
+                playerScript.dead = true;
+                StartCoroutine(KillPlayer(player));
+            }
 
             PlayerInventoryMsg pInventoryMsg = new PlayerInventoryMsg();
             pInventoryMsg.id = playerId;
@@ -189,6 +200,7 @@ public class Server : MonoBehaviour
                     }
                 }
                 simulatedPlayers.Add(hsMsg.player.id, playerAux);
+                simulatedPlayersInverse.Add(playerAux, hsMsg.player.id);
 
                 //Menssage to new player
                 PlayerJoinMsg playerJoinMsg = new PlayerJoinMsg();
@@ -299,6 +311,30 @@ public class Server : MonoBehaviour
                 }
             }
             yield return new WaitForSeconds(5f);
+        }
+    }
+
+    public IEnumerator KillPlayer(GameObject playerToKill)
+    { 
+        playerToKill.SetActive(false);
+        playerToKill.GetComponent<PlayerScript>().health = 100;
+        //Change to random later
+        playerToKill.transform.position = new Vector3(0, 1, 0);
+        var idPlayer = simulatedPlayersInverse[playerToKill];
+
+        for (int respCountDown = 5; respCountDown > -1; respCountDown--)
+        {
+            PlayerKillMsg pKillMsg = new PlayerKillMsg();
+            pKillMsg.id = idPlayer;
+            pKillMsg.respCountDown = respCountDown;
+            SendToAllClients(JsonUtility.ToJson(pKillMsg));
+            Debug.Log(respCountDown);
+            if (respCountDown == 0)
+            {
+                playerToKill.SetActive(true);
+                playerToKill.GetComponent<PlayerScript>().dead = false;
+            }
+            yield return new WaitForSeconds(1f);
         }
     }
 }

@@ -39,6 +39,7 @@ namespace NetworkMessages
         PLAYER_INVENTORY,
         PLAYER_SWITCH_GUN,
         PLAYER_DISCONNECT,
+        PLAYER_KILL,
         CREATE_BULLET_HOLE,
     }
 
@@ -197,6 +198,19 @@ namespace NetworkMessages
         {
             command = Commands.CREATE_BULLET_HOLE;
             hit = new NetworkObject.NetworkTransform();
+        }
+    }
+
+    [System.Serializable]
+    public class PlayerKillMsg : NetworkHeader
+    {
+        public string id;
+        public int respCountDown;
+        public PlayerKillMsg()
+        {
+            command = Commands.PLAYER_KILL;
+            id = "";
+            respCountDown = 0;
         }
     }
 }

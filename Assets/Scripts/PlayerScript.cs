@@ -22,6 +22,8 @@ public class PlayerScript : MonoBehaviour
     [Header("Player variables")]
     public int health;
 
+    public bool dead = false;
+
     [Header("Controller variables")]
 
     public float moveSpeed;
@@ -41,11 +43,20 @@ public class PlayerScript : MonoBehaviour
     public byte fireInput;
 
     private Rigidbody rb;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+    }
+
+    void Update()
+    {
+        if (health <= 0)
+        {
+            health = 0;
+        }
     }
 
     void FixedUpdate()
