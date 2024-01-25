@@ -95,6 +95,10 @@ public class PlayerScript : MonoBehaviour
         horizontalInput = pInputMsg.horizontalInput;
         leanInput = pInputMsg.leanInput;
         fireInput = pInputMsg.fireInput;
+        if (pInputMsg.reloadInput == 1)
+        {
+            Reload();
+        }
     }
 
     public void LoadLoadOut(GameObject[] gunInvAdd)
@@ -177,5 +181,13 @@ public class PlayerScript : MonoBehaviour
         float finalDamage = damage * (1f + closeRangeBonus) * (1f - farRangePenalty);
 
         health -= (int)finalDamage;
+    }
+
+    public void Reload()
+    {
+        if (activeGun.TryGetComponent<GunScript>(out GunScript gunScript))
+        {
+            StartCoroutine(gunScript.Reload());
+        }
     }
 }

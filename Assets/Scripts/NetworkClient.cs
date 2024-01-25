@@ -115,6 +115,8 @@ public class NetworkClient : MonoBehaviour
 
         byte fireInput = (byte)(Input.GetMouseButton(0) ? 1 : 0);
 
+        byte reloadInput = (byte)(Input.GetKeyDown("r") ? 1 : 0);
+
         float mouseScrollInput = Input.mouseScrollDelta.y * 0.1f;
 
         byte switchGunInput = (byte)(Input.GetKeyDown(KeyCode.Alpha1) ? 1 : Input.GetKeyDown(KeyCode.Alpha2) ? 2 : Input.GetKeyDown(KeyCode.Alpha3) ? 3 : 0);
@@ -144,6 +146,7 @@ public class NetworkClient : MonoBehaviour
         pInputMsg.verticalInput = verticalInput;
         pInputMsg.leanInput = leanInput;
         pInputMsg.fireInput = fireInput;
+        pInputMsg.reloadInput = reloadInput;
         pInputMsg.mouseX = mouseX;
         pInputMsg.mouseY = mouseY;
         SendToServer(JsonUtility.ToJson(pInputMsg));

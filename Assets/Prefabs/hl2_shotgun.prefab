@@ -125,7 +125,7 @@ MonoBehaviour:
   ammoInMag: 0
   damage: 10
   fireRate: 4
-  reloadTime: 10
+  reloadTime: 1
   pelletsCount: 10
   spreadAngle: 30
   shotRange: 10

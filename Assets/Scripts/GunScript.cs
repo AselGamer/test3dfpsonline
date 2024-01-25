@@ -19,6 +19,8 @@ public class GunScript : MonoBehaviour
     public float fireRate;
     public float reloadTime;
 
+    public bool reloading = false;
+
     private float nextTimeToFire = 0f;
 
     private void Start()
@@ -48,5 +50,25 @@ public class GunScript : MonoBehaviour
             nextTimeToFire = Time.time + 1f / fireRate;
             ammoInMag--;
         }
+    }
+
+    public virtual IEnumerator Reload()
+    {
+        if (reloading)
+        {
+            yield break;
+        }
+        while (ammoInMag < magSize && ammoCount > 0)
+        {
+            reloading = true;
+            if (!gameObject.activeSelf)
+            {
+                break;
+            }
+            ammoInMag++;
+            ammoCount--;
+            yield return new WaitForSeconds(reloadTime);
+        }
+        reloading = false;
     }
 }

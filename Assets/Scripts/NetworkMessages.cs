@@ -68,6 +68,7 @@ namespace NetworkMessages
         public short leanInput;
 
         public byte fireInput;
+        public byte reloadInput;
 
         public float mouseX;
         public float mouseY;
