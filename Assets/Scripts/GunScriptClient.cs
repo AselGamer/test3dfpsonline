@@ -13,15 +13,15 @@ public class GunScriptClient : MonoBehaviour
         {
             if (overrideX)
             {
-                transform.localPosition = new Vector3(gunPositionOverride.x, transform.position.y, transform.position.z);
+                transform.localPosition = new Vector3(gunPositionOverride.x, transform.localPosition.y, transform.localPosition.z);
             }
             if (overrideY)
             {
-                transform.localPosition = new Vector3(transform.position.x, gunPositionOverride.y, transform.position.z);
+                transform.localPosition = new Vector3(transform.localPosition.x, gunPositionOverride.y, transform.localPosition.z);
             }
             if (overrideZ)
             {
-                transform.localPosition = new Vector3(transform.position.x, transform.position.y, gunPositionOverride.z);
+                transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, gunPositionOverride.z);
             }
         }
     }
