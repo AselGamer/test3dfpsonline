@@ -13,15 +13,15 @@ public class ShotgunScript : GunScript
 
     public override void Fire()
     {
-        if (Time.time >= nextTimeToShoot)
+        if (Time.time >= nextTimeToShoot && ammoInMag > 0)
         {
             for (int i = 0; i < pelletsCount; i++)
             {
                 float currentSpread = Random.Range(-spreadAngle / 2f, spreadAngle / 2f);
 
-                Vector3 direction = Quaternion.Euler(0, currentSpread, 0) * firePoint.forward;
+                Vector3 direction = Quaternion.Euler(0, currentSpread, 0) * cameraTransform.forward;
 
-                if (Physics.Raycast(firePoint.position, direction, out RaycastHit hit, shotRange))
+                if (Physics.Raycast(cameraTransform.position, direction, out RaycastHit hit, shotRange))
                 {
                     if (hit.transform.tag != "Player")
                     {
@@ -36,6 +36,7 @@ public class ShotgunScript : GunScript
                 Debug.DrawRay(firePoint.position, firePoint.forward * 20f, Color.magenta, 0.5f);
                 nextTimeToShoot = Time.time + 1f / fireRate;
             }
+            ammoInMag--;
         }
     }
 }

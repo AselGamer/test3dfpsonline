@@ -10,6 +10,8 @@ public class GunScript : MonoBehaviour
 
     public Server server;
 
+    public Transform cameraTransform;
+
     public int ammoCount;
     public int magSize;
     public int ammoInMag;
@@ -21,15 +23,17 @@ public class GunScript : MonoBehaviour
 
     private void Start()
     {
-        ammoCount = magSize;
+        ammoInMag = magSize;
+        ammoCount-=magSize;
         server = GameObject.Find("Server").GetComponent<Server>();
+        cameraTransform = transform.parent;
     }
 
     public virtual void Fire()
     {
-        if (Time.time >= nextTimeToFire)
+        if (Time.time >= nextTimeToFire && ammoInMag > 0)
         {
-            if (Physics.Raycast(firePoint.position, firePoint.forward, out RaycastHit hit, Mathf.Infinity))
+            if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, Mathf.Infinity))
             {
                 //Change to pool and move to client
                 if (hit.transform.tag != "Player")
@@ -42,6 +46,7 @@ public class GunScript : MonoBehaviour
                 }
             }
             nextTimeToFire = Time.time + 1f / fireRate;
+            ammoInMag--;
         }
     }
 }

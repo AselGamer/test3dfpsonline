@@ -291,8 +291,8 @@ MonoBehaviour:
   sensitivity: 4
   arrGuns: 00000100
   guns:
-  - {fileID: 919132149155446097, guid: 2011e880fe7255e4baec34d83dc5f9fa, type: 3}
-  - {fileID: 919132149155446097, guid: 99da1c1cae3a1c243beac94fb97d96cb, type: 3}
+  - {fileID: 2643419681372876082, guid: 3742a06c2779127458560c898168e5b5, type: 3}
+  - {fileID: 6879296485510710116, guid: b0ba94a1df0f9984ab2b3ee621b69a9e, type: 3}
   bulletHolePrefab: {fileID: 3605365342191440416, guid: 35f8cdaa04ae1084bb01e99f9c015c56, type: 3}
   bulletHolePoolSize: 30
   bulletHolePool: []

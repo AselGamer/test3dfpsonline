@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 8684472588583959253}
   - component: {fileID: 6653722233519400914}
   - component: {fileID: 23335471467350769}
-  - component: {fileID: 2977604787333245933}
+  - component: {fileID: -8003277481451478257}
   m_Layer: 2
   m_Name: hl2_pistol
   m_TagString: Untagged
@@ -116,7 +116,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &2977604787333245933
+--- !u!114 &-8003277481451478257
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -125,14 +125,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 7693801664679414444}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3491bc6b26098749bf9a9688b8e04b0, type: 3}
+  m_Script: {fileID: 11500000, guid: f11a6ef3745ad6c4d898833026f17dc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  firePoint: {fileID: 4583071987479549965}
+  firePoint: {fileID: 7385613502634641468, guid: 8d0fdb4e4440db64e81b5606ba50fb6d, type: 3}
   bulletHolePrefab: {fileID: 3605365342191440416, guid: 35f8cdaa04ae1084bb01e99f9c015c56, type: 3}
-  ammoCount: 150
-  magSize: 18
+  server: {fileID: 0}
+  cameraTransform: {fileID: 0}
+  ammoCount: 20
+  magSize: 4
   ammoInMag: 0
-  damage: 5
-  fireRate: 3
-  reloadTime: 4
+  damage: 10
+  fireRate: 4
+  reloadTime: 10
+  pelletsCount: 10
+  spreadAngle: 30
+  shotRange: 10

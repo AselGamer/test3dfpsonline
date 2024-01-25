@@ -16,7 +16,7 @@ public class UIScript : MonoBehaviour
     void Update()
     {
         healthPoints.text = "Vida: " + health.ToString();
-        ammoCounter.text = ammoInMag.ToString() + "/" + ammoCount.ToString();
+        ammoCounter.text = ammoInMag.ToString() + "|" + ammoCount.ToString();
         
     }
 }
