@@ -31,6 +31,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6067469203525720542}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8476339619356797918
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4619086558392662828}
+  m_Layer: 0
+  m_Name: handle_point
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4619086558392662828
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8476339619356797918}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.0302, z: 0.4231}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6067469203525720542}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &6032926179537239605
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -45,7 +76,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9dcd5bbc3aafac343b7d0cd460d13b9d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.75
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9dcd5bbc3aafac343b7d0cd460d13b9d, type: 3}
       propertyPath: m_LocalPosition.z
@@ -89,6 +120,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 9dcd5bbc3aafac343b7d0cd460d13b9d, type: 3}
       insertIndex: -1
       addedObject: {fileID: 903286984404909679}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 9dcd5bbc3aafac343b7d0cd460d13b9d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4619086558392662828}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9dcd5bbc3aafac343b7d0cd460d13b9d, type: 3}
       insertIndex: -1
@@ -120,12 +154,17 @@ MonoBehaviour:
   bulletHolePrefab: {fileID: 3605365342191440416, guid: 35f8cdaa04ae1084bb01e99f9c015c56, type: 3}
   server: {fileID: 0}
   cameraTransform: {fileID: 0}
+  handlePoint: {fileID: 4619086558392662828}
+  overrideEulerAngles: {x: 90, y: 270, z: 0}
+  overridePosition: {x: 0, y: 0.384, z: 0.029}
   ammoCount: 20
   magSize: 4
   ammoInMag: 0
   damage: 10
   fireRate: 4
   reloadTime: 1
+  reloading: 0
+  gunType: Shotgun
   pelletsCount: 10
   spreadAngle: 30
   shotRange: 10

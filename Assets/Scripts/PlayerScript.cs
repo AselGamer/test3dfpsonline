@@ -122,8 +122,21 @@ public class PlayerScript : MonoBehaviour
             if (gunInvAdd[i] != null)
             {
                 var auxGun = Instantiate(gunInvAdd[i], gunPosition.transform.position, gunPosition.transform.rotation);
-                auxGun.transform.parent = camara.transform;
                 auxGun.SetActive(false);
+
+                //This code sucks
+
+                if (auxGun.TryGetComponent<GunScript>(out GunScript gunScript))
+                {
+                    gunScript.cameraTransform = camara.transform;
+                }
+
+                if (auxGun.TryGetComponent<ShotgunScript>(out ShotgunScript shotgunScript))
+                {
+                    shotgunScript.cameraTransform = camara.transform;
+                }
+
+                auxGun.transform.parent = gunPosition.transform;
                 if (activeGun == null)
                 {
                     auxGun.SetActive(true);

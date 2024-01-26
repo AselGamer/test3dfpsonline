@@ -108,6 +108,7 @@ public class Server : MonoBehaviour
                 {
                     Debug.Log("Client disconnected from server");
                     //Might need to handle when a player crashes on join
+                    StopCoroutine("KillPlayer");
                     m_Driver.Disconnect(m_Connections[i]);
                     m_Connections.RemoveAtSwapBack(i);
                     var idDisconnect = m_Players[i].id;
@@ -324,11 +325,14 @@ public class Server : MonoBehaviour
 
         for (int respCountDown = 5; respCountDown > -1; respCountDown--)
         {
+            if (playerToKill == null)
+            {
+                yield break;
+            }
             PlayerKillMsg pKillMsg = new PlayerKillMsg();
             pKillMsg.id = idPlayer;
             pKillMsg.respCountDown = respCountDown;
             SendToAllClients(JsonUtility.ToJson(pKillMsg));
-            Debug.Log(respCountDown);
             if (respCountDown == 0)
             {
                 playerToKill.SetActive(true);

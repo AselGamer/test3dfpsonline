@@ -33,7 +33,7 @@ public class ShotgunScript : GunScript
                     }
                 }
 
-                Debug.DrawRay(firePoint.position, firePoint.forward * 20f, Color.magenta, 0.5f);
+                //Debug.DrawRay(cameraTransform.position, cameraTransform.forward * 20f, Color.magenta, 0.5f);
                 nextTimeToShoot = Time.time + 1f / fireRate;
             }
             ammoInMag--;

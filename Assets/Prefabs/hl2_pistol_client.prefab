@@ -77,4 +77,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e8f12b7edaff574899d8dde28769f58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gunPositionOverride: {x: 0, y: 0, z: 0}
+  eulerAngleOverride: {x: 90, y: 270, z: 0}
+  positionOverride: {x: -0.0711, y: 0.0385, z: 0.0325}
+  viewModelScale: {x: 1.5, y: 1.5, z: 1.5}
+  viewModelPosition: {x: 0, y: -0.04, z: 0.118}
+  viewModelEulerAngle: {x: 0, y: 0, z: 0}

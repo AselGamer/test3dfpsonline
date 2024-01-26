@@ -12,6 +12,11 @@ public class GunScript : MonoBehaviour
 
     public Transform cameraTransform;
 
+    public Transform handlePoint;
+
+    public Vector3 overrideEulerAngles;
+    public Vector3 overridePosition;
+
     public int ammoCount;
     public int magSize;
     public int ammoInMag;
@@ -21,6 +26,8 @@ public class GunScript : MonoBehaviour
 
     public bool reloading = false;
 
+    public string gunType;
+
     private float nextTimeToFire = 0f;
 
     private void Start()
@@ -28,7 +35,9 @@ public class GunScript : MonoBehaviour
         ammoInMag = magSize;
         ammoCount-=magSize;
         server = GameObject.Find("Server").GetComponent<Server>();
-        cameraTransform = transform.parent;
+
+        transform.localPosition = overridePosition;
+        transform.localEulerAngles = overrideEulerAngles;
     }
 
     public virtual void Fire()

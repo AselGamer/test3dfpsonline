@@ -28,7 +28,7 @@ public class PlayerScriptClient : MonoBehaviour
             if (gunInvAdd[i] != null)
             {
                 var auxGun = Instantiate(gunInvAdd[i], gunPosition.transform.position, gunPosition.transform.rotation);
-                auxGun.transform.parent = camara.transform;
+                auxGun.transform.parent = gunPosition.transform;
                 auxGun.SetActive(false);
                 if (activeGun == null)
                 {
@@ -45,10 +45,8 @@ public class PlayerScriptClient : MonoBehaviour
     {
         foreach (var gun in gunInventoryScene)
         {
-            if (gun != null)
-            {
-                gun.transform.position = viewModelPosition.position;
-            }
+            gun.transform.parent = viewModelPosition;
+            gun.GetComponent<GunScriptClient>().isViewModel = true;
         }
 
     }

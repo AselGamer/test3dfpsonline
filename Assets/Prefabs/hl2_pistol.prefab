@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1137911007596322789
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4755914445058015076}
+  m_Layer: 2
+  m_Name: handle_point
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4755914445058015076
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1137911007596322789}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.0083, y: -0.073, z: 0.0464}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8684472588583959253}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4620281720100998244
 GameObject:
   m_ObjectHideFlags: 0
@@ -64,6 +95,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4583071987479549965}
+  - {fileID: 4755914445058015076}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6653722233519400914
@@ -132,9 +164,14 @@ MonoBehaviour:
   bulletHolePrefab: {fileID: 3605365342191440416, guid: 35f8cdaa04ae1084bb01e99f9c015c56, type: 3}
   server: {fileID: 0}
   cameraTransform: {fileID: 0}
+  handlePoint: {fileID: 4755914445058015076}
+  overrideEulerAngles: {x: 90, y: 270, z: 0}
+  overridePosition: {x: -0.0711, y: 0.0385, z: 0.0325}
   ammoCount: 50
   magSize: 18
   ammoInMag: 0
   damage: 10
   fireRate: 10
   reloadTime: 0.5
+  reloading: 0
+  gunType: Pistol
