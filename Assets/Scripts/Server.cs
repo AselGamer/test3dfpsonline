@@ -134,13 +134,13 @@ public class Server : MonoBehaviour
             PlayerPosMsg pPosMsg = new PlayerPosMsg();
             var player = playerKvp.Value;
             var playerId = playerKvp.Key;
+            var playerScript = player.GetComponent<PlayerScript>();
             pPosMsg.id = playerId;
             pPosMsg.pos.position = player.transform.position;
             pPosMsg.pos.rotation = player.transform.rotation;
-            pPosMsg.cameraRotation = player.transform.Find("Camara").transform.localEulerAngles;
+            pPosMsg.cameraRotation = playerScript.camara.transform.localEulerAngles;
             SendToAllClients(JsonUtility.ToJson(pPosMsg));
 
-            var playerScript = player.GetComponent<PlayerScript>();
 
             if (playerScript.health <= 0 && !playerScript.dead)
             {

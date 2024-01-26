@@ -116,8 +116,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e8f12b7edaff574899d8dde28769f58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eulerAngleOverride: {x: 90, y: 270, z: 0}
+  eulerAngleOverride: {x: 45, y: 270, z: 0}
   positionOverride: {x: 0, y: 0.384, z: 0.029}
+  isViewModel: 0
   viewModelScale: {x: 1.3, y: 1.3, z: 1.3}
   viewModelPosition: {x: 0, y: -0.2, z: 0}
   viewModelEulerAngle: {x: 9.952945, y: 0, z: 0}

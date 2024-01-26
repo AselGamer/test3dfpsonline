@@ -165,8 +165,8 @@ MonoBehaviour:
   server: {fileID: 0}
   cameraTransform: {fileID: 0}
   handlePoint: {fileID: 4755914445058015076}
-  overrideEulerAngles: {x: 90, y: 270, z: 0}
-  overridePosition: {x: -0.0711, y: 0.0385, z: 0.0325}
+  overrideEulerAngles: {x: 53, y: 0, z: 90}
+  overridePosition: {x: -0.073, y: 0.0519, z: 0.0121}
   ammoCount: 50
   magSize: 18
   ammoInMag: 0

@@ -44,9 +44,13 @@ public class PlayerScript : MonoBehaviour
 
     private Rigidbody rb;
 
+    [Header("Animator variables")]
+    public Animator miAnimator;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        miAnimator = GetComponent<Animator>();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
@@ -57,6 +61,11 @@ public class PlayerScript : MonoBehaviour
         {
             health = 0;
         }
+
+        miAnimator.SetInteger("walking", horizontalInput);
+        miAnimator.SetInteger("strafing", verticalInput);
+        
+        
     }
 
     void FixedUpdate()
@@ -98,6 +107,8 @@ public class PlayerScript : MonoBehaviour
                 gunScript.Fire();
             }
         }
+
+        miAnimator.SetInteger("firing", (int)fireInput);
     }
 
     public void UpdateMovementVariables(PlayerInputMsg pInputMsg)
