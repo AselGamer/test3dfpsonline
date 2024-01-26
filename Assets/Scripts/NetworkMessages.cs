@@ -24,6 +24,14 @@ namespace NetworkObject
         public Vector3 position;
         public Quaternion rotation;
     }
+
+    [System.Serializable]
+    public class NetworkAnimation : NetworkObject
+    {
+        public int walking;
+        public int strafing;
+        public int firing;
+    }
 }
 
 namespace NetworkMessages
@@ -40,6 +48,7 @@ namespace NetworkMessages
         PLAYER_SWITCH_GUN,
         PLAYER_DISCONNECT,
         PLAYER_KILL,
+        PLAYER_ANIMATION,
         CREATE_BULLET_HOLE,
     }
 
@@ -211,6 +220,19 @@ namespace NetworkMessages
             command = Commands.PLAYER_KILL;
             id = "";
             respCountDown = 0;
+        }
+    }
+
+    [System.Serializable]
+    public class PlayerAnimationMsg : NetworkHeader
+    {
+        public string id;
+        public NetworkObject.NetworkAnimation animation;
+        public PlayerAnimationMsg()
+        {
+            command = Commands.PLAYER_ANIMATION;
+            id = "";
+            animation = new NetworkObject.NetworkAnimation();
         }
     }
 }

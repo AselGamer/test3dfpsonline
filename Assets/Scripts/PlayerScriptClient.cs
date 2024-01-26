@@ -19,6 +19,13 @@ public class PlayerScriptClient : MonoBehaviour
 
     public Transform viewModelPosition;
 
+    public Animator miAnimator;
+
+    void Start()
+    {
+        miAnimator = GetComponent<Animator>();
+    }
+
     public void LoadLoadOut(GameObject[] gunInvAdd)
     {
         //Move to server script later
@@ -57,5 +64,12 @@ public class PlayerScriptClient : MonoBehaviour
         activeGunIndex = gunIndex;
         gunInventoryScene[activeGunIndex].SetActive(true);
         activeGun = gunInventoryScene[activeGunIndex];
+    }
+
+    public void PlayAnimations(NetworkObject.NetworkAnimation animation)
+    {
+        miAnimator.SetInteger("walking", animation.walking);
+        miAnimator.SetInteger("strafing", animation.strafing);
+        miAnimator.SetInteger("firing", animation.firing);
     }
 }

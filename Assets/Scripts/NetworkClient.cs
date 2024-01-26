@@ -268,6 +268,12 @@ public class NetworkClient : MonoBehaviour
                     muerto = false;
                 }
                 break;
+            case Commands.PLAYER_ANIMATION:
+                PlayerAnimationMsg pAnimationMsg = JsonUtility.FromJson<PlayerAnimationMsg>(recMsg);
+                playerAux5 = simulatedPlayers[pAnimationMsg.id];
+                Debug.Log(pAnimationMsg.id);
+                playerAux5.GetComponent<PlayerScriptClient>().PlayAnimations(pAnimationMsg.animation);
+                break;
             default:
                 break;
         }

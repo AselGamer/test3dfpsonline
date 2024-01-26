@@ -341,4 +341,14 @@ public class Server : MonoBehaviour
             yield return new WaitForSeconds(1f);
         }
     }
+
+    public void SendPlayerAnimation(GameObject playerToAnimate)
+    {
+        PlayerAnimationMsg pAnimationMsg = new PlayerAnimationMsg();
+        pAnimationMsg.id = simulatedPlayersInverse[playerToAnimate];
+        pAnimationMsg.animation.walking = playerToAnimate.GetComponent<PlayerScript>().horizontalInput;
+        pAnimationMsg.animation.firing = playerToAnimate.GetComponent<PlayerScript>().fireInput;
+        pAnimationMsg.animation.strafing = playerToAnimate.GetComponent<PlayerScript>().verticalInput;
+        SendToAllClients(JsonUtility.ToJson(pAnimationMsg));
+    }
 }

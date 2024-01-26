@@ -47,10 +47,14 @@ public class PlayerScript : MonoBehaviour
     [Header("Animator variables")]
     public Animator miAnimator;
 
+    [Header("Server variables")]
+    public Server server;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         miAnimator = GetComponent<Animator>();
+        server = GameObject.Find("Server").GetComponent<Server>();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
@@ -64,8 +68,8 @@ public class PlayerScript : MonoBehaviour
 
         miAnimator.SetInteger("walking", horizontalInput);
         miAnimator.SetInteger("strafing", verticalInput);
-        
-        
+
+        server.SendPlayerAnimation(gameObject);
     }
 
     void FixedUpdate()
