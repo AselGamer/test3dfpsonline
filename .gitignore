@@ -61,6 +61,10 @@ sysinfo.txt
 *.unitypackage
 *.app
 
+#3D Models
+*.fbx
+*.blend
+
 # Crashlytics generated file
 crashlytics-build.properties
 
