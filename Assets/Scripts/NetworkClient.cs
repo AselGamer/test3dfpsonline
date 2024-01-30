@@ -191,9 +191,12 @@ public class NetworkClient : MonoBehaviour
 
                 if (playerAux2 != null)
                 {
+                    var eulerAngles = pPosMsg.pos.rotation.eulerAngles;
                     playerAux2.transform.position = pPosMsg.pos.position;
-                    playerAux2.transform.rotation = pPosMsg.pos.rotation;
-                    playerAux2.transform.Find("Camara").localEulerAngles = pPosMsg.cameraRotation;
+                    playerAux2.transform.localEulerAngles = new Vector3(eulerAngles.x, eulerAngles.y);
+                    playerAux2.transform.Find("Camara").localEulerAngles = new Vector3(pPosMsg.cameraRotation.x, pPosMsg.cameraRotation.y);
+                    playerAux2.transform.Find("lean_angles").localEulerAngles = new Vector3(0, 0, eulerAngles.z);
+
                 }
                 break;
             case Commands.PLAYER_JOIN:

@@ -17,13 +17,13 @@ public class PlayerScriptClient : MonoBehaviour
 
     public GameObject[] gunInventoryScene;
 
+    [Header("Animation variables")]
+
     public Transform gunPosition;
-
     public Transform viewModelPosition;
-
     public Animator miAnimator;
-
     public Transform aimDirection;
+    public Transform leanAngles;
 
     void Update()
     {

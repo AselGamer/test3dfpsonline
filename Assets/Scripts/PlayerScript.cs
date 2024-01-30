@@ -84,9 +84,7 @@ public class PlayerScript : MonoBehaviour
             isGrounded = true;
         }
 
-        rotationZ = Mathf.Lerp(rotationZ, 20f * leanInput, 10f * Time.deltaTime);
-
-        camara.GetComponent<CameraScript>().Zrotation = rotationZ;
+        rotationZ = Mathf.Lerp(rotationZ, 30f * leanInput, 10f * Time.deltaTime);
 
         Vector3 moveDirection = new Vector3(verticalInput, 0, horizontalInput);
 
@@ -99,7 +97,7 @@ public class PlayerScript : MonoBehaviour
 
         jumpInput = false;
 
-        transform.rotation = Quaternion.Euler(0, camara.eulerAngles.y, camara.eulerAngles.z);
+        transform.rotation = Quaternion.Euler(0, camara.eulerAngles.y, rotationZ);
 
         camara.GetComponent<CameraScript>().Zrotation = this.rotationZ;
 
