@@ -820,6 +820,10 @@ PrefabInstance:
       propertyPath: m_WarningMessage
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 8381984868952709122, guid: 8f6156e06890e2648aa93f6bb81b77ed, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -932,6 +936,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   camara: {fileID: 424663367507019623}
+  playerModel: {fileID: 9187480146405400941}
   gunInventoryScene: []
   gunPosition: {fileID: 5183894055121365468}
   viewModelPosition: {fileID: 2077369186428286526}
@@ -990,5 +995,10 @@ Rigidbody:
 --- !u!4 &6709182822558333085 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 8f6156e06890e2648aa93f6bb81b77ed, type: 3}
+  m_PrefabInstance: {fileID: 6526128484161462134}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &9187480146405400941 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2670928988342468123, guid: 8f6156e06890e2648aa93f6bb81b77ed, type: 3}
   m_PrefabInstance: {fileID: 6526128484161462134}
   m_PrefabAsset: {fileID: 0}

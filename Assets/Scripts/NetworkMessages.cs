@@ -31,6 +31,7 @@ namespace NetworkObject
         public int walking;
         public int strafing;
         public int firing;
+        public bool isGrounded;
     }
 }
 

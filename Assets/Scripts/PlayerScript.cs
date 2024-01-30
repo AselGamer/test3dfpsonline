@@ -31,7 +31,7 @@ public class PlayerScript : MonoBehaviour
 
     private float rotationZ;
 
-    private bool isGrounded = false;
+    public bool isGrounded = false;
 
     public short verticalInput;
     public short horizontalInput;
@@ -68,6 +68,7 @@ public class PlayerScript : MonoBehaviour
 
         miAnimator.SetInteger("walking", horizontalInput);
         miAnimator.SetInteger("strafing", verticalInput);
+        miAnimator.SetBool("isGrounded", isGrounded);
 
         server.SendPlayerAnimation(gameObject);
     }

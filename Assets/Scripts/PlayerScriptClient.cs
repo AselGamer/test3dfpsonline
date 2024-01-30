@@ -13,6 +13,8 @@ public class PlayerScriptClient : MonoBehaviour
 
     public GameObject camara;
 
+    public GameObject playerModel;
+
     public GameObject[] gunInventoryScene;
 
     public Transform gunPosition;
@@ -58,6 +60,7 @@ public class PlayerScriptClient : MonoBehaviour
             gun.transform.parent = viewModelPosition;
             gun.GetComponent<GunScriptClient>().isViewModel = true;
         }
+        playerModel.SetActive(false);
 
     }
 
@@ -74,5 +77,6 @@ public class PlayerScriptClient : MonoBehaviour
         miAnimator.SetInteger("walking", animation.walking);
         miAnimator.SetInteger("strafing", animation.strafing);
         miAnimator.SetInteger("firing", animation.firing);
+        miAnimator.SetBool("isGrounded", animation.isGrounded);
     }
 }

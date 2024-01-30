@@ -349,6 +349,7 @@ public class Server : MonoBehaviour
         pAnimationMsg.animation.walking = playerToAnimate.GetComponent<PlayerScript>().horizontalInput;
         pAnimationMsg.animation.firing = playerToAnimate.GetComponent<PlayerScript>().fireInput;
         pAnimationMsg.animation.strafing = playerToAnimate.GetComponent<PlayerScript>().verticalInput;
+        pAnimationMsg.animation.isGrounded = playerToAnimate.GetComponent<PlayerScript>().isGrounded;
         SendToAllClients(JsonUtility.ToJson(pAnimationMsg));
     }
 }
