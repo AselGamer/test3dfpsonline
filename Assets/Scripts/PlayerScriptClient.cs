@@ -21,7 +21,13 @@ public class PlayerScriptClient : MonoBehaviour
 
     public Animator miAnimator;
 
-    public Transform headTransform;
+    public Transform aimDirection;
+
+    void Update()
+    {
+        Vector3 newPosition = camara.transform.position + camara.transform.forward * 2 + Vector3.zero;
+        aimDirection.transform.position = newPosition;
+    }
 
     public void LoadLoadOut(GameObject[] gunInvAdd)
     {
