@@ -66,8 +66,9 @@ public class PlayerScript : MonoBehaviour
             health = 0;
         }
 
-        miAnimator.SetInteger("walking", horizontalInput);
-        miAnimator.SetInteger("strafing", verticalInput);
+        miAnimator.SetFloat("walking", (int)Mathf.Clamp01(Mathf.Abs(horizontalInput) + Mathf.Abs(verticalInput)));
+        miAnimator.SetFloat("velocidad_x", horizontalInput);
+        miAnimator.SetFloat("velocidad_y", verticalInput);
         miAnimator.SetBool("isGrounded", isGrounded);
 
         server.SendPlayerAnimation(gameObject);

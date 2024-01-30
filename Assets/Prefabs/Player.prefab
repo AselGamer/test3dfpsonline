@@ -183,10 +183,9 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   gunPosition: {fileID: 3205177256211226675}
-  leanAngle: {fileID: 6773622478986315654}
   health: 100
   dead: 0
-  moveSpeed: 4
+  moveSpeed: 2
   jumpForce: 6
   isGrounded: 0
   verticalInput: 0

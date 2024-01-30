@@ -28,8 +28,8 @@ namespace NetworkObject
     [System.Serializable]
     public class NetworkAnimation : NetworkObject
     {
-        public int walking;
-        public int strafing;
+        public int velocidad_y;
+        public int velocidad_x;
         public int firing;
         public bool isGrounded;
     }

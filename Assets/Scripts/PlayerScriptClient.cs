@@ -74,8 +74,9 @@ public class PlayerScriptClient : MonoBehaviour
 
     public void PlayAnimations(NetworkObject.NetworkAnimation animation)
     {
-        miAnimator.SetInteger("walking", animation.walking);
-        miAnimator.SetInteger("strafing", animation.strafing);
+        miAnimator.SetFloat("walking", (int)Mathf.Clamp01(Mathf.Abs(animation.velocidad_x) + Mathf.Abs(animation.velocidad_y)));
+        miAnimator.SetFloat("velocidad_x", animation.velocidad_x);
+        miAnimator.SetFloat("velocidad_y", animation.velocidad_y);
         miAnimator.SetInteger("firing", animation.firing);
         miAnimator.SetBool("isGrounded", animation.isGrounded);
     }
