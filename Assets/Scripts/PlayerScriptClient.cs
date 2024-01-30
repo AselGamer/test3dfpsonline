@@ -21,10 +21,7 @@ public class PlayerScriptClient : MonoBehaviour
 
     public Animator miAnimator;
 
-    void Start()
-    {
-        miAnimator = GetComponent<Animator>();
-    }
+    public Transform headTransform;
 
     public void LoadLoadOut(GameObject[] gunInvAdd)
     {

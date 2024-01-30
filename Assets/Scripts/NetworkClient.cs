@@ -270,9 +270,11 @@ public class NetworkClient : MonoBehaviour
                 break;
             case Commands.PLAYER_ANIMATION:
                 PlayerAnimationMsg pAnimationMsg = JsonUtility.FromJson<PlayerAnimationMsg>(recMsg);
-                playerAux5 = simulatedPlayers[pAnimationMsg.id];
-                Debug.Log(pAnimationMsg.id);
-                playerAux5.GetComponent<PlayerScriptClient>().PlayAnimations(pAnimationMsg.animation);
+                simulatedPlayers.TryGetValue(pAnimationMsg.id, out GameObject playerAux6);
+                if (playerAux6 != null)
+                {
+                    playerAux6.GetComponent<PlayerScriptClient>().PlayAnimations(pAnimationMsg.animation);
+                }
                 break;
             default:
                 break;

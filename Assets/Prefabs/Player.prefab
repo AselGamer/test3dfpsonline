@@ -191,6 +191,8 @@ MonoBehaviour:
   leanInput: 0
   jumpInput: 0
   fireInput: 0
+  miAnimator: {fileID: 0}
+  server: {fileID: 0}
 --- !u!95 &4235955251370392810
 Animator:
   serializedVersion: 5
@@ -366,7 +368,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8f6156e06890e2648aa93f6bb81b77ed, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8f6156e06890e2648aa93f6bb81b77ed, type: 3}
       propertyPath: m_LocalPosition.z
