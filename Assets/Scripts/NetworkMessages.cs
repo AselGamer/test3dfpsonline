@@ -16,6 +16,7 @@ namespace NetworkObject
         public Vector3 pos;
         public string nombre;
         public short[] arrGuns;
+        public int activeGunIndex;
     }
 
     [System.Serializable]

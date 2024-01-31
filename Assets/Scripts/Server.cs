@@ -206,7 +206,15 @@ public class Server : MonoBehaviour
                 //Menssage to new player
                 PlayerJoinMsg playerJoinMsg = new PlayerJoinMsg();
                 playerJoinMsg.id = hsMsg.player.id;
-                playerJoinMsg.playersList = m_Players;
+                var auxPlayers = new List<NetworkObject.NetworkPlayer>();
+
+                foreach (var auxPlayer in m_Players)
+                {
+                    //Why am i like this
+                    auxPlayer.activeGunIndex = FindPlayerById(auxPlayer.id).GetComponent<PlayerScript>().activeGunIndex;
+                    auxPlayers.Add(auxPlayer);
+                }
+                playerJoinMsg.playersList = auxPlayers;
                 SendToClient(JsonUtility.ToJson(playerJoinMsg), m_Connections[numJugador]);
                 break;
             case Commands.PLAYER_INPUT:

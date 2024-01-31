@@ -15,6 +15,7 @@ public class ShotgunScript : GunScript
     {
         if (Time.time >= nextTimeToShoot && ammoInMag > 0)
         {
+            reloading = true;
             for (int i = 0; i < pelletsCount; i++)
             {
                 float currentSpread = Random.Range(-spreadAngle / 2f, spreadAngle / 2f);

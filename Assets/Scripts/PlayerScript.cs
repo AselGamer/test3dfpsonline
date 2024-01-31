@@ -71,8 +71,8 @@ public class PlayerScript : MonoBehaviour
             health = 0;
         }
 
-        //miAnimator.SetFloat("walking", (int)Mathf.Clamp01(Mathf.Abs(horizontalInput) + Mathf.Abs(verticalInput)));
-        miAnimator.SetBool("aim_fire", Mathf.Clamp01(Mathf.Abs(fireInput) + Mathf.Abs(aimInput)) == 1 ? true : false);
+        miAnimator.SetFloat("walk_axis", Mathf.Clamp01(Mathf.Abs(horizontalInput) + Mathf.Abs(verticalInput)));
+        miAnimator.SetFloat("fire_aim_axis", Mathf.Clamp01(Mathf.Abs(fireInput) + Mathf.Abs(aimInput)));
         miAnimator.SetFloat("velocidad_x", horizontalInput);
         miAnimator.SetFloat("velocidad_y", verticalInput);
         miAnimator.SetFloat("aim_axis", aimInput);
@@ -116,14 +116,15 @@ public class PlayerScript : MonoBehaviour
         {
             if (fireInput == 1)
             {
-                StopAllCoroutines();
-                gunScript.reloading = false;
                 gunScript.Fire();
             }
 
             if (reloadInput == 1 && fireInput == 0)
             {
-                StartCoroutine(gunScript.Reload());
+                gunScript.reloading = false;
+            } else if(reloadInput == 1 && fireInput == 1)
+            {
+                gunScript.reloading = true;
             }
 
             if (aimInput == 1)

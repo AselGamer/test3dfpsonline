@@ -172,6 +172,6 @@ MonoBehaviour:
   ammoInMag: 0
   damage: 10
   fireRate: 10
-  reloadTime: 0.5
+  reloadTime: 0.8
   reloading: 0
   gunType: Pistol

@@ -86,8 +86,8 @@ public class PlayerScriptClient : MonoBehaviour
 
     public void PlayAnimations(NetworkObject.NetworkAnimation animation)
     {
-        //miAnimator.SetFloat("walking", (int)Mathf.Clamp01(Mathf.Abs(animation.velocidad_x) + Mathf.Abs(animation.velocidad_y)));
-        miAnimator.SetBool("aim_fire", Mathf.Clamp01(Mathf.Abs(animation.fire_axis) + Mathf.Abs(animation.aim_axis)) == 1 ? true : false);
+        miAnimator.SetFloat("walk_axis", (int)Mathf.Clamp01(Mathf.Abs(animation.velocidad_x) + Mathf.Abs(animation.velocidad_y)));
+        miAnimator.SetFloat("fire_aim_axis", Mathf.Clamp01(Mathf.Abs(animation.fire_axis) + Mathf.Abs(animation.aim_axis)));
         miAnimator.SetFloat("fire_axis", animation.fire_axis);
         miAnimator.SetFloat("aim_axis", animation.aim_axis);
         miAnimator.SetFloat("velocidad_x", animation.velocidad_x);

@@ -131,7 +131,7 @@ public class NetworkClient : MonoBehaviour
 
         byte aimInput = (byte)(Input.GetMouseButton(1) ? 1 : 0);
 
-        byte reloadInput = (byte)(Input.GetKeyDown("r") ? 1 : 0);
+        byte reloadInput = (byte)(Input.GetKey("r") ? 1 : 0);
 
         float mouseScrollInput = Input.mouseScrollDelta.y * 0.1f;
 
@@ -219,6 +219,7 @@ public class NetworkClient : MonoBehaviour
                 {
                     var playerAux3 = Instantiate(playerPrefab, pJoinMsg.playersList[i].pos, Quaternion.identity);
                     playerAux3.GetComponent<PlayerScriptClient>().LoadLoadOut(GetLoadOut(pJoinMsg.playersList[i].arrGuns));
+                    playerAux3.GetComponent<PlayerScriptClient>().SwitchGun(pJoinMsg.playersList[i].activeGunIndex);
                     simulatedPlayers.Add(pJoinMsg.playersList[i].id, playerAux3);
                 }
                 /*

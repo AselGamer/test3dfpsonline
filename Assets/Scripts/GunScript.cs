@@ -24,7 +24,7 @@ public class GunScript : MonoBehaviour
     public float fireRate;
     public float reloadTime;
 
-    public bool reloading = false;
+    public bool reloading = true;
 
     public string gunType;
 
@@ -38,16 +38,26 @@ public class GunScript : MonoBehaviour
 
         transform.localPosition = overridePosition;
         transform.localEulerAngles = overrideEulerAngles;
+        StartCoroutine(Reload());
+    }
+
+    void OnEnable()
+    {
+        StartCoroutine(Reload());
+    }
+
+    void OnDisable()
+    {
+        reloading = true;
     }
 
     public virtual void Fire()
     {
         if (Time.time >= nextTimeToFire && ammoInMag > 0)
         {
-
+            reloading = true;
             if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, Mathf.Infinity))
             {
-                //Change to pool and move to client
                 if (hit.transform.tag != "Player")
                 {
                     server.CreateBulletHole(hit);
@@ -64,22 +74,18 @@ public class GunScript : MonoBehaviour
 
     public virtual IEnumerator Reload()
     {
-        Debug.Log("entra");
-        if (reloading)
+        while (true)
         {
-            yield break;
-        }
-        while (ammoInMag < magSize && ammoCount > 0)
-        {
-            reloading = true;
-            if (!gameObject.activeSelf)
-            {
-                break;
-            }
-            ammoInMag++;
-            ammoCount--;
             yield return new WaitForSeconds(reloadTime);
+            Debug.Log(this.name + " " + reloading);
+            if (ammoInMag < magSize && ammoCount > 0 && !reloading)
+            {
+                reloading = true;
+                ammoInMag++;
+                ammoCount--;
+                reloading = false;
+                
+            }
         }
-        reloading = false;
     }
 }
