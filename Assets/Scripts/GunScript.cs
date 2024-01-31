@@ -77,7 +77,6 @@ public class GunScript : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(reloadTime);
-            Debug.Log(this.name + " " + reloading);
             if (ammoInMag < magSize && ammoCount > 0 && !reloading)
             {
                 reloading = true;

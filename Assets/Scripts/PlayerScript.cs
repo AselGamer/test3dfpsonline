@@ -1,4 +1,5 @@
 using NetworkMessages;
+using NetworkObject;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,6 +9,8 @@ using UnityEngine.EventSystems;
 public class PlayerScript : MonoBehaviour
 {
     [Header("Player objects/prefabs")]
+
+    public string playerId;
 
     public Transform camara;
 
@@ -79,7 +82,14 @@ public class PlayerScript : MonoBehaviour
         miAnimator.SetFloat("fire_axis", fireInput);
         miAnimator.SetBool("isGrounded", isGrounded);
 
-        server.SendPlayerAnimation(gameObject);
+        NetworkAnimation networkAnimation = new NetworkAnimation();
+        networkAnimation.velocidad_x = horizontalInput;
+        networkAnimation.velocidad_y = verticalInput;
+        networkAnimation.fire_axis = fireInput;
+        networkAnimation.aim_axis = aimInput;
+        networkAnimation.isGrounded = isGrounded;
+
+        server.SendPlayerAnimation(playerId, networkAnimation);
     }
 
     void FixedUpdate()

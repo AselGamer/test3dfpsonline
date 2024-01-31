@@ -59,6 +59,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2011e880fe7255e4baec34d83dc5f9fa, type: 3}
       insertIndex: -1
       addedObject: {fileID: -6329026341770993140}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2011e880fe7255e4baec34d83dc5f9fa, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3938139917024048804}
   m_SourcePrefab: {fileID: 100100000, guid: 2011e880fe7255e4baec34d83dc5f9fa, type: 3}
 --- !u!1 &2643419681372876082 stripped
 GameObject:
@@ -80,3 +83,26 @@ MonoBehaviour:
   viewModelScale: {x: 1.5, y: 1.5, z: 1.5}
   viewModelPosition: {x: 0, y: -0.04, z: 0.118}
   viewModelEulerAngle: {x: 0, y: 0, z: 0}
+  aiming: 0
+  firing: 0
+--- !u!95 &3938139917024048804
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2643419681372876082}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 523bac5a060f4894e8df90b8e99e3461, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

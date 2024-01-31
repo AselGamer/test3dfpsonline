@@ -7,6 +7,7 @@ using Unity.Networking.Transport;
 using UnityEngine;
 using Unity.Jobs;
 using System;
+using NetworkObject;
 
 public class Server : MonoBehaviour
 {
@@ -190,6 +191,7 @@ public class Server : MonoBehaviour
                 pSpawnMsg.id = hsMsg.player.id;
                 var playerAux = Instantiate(playerPrefab);
                 playerAux.GetComponent<PlayerScript>().LoadLoadOut(GetLoadOut(hsMsg.player.arrGuns));
+                playerAux.GetComponent<PlayerScript>().playerId = pSpawnMsg.id;
                 pSpawnMsg.spawnPlayer.pos = playerAux.transform.position;
                 pSpawnMsg.spawnPlayer.arrGuns = hsMsg.player.arrGuns;
                 playerAux.transform.name = hsMsg.player.nombre;
@@ -352,15 +354,11 @@ public class Server : MonoBehaviour
 
     /*For the love of god move this to the player script it doesen't make sense it being here
      */
-    public void SendPlayerAnimation(GameObject playerToAnimate)
+    public void SendPlayerAnimation(string playerId, NetworkAnimation animationVariables)
     {
         PlayerAnimationMsg pAnimationMsg = new PlayerAnimationMsg();
-        pAnimationMsg.id = simulatedPlayersInverse[playerToAnimate];
-        pAnimationMsg.animation.velocidad_x = playerToAnimate.GetComponent<PlayerScript>().horizontalInput;
-        pAnimationMsg.animation.fire_axis = playerToAnimate.GetComponent<PlayerScript>().fireInput;
-        pAnimationMsg.animation.aim_axis = playerToAnimate.GetComponent<PlayerScript>().aimInput;
-        pAnimationMsg.animation.velocidad_y = playerToAnimate.GetComponent<PlayerScript>().verticalInput;
-        pAnimationMsg.animation.isGrounded = playerToAnimate.GetComponent<PlayerScript>().isGrounded;
+        pAnimationMsg.id = playerId;
+        pAnimationMsg.animation = animationVariables;
         SendToAllClients(JsonUtility.ToJson(pAnimationMsg));
     }
 }

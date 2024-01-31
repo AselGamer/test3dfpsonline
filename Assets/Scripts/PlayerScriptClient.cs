@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PlayerScriptClient : MonoBehaviour
@@ -55,6 +56,7 @@ public class PlayerScriptClient : MonoBehaviour
 
     public void HideLoadOut(GameObject[] gunInvReplace)
     {
+        gunInventoryScene.ToList().ForEach(x => Destroy(x));
         gunInventoryScene = new GameObject[gunInvReplace.Length];
         activeGun = null;
         for (int i = 0; i < gunInvReplace.Length; i++)
@@ -93,5 +95,15 @@ public class PlayerScriptClient : MonoBehaviour
         miAnimator.SetFloat("velocidad_x", animation.velocidad_x);
         miAnimator.SetFloat("velocidad_y", animation.velocidad_y);
         miAnimator.SetBool("isGrounded", animation.isGrounded);
+        //Gun Animations
+        if (activeGun != null)
+        {
+            if (activeGun.TryGetComponent<ViewModelScript>(out ViewModelScript viewModelScript))
+            {
+                viewModelScript.aiming = animation.aim_axis > 0;
+                viewModelScript.firing = animation.fire_axis > 0;
+            }
+            
+        }
     }
 }
