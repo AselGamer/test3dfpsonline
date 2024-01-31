@@ -15,6 +15,7 @@ public class GetMethod : MonoBehaviour
     public string json;
     public Arma arma;
     public Armadura armadura;
+    public Medicamento medicamento;
     public Resultado resultado;
     public GameObject[] articulos;
     public GameObject articulo;
@@ -24,9 +25,9 @@ public class GetMethod : MonoBehaviour
     public GameObject panelArmas;
     public GameObject panelDetalle;
     public GameObject atras;
-    public GameObject atrasArma, atrasArmadura;
+    public GameObject atrasArma, atrasArmadura, atrasMedicamento;
     public GameObject bienvenida;
-    public GameObject nombre, descripcion, danyo, velocidad, precio, defensa;
+    public GameObject nombre, descripcion, danyo, velocidad, precio, defensa, curacion;
 
     public void Start()
     {
@@ -39,6 +40,7 @@ public class GetMethod : MonoBehaviour
     
     public void GetDataArmas() => StartCoroutine(GetData_Coroutine_Armas("arma"));
     public void GetDataArmaduras() => StartCoroutine(GetData_Coroutine_Armas("armadura"));
+    public void GetDataMedicamentos() => StartCoroutine(GetData_Coroutine_Armas("medicamento"));
 
     //Obtener todas las armas
     public IEnumerator GetData_Coroutine_Armas(string tipo)
@@ -51,14 +53,24 @@ public class GetMethod : MonoBehaviour
         {
             atrasArma.SetActive(true);
             atrasArmadura.SetActive(false);
-            //string uri = "https://retoiraitz.duckdns.org/api/arma/?query={id, name, descripcion, danyo, velocidad, precio, imagen, ventas, priority}";
-            uri = "http://localhost:8069/api/arma/?query={id, name, descripcion, danyo, velocidad, precio, imagen, ventas, priority}";
+            atrasMedicamento.SetActive(false);
+            uri = "https://retoiraitz.duckdns.org/api/arma/?query={id, name, descripcion, danyo, velocidad, precio, imagen, ventas, priority}";
+            //uri = "http://localhost:8069/api/arma/?query={id, name, descripcion, danyo, velocidad, precio, imagen, ventas, priority}";
         }else if(tipo == "armadura")
         {
             atrasArma.SetActive(false);
             atrasArmadura.SetActive(true);
-            //string uri = "https://retoiraitz.duckdns.org/api/armadura/?query={id, name, descripcion, defensa, precio, imagen, ventas, priority}";
-            uri = "http://localhost:8069/api/armadura/?query={id, name, descripcion, defensa, precio, imagen, ventas, priority}";
+            atrasMedicamento.SetActive(false);
+            uri = "https://retoiraitz.duckdns.org/api/armadura/?query={id, name, descripcion, defensa, precio, imagen, ventas, priority}";
+            //uri = "http://localhost:8069/api/armadura/?query={id, name, descripcion, defensa, precio, imagen, ventas, priority}";
+        }
+        else if (tipo == "medicamento")
+        {
+            atrasArma.SetActive(false);
+            atrasArmadura.SetActive(false);
+            atrasMedicamento.SetActive(true);
+            uri = "https://retoiraitz.duckdns.org/api/medicamento/?query={id, name, descripcion, curacion, precio, imagen, ventas, priority}";
+            //uri = "http://localhost:8069/api/medicamento/?query={id, name, descripcion, curacion, precio, imagen, ventas, priority}";
         }
 
         using (UnityWebRequest request = UnityWebRequest.Get(uri))
@@ -72,7 +84,7 @@ public class GetMethod : MonoBehaviour
             {
                 json = request.downloadHandler.text;
                 resultado = JsonUtility.FromJson<Resultado>(json);
-                outputArea.text = resultado.count + "\n" + resultado.result[0].imagen;
+                //outputArea.text = resultado.count + "\n" + resultado.result[0].imagen;
                 //armas = resultado.result;
 
                 //Pasamos de Base64 a sprite
@@ -162,8 +174,8 @@ public class GetMethod : MonoBehaviour
 
         if(tipo == "arma")
         {
-            //string uri = "https://retoiraitz.duckdns.org/api/arma/" + articulo.name + "/?query={id, name, descripcion, danyo, velocidad, precio, imagen, ventas, priority}";
-            string uri = "http://localhost:8069/api/arma/" + articulo.name + "/?query={id, name, descripcion, danyo, velocidad, precio, imagen, ventas, priority}";
+            string uri = "https://retoiraitz.duckdns.org/api/arma/" + articulo.name + "/?query={id, name, descripcion, danyo, velocidad, precio, imagen, ventas, priority}";
+            //string uri = "http://localhost:8069/api/arma/" + articulo.name + "/?query={id, name, descripcion, danyo, velocidad, precio, imagen, ventas, priority}";
             using (UnityWebRequest request = UnityWebRequest.Get(uri))
             {
                 yield return request.SendWebRequest();
@@ -175,8 +187,8 @@ public class GetMethod : MonoBehaviour
                 {
                     json = request.downloadHandler.text;
                     arma = JsonUtility.FromJson<Arma>(json);
-                    outputArea.text = arma.id + "\n" + arma.name + "\n" + arma.descripcion + "\n" + arma.danyo
-                        + "\n" + arma.velocidad + "\n" + arma.precio + "\n" + arma.ventas + "\n" + arma.priority;
+                    /*outputArea.text = arma.id + "\n" + arma.name + "\n" + arma.descripcion + "\n" + arma.danyo
+                        + "\n" + arma.velocidad + "\n" + arma.precio + "\n" + arma.ventas + "\n" + arma.priority;*/
 
                     //Pasamos de Base64 a sprite
                     /*byte[] imageBytes = Convert.FromBase64String(arma.imagen);
@@ -199,8 +211,8 @@ public class GetMethod : MonoBehaviour
             }
         }else if(tipo == "armadura")
         {
-            //string uri = "https://retoiraitz.duckdns.org/api/armadura/" + articulo.name + "/?query={id, name, descripcion, defensa, precio, imagen, ventas, priority}";
-            string uri = "http://localhost:8069/api/armadura/" + articulo.name + "/?query={id, name, descripcion, defensa, precio, imagen, ventas, priority}";
+            string uri = "https://retoiraitz.duckdns.org/api/armadura/" + articulo.name + "/?query={id, name, descripcion, defensa, precio, imagen, ventas, priority}";
+            //string uri = "http://localhost:8069/api/armadura/" + articulo.name + "/?query={id, name, descripcion, defensa, precio, imagen, ventas, priority}";
             using (UnityWebRequest request = UnityWebRequest.Get(uri))
             {
                 yield return request.SendWebRequest();
@@ -212,8 +224,8 @@ public class GetMethod : MonoBehaviour
                 {
                     json = request.downloadHandler.text;
                     armadura = JsonUtility.FromJson<Armadura>(json);
-                    outputArea.text = armadura.id + "\n" + armadura.name + "\n" + armadura.descripcion + "\n"
-                        + "\n" + armadura.defensa + "\n" + armadura.precio + "\n" + armadura.ventas + "\n" + armadura.priority;
+                    /*outputArea.text = armadura.id + "\n" + armadura.name + "\n" + armadura.descripcion + "\n"
+                        + "\n" + armadura.defensa + "\n" + armadura.precio + "\n" + armadura.ventas + "\n" + armadura.priority;*/
 
                     //Pasamos de Base64 a sprite
                     /*byte[] imageBytes = Convert.FromBase64String(arma.imagen);
@@ -234,7 +246,45 @@ public class GetMethod : MonoBehaviour
                 }
             }
         }
-        
+        else if (tipo == "medicamento")
+        {
+            string uri = "https://retoiraitz.duckdns.org/api/medicamento/" + articulo.name + "/?query={id, name, descripcion, curacion, precio, imagen, ventas, priority}";
+            //string uri = "http://localhost:8069/api/medicamento/" + articulo.name + "/?query={id, name, descripcion, curacion, precio, imagen, ventas, priority}";
+            using (UnityWebRequest request = UnityWebRequest.Get(uri))
+            {
+                yield return request.SendWebRequest();
+                if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
+                {
+                    outputArea.text = request.error;
+                }
+                else
+                {
+                    json = request.downloadHandler.text;
+                    medicamento = JsonUtility.FromJson<Medicamento>(json);
+                    /*outputArea.text = medicamento.id + "\n" + medicamento.name + "\n" + medicamento.descripcion + "\n"
+                        + "\n" + medicamento.curacion + "\n" + medicamento.precio + "\n" + medicamento.ventas + "\n" + medicamento.priority;*/
+
+                    //Pasamos de Base64 a sprite
+                    /*byte[] imageBytes = Convert.FromBase64String(arma.imagen);
+                    Texture2D tex = new Texture2D(2, 2);
+                    tex.LoadImage(imageBytes);
+                    Sprite sprite = Sprite.Create(tex, new Rect(0.0f, 0.0f, tex.width, tex.height), new Vector2(0.5f, 0.5f), 100.0f);*/
+                    /*var gameObject = new GameObject(arma.name);
+                    gameObject.transform.position = new Vector3(-6.5f, -0.5f, gameObject.transform.position.z);
+                    var spriteRenderer = gameObject.AddComponent<SpriteRenderer>(); //Añade un componente
+                    spriteRenderer.sprite = sprite;*/
+
+                    //articulos[0].GetComponent<Image>().sprite = sprite;
+                    danyo.SetActive(false);
+                    nombre.GetComponent<TextMeshProUGUI>().text = medicamento.name;
+                    descripcion.GetComponent<TextMeshProUGUI>().text = medicamento.descripcion;
+                    curacion.GetComponent<TextMeshProUGUI>().text = "Defensa: " + medicamento.curacion.ToString();
+                    precio.GetComponent<TextMeshProUGUI>().text = "Precio: " + medicamento.precio + "€";
+                }
+            }
+        }
+
+
     }
 
 

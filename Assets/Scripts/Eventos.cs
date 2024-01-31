@@ -40,6 +40,12 @@ public class Eventos : MonoBehaviour
         panelArmas.SetActive(true);
         panelArmas.GetComponent<GetMethod>().GetDataArmaduras();
     }
+    public void avanzarAlPanelMedicamentos()
+    {
+        panelCompras.SetActive(false);
+        panelArmas.SetActive(true);
+        panelArmas.GetComponent<GetMethod>().GetDataMedicamentos();
+    }
     public void retrocederAlPanelCompras()
     {
         for(int i=1; i<panelArmas.GetComponent<GetMethod>().articulos.Length; i++)
@@ -70,6 +76,10 @@ public class Eventos : MonoBehaviour
         }else if (tipo == "armadura")
         {
             panelArmas.GetComponent<GetMethod>().GetDataArmaduras();
+        }
+        else if (tipo == "medicamento")
+        {
+            panelArmas.GetComponent<GetMethod>().GetDataMedicamentos();
         }
         for (int i = 0; i < panelArmas.GetComponent<GetMethod>().articulos.Length; i++)
         {

@@ -40,8 +40,8 @@ public class PostMethod : MonoBehaviour
     IEnumerator PostData_Coroutine()
     {
         outputArea.text = "Loading...";
-        //string uri = "https://retoiraitz.duckdns.org/auth";
-        string uri = "http://localhost:8069/auth";
+        string uri = "https://retoiraitz.duckdns.org/auth";
+        //string uri = "http://localhost:8069/auth";
         //WWWForm form = new WWWForm();
         //form.AddField("params", body);
         //using (UnityWebRequest request = UnityWebRequest.Post(uri, form))
