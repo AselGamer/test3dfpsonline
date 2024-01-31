@@ -1,3 +1,4 @@
+using GetGunsScript;
 using NetworkMessages;
 using System.Collections;
 using System.Collections.Generic;
@@ -28,6 +29,7 @@ public class NetworkClient : MonoBehaviour
     public bool muerto = false;
 
     [Header("Guns Variables")]
+    private GetGuns getGuns = new GetGuns();
     public List<GameObject> guns;
 
     [Header("Bullet hole pool")]
@@ -46,6 +48,13 @@ public class NetworkClient : MonoBehaviour
         m_Connection = m_Driver.Connect(endpoint);
         Debug.Log("Connecting to server");
         empezar = true;
+
+        /*
+         * Place in a loop somewhere
+        */
+
+        getGuns.FetchGuns();
+
 
         for (int i = 0; i < bulletHolePoolSize; i++)
         {
@@ -207,8 +216,13 @@ public class NetworkClient : MonoBehaviour
                     playerAux3.GetComponent<PlayerScriptClient>().LoadLoadOut(GetLoadOut(pJoinMsg.playersList[i].arrGuns));
                     simulatedPlayers.Add(pJoinMsg.playersList[i].id, playerAux3);
                 }
+                /*
+                 * Reload loadout of the client
+                 * this sucks, why did i access the player script from outside so many times
+                 * well im not refactoring this so i dont care
+                 */
+                FindPlayerById(pJoinMsg.id).GetComponent<PlayerScriptClient>().HideLoadOut(GetLoadOutViewModel(pJoinMsg.playersList[int.Parse(pJoinMsg.id)].arrGuns));
 
-                FindPlayerById(pJoinMsg.id).GetComponent<PlayerScriptClient>().HideLoadOut();
                 var playerCamera = FindPlayerById(pJoinMsg.id).transform.Find("Camara").GetComponent<Camera>();
                 var uiCamera = playerCamera.transform.Find("UI Camara").GetComponent<Camera>();
                 playerCamera.enabled = true;
@@ -291,13 +305,25 @@ public class NetworkClient : MonoBehaviour
         return player;
     }
 
-    public GameObject[] GetLoadOut(short[] arrGuns)
+    public GameObject[] GetLoadOut(short[] gunsIds)
     {
-        GameObject[] returnGunsArr = new GameObject[arrGuns.Length];
-        for (int i = 0; i < arrGuns.Length; i++)
+        GameObject[] returnGunsArr = new GameObject[gunsIds.Length];
+        for (int i = 0; i < gunsIds.Length; i++)
         {
             
-            returnGunsArr[i] = guns[arrGuns[i]];
+            returnGunsArr[i] = getGuns.GetGun(gunsIds[i]).GetPrefabClient();
+        }
+
+        return returnGunsArr;
+    }
+
+    public GameObject[] GetLoadOutViewModel(short[] gunsIds)
+    {
+        GameObject[] returnGunsArr = new GameObject[gunsIds.Length];
+        for (int i = 0; i < gunsIds.Length; i++)
+        {
+
+            returnGunsArr[i] = getGuns.GetGun(gunsIds[i]).GetPrefabViewModel();
         }
 
         return returnGunsArr;

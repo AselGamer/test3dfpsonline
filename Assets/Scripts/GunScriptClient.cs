@@ -7,6 +7,8 @@ public class GunScriptClient : MonoBehaviour
     public Vector3 eulerAngleOverride;
     public Vector3 positionOverride;
 
+    //TODO: remove this
+
     public bool isViewModel;
 
     public Vector3 viewModelScale;

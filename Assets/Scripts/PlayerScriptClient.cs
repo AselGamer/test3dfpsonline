@@ -53,12 +53,24 @@ public class PlayerScriptClient : MonoBehaviour
         }
     }
 
-    public void HideLoadOut()
+    public void HideLoadOut(GameObject[] gunInvReplace)
     {
-        foreach (var gun in gunInventoryScene)
+        gunInventoryScene = new GameObject[gunInvReplace.Length];
+        activeGun = null;
+        for (int i = 0; i < gunInvReplace.Length; i++)
         {
-            gun.transform.parent = viewModelPosition;
-            gun.GetComponent<GunScriptClient>().isViewModel = true;
+            if (gunInvReplace[i] != null)
+            {
+                var auxGun = Instantiate(gunInvReplace[i], viewModelPosition.transform);
+                auxGun.SetActive(false);
+                if (activeGun == null)
+                {
+                    auxGun.SetActive(true);
+                    activeGun = auxGun;
+                    activeGunIndex = i;
+                }
+                gunInventoryScene[i] = auxGun;
+            }
         }
         playerModel.SetActive(false);
 
