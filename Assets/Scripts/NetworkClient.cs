@@ -116,6 +116,8 @@ public class NetworkClient : MonoBehaviour
 
     private void PlayerMovement()
     {
+        /*Most of the code in this script should be place in jobs but i don't know how to do that
+         */
         if (!empezar || !m_Connection.IsCreated || idPlayer == string.Empty || muerto)
         {
             return;
@@ -126,6 +128,8 @@ public class NetworkClient : MonoBehaviour
         short leanInput = (short)(Input.GetKey("e") ? -1 : Input.GetKey("q") ? 1 : 0);
 
         byte fireInput = (byte)(Input.GetMouseButton(0) ? 1 : 0);
+
+        byte aimInput = (byte)(Input.GetMouseButton(1) ? 1 : 0);
 
         byte reloadInput = (byte)(Input.GetKeyDown("r") ? 1 : 0);
 
@@ -158,6 +162,7 @@ public class NetworkClient : MonoBehaviour
         pInputMsg.verticalInput = verticalInput;
         pInputMsg.leanInput = leanInput;
         pInputMsg.fireInput = fireInput;
+        pInputMsg.aimInput = aimInput;
         pInputMsg.reloadInput = reloadInput;
         pInputMsg.mouseX = mouseX;
         pInputMsg.mouseY = mouseY;
@@ -221,7 +226,7 @@ public class NetworkClient : MonoBehaviour
                  * this sucks, why did i access the player script from outside so many times
                  * well im not refactoring this so i dont care
                  */
-                FindPlayerById(pJoinMsg.id).GetComponent<PlayerScriptClient>().HideLoadOut(GetLoadOutViewModel(pJoinMsg.playersList[int.Parse(pJoinMsg.id)].arrGuns));
+                FindPlayerById(pJoinMsg.id).GetComponent<PlayerScriptClient>().HideLoadOut(GetLoadOutViewModel(pJoinMsg.playersList.Find(x => x.id == pJoinMsg.id).arrGuns));
 
                 var playerCamera = FindPlayerById(pJoinMsg.id).transform.Find("Camara").GetComponent<Camera>();
                 var uiCamera = playerCamera.transform.Find("UI Camara").GetComponent<Camera>();

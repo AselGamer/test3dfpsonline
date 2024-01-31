@@ -42,6 +42,8 @@ public class PlayerScript : MonoBehaviour
 
     public byte fireInput;
 
+    public byte aimInput;
+
     private Rigidbody rb;
 
     [Header("Animator variables")]
@@ -108,7 +110,9 @@ public class PlayerScript : MonoBehaviour
         {
             if (fireInput == 1)
             {
+                StopAllCoroutines();
                 gunScript.Fire();
+                gunScript.reloading = false;
             }
         }
 
@@ -121,7 +125,8 @@ public class PlayerScript : MonoBehaviour
         horizontalInput = pInputMsg.horizontalInput;
         leanInput = pInputMsg.leanInput;
         fireInput = pInputMsg.fireInput;
-        if (pInputMsg.reloadInput == 1)
+        aimInput = pInputMsg.aimInput;
+        if (pInputMsg.reloadInput == 1 && fireInput == 0)
         {
             Reload();
         }
