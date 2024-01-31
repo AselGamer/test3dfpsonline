@@ -26,6 +26,7 @@ public class PlayerScript : MonoBehaviour
 
     [Header("Controller variables")]
 
+    public float speedQuantity = 1;
     public float moveSpeed;
     public float jumpForce;
 
@@ -39,6 +40,8 @@ public class PlayerScript : MonoBehaviour
     public short leanInput;
 
     public bool jumpInput;
+
+    public byte reloadInput;
 
     public byte fireInput;
 
@@ -68,9 +71,12 @@ public class PlayerScript : MonoBehaviour
             health = 0;
         }
 
-        miAnimator.SetFloat("walking", (int)Mathf.Clamp01(Mathf.Abs(horizontalInput) + Mathf.Abs(verticalInput)));
+        //miAnimator.SetFloat("walking", (int)Mathf.Clamp01(Mathf.Abs(horizontalInput) + Mathf.Abs(verticalInput)));
+        miAnimator.SetBool("aim_fire", Mathf.Clamp01(Mathf.Abs(fireInput) + Mathf.Abs(aimInput)) == 1 ? true : false);
         miAnimator.SetFloat("velocidad_x", horizontalInput);
         miAnimator.SetFloat("velocidad_y", verticalInput);
+        miAnimator.SetFloat("aim_axis", aimInput);
+        miAnimator.SetFloat("fire_axis", fireInput);
         miAnimator.SetBool("isGrounded", isGrounded);
 
         server.SendPlayerAnimation(gameObject);
@@ -91,7 +97,7 @@ public class PlayerScript : MonoBehaviour
 
         Vector3 moveDirection = new Vector3(verticalInput, 0, horizontalInput);
 
-        Vector3 movement = moveDirection * moveSpeed * Time.deltaTime;
+        Vector3 movement = moveDirection * (moveSpeed * speedQuantity) * Time.deltaTime;
 
         if (isGrounded && jumpInput && leanInput==0)
         {
@@ -111,12 +117,25 @@ public class PlayerScript : MonoBehaviour
             if (fireInput == 1)
             {
                 StopAllCoroutines();
-                gunScript.Fire();
                 gunScript.reloading = false;
+                gunScript.Fire();
             }
-        }
 
-        miAnimator.SetInteger("firing", (int)fireInput);
+            if (reloadInput == 1 && fireInput == 0)
+            {
+                StartCoroutine(gunScript.Reload());
+            }
+
+            if (aimInput == 1)
+            {
+                speedQuantity = 0.75f;
+            }
+            else
+            {
+                speedQuantity = 1f;
+            }
+
+        }
     }
 
     public void UpdateMovementVariables(PlayerInputMsg pInputMsg)
@@ -126,10 +145,7 @@ public class PlayerScript : MonoBehaviour
         leanInput = pInputMsg.leanInput;
         fireInput = pInputMsg.fireInput;
         aimInput = pInputMsg.aimInput;
-        if (pInputMsg.reloadInput == 1 && fireInput == 0)
-        {
-            Reload();
-        }
+        reloadInput = pInputMsg.reloadInput;
     }
 
     public void LoadLoadOut(GameObject[] gunInvAdd)
@@ -225,13 +241,5 @@ public class PlayerScript : MonoBehaviour
         float finalDamage = damage * (1f + closeRangeBonus) * (1f - farRangePenalty);
 
         health -= (int)finalDamage;
-    }
-
-    public void Reload()
-    {
-        if (activeGun.TryGetComponent<GunScript>(out GunScript gunScript))
-        {
-            StartCoroutine(gunScript.Reload());
-        }
     }
 }

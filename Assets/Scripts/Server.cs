@@ -342,12 +342,15 @@ public class Server : MonoBehaviour
         }
     }
 
+    /*For the love of god move this to the player script it doesen't make sense it being here
+     */
     public void SendPlayerAnimation(GameObject playerToAnimate)
     {
         PlayerAnimationMsg pAnimationMsg = new PlayerAnimationMsg();
         pAnimationMsg.id = simulatedPlayersInverse[playerToAnimate];
         pAnimationMsg.animation.velocidad_x = playerToAnimate.GetComponent<PlayerScript>().horizontalInput;
-        pAnimationMsg.animation.firing = playerToAnimate.GetComponent<PlayerScript>().fireInput;
+        pAnimationMsg.animation.fire_axis = playerToAnimate.GetComponent<PlayerScript>().fireInput;
+        pAnimationMsg.animation.aim_axis = playerToAnimate.GetComponent<PlayerScript>().aimInput;
         pAnimationMsg.animation.velocidad_y = playerToAnimate.GetComponent<PlayerScript>().verticalInput;
         pAnimationMsg.animation.isGrounded = playerToAnimate.GetComponent<PlayerScript>().isGrounded;
         SendToAllClients(JsonUtility.ToJson(pAnimationMsg));

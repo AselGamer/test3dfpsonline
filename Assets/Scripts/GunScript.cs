@@ -44,6 +44,7 @@ public class GunScript : MonoBehaviour
     {
         if (Time.time >= nextTimeToFire && ammoInMag > 0)
         {
+
             if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, Mathf.Infinity))
             {
                 //Change to pool and move to client
@@ -63,6 +64,7 @@ public class GunScript : MonoBehaviour
 
     public virtual IEnumerator Reload()
     {
+        Debug.Log("entra");
         if (reloading)
         {
             yield break;

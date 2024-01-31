@@ -30,7 +30,8 @@ namespace NetworkObject
     {
         public int velocidad_y;
         public int velocidad_x;
-        public int firing;
+        public int fire_axis;
+        public int aim_axis;
         public bool isGrounded;
     }
 }
