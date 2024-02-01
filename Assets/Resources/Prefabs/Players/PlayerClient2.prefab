@@ -693,8 +693,8 @@ MonoBehaviour:
         transform: {fileID: 0}
         weight: 0
     m_Offset: {x: 0, y: 0, z: 0}
-    m_MinLimit: -180
-    m_MaxLimit: 180
+    m_MinLimit: -100
+    m_MaxLimit: 100
     m_AimAxis: 4
     m_UpAxis: 2
     m_WorldUpType: 0
@@ -1052,6 +1052,7 @@ MonoBehaviour:
   camara: {fileID: 424663367507019623}
   playerModel: {fileID: 9187480146405400941}
   gunInventoryScene: []
+  gunInventoryNoViewModel: []
   gunPosition: {fileID: 5183894055121365468}
   viewModelPosition: {fileID: 2077369186428286526}
   miAnimator: {fileID: 863533267326870247}
