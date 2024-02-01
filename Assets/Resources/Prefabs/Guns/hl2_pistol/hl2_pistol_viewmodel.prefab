@@ -4920,7 +4920,7 @@ MonoBehaviour:
   viewModelScale: {x: 1.5, y: 1.5, z: 1.5}
   viewModelPosition: {x: 0, y: -0.04, z: 0.118}
   viewModelEulerAngle: {x: 0, y: 0, z: 0}
-  muzzleParticles: {fileID: 0}
+  particles: {fileID: 6989086896635737847}
   aiming: 0
   firing: 0
 --- !u!95 &3938139917024048804
