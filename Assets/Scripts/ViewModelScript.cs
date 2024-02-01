@@ -8,6 +8,8 @@ public class ViewModelScript : MonoBehaviour
     public Vector3 viewModelPosition;
     public Vector3 viewModelEulerAngle;
 
+    public ParticleSystem muzzleParticles;
+
     public bool aiming = false;
     public bool firing = false;
 
@@ -24,5 +26,15 @@ public class ViewModelScript : MonoBehaviour
     {
         miAnimator.SetBool("aiming", aiming);
         miAnimator.SetBool("firing", firing);
+    }
+
+    public void EnableMuzzleFlash()
+    {
+        muzzleParticles.emission.enabled.Equals(true);
+    }
+
+    public void DisableMuzzleFlash()
+    {
+        muzzleParticles.emission.enabled.Equals(false);
     }
 }

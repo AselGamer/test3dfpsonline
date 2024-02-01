@@ -18,6 +18,8 @@ public class PlayerScriptClient : MonoBehaviour
 
     public GameObject[] gunInventoryScene;
 
+    public GameObject[] gunInventoryNoViewModel;
+
     [Header("Animation variables")]
 
     public Transform gunPosition;
@@ -56,7 +58,8 @@ public class PlayerScriptClient : MonoBehaviour
 
     public void HideLoadOut(GameObject[] gunInvReplace)
     {
-        gunInventoryScene.ToList().ForEach(x => Destroy(x));
+        gunInventoryNoViewModel = gunInventoryScene;
+        gunInventoryNoViewModel.ToList().ForEach(x => x.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly);
         gunInventoryScene = new GameObject[gunInvReplace.Length];
         activeGun = null;
         for (int i = 0; i < gunInvReplace.Length; i++)
@@ -74,7 +77,7 @@ public class PlayerScriptClient : MonoBehaviour
                 gunInventoryScene[i] = auxGun;
             }
         }
-        playerModel.SetActive(false);
+        playerModel.GetComponent<SkinnedMeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
 
     }
 
@@ -84,6 +87,12 @@ public class PlayerScriptClient : MonoBehaviour
         activeGunIndex = gunIndex;
         gunInventoryScene[activeGunIndex].SetActive(true);
         activeGun = gunInventoryScene[activeGunIndex];
+
+        if (gunInventoryNoViewModel != null && gunInventoryNoViewModel.Length > 0)
+        {
+            gunInventoryNoViewModel[activeGunIndex].SetActive(false);
+            gunInventoryNoViewModel[activeGunIndex].SetActive(true);
+        }
     }
 
     public void PlayAnimations(NetworkObject.NetworkAnimation animation)
