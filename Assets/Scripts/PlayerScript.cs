@@ -74,6 +74,8 @@ public class PlayerScript : MonoBehaviour
             health = 0;
         }
 
+        
+
         miAnimator.SetFloat("walk_axis", Mathf.Clamp01(Mathf.Abs(horizontalInput) + Mathf.Abs(verticalInput)));
         miAnimator.SetFloat("fire_aim_axis", Mathf.Clamp01(Mathf.Abs(fireInput) + Mathf.Abs(aimInput)));
         miAnimator.SetFloat("velocidad_x", horizontalInput);
@@ -145,6 +147,7 @@ public class PlayerScript : MonoBehaviour
             {
                 speedQuantity = 1f;
             }
+
 
         }
     }

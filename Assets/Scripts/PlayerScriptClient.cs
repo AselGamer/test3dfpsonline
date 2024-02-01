@@ -30,6 +30,7 @@ public class PlayerScriptClient : MonoBehaviour
 
     void Update()
     {
+
         Vector3 newPosition = camara.transform.position + camara.transform.forward * 2 + Vector3.zero;
         aimDirection.transform.position = newPosition;
     }

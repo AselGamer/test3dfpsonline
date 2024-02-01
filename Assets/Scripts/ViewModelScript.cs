@@ -9,7 +9,6 @@ public class ViewModelScript : MonoBehaviour
     public Vector3 viewModelEulerAngle;
 
     public ParticleSystem particles;
-    private ParticleSystem.EmissionModule muzzleEmision;
 
     public bool aiming = false;
     public bool firing = false;
@@ -21,7 +20,6 @@ public class ViewModelScript : MonoBehaviour
         transform.localScale = viewModelScale;
         transform.localPosition = viewModelPosition;
         miAnimator = GetComponent<Animator>();
-        muzzleEmision = particles.emission;
     }
 
     void Update()
@@ -32,13 +30,12 @@ public class ViewModelScript : MonoBehaviour
 
     public void EnableMuzzleFlash()
     {
-        muzzleEmision.enabled = true;
-        Debug.Log("Muzzle flash enabled");
+        particles.Play();
     }
 
     public void DisableMuzzleFlash()
     {
-        muzzleEmision.enabled = false;
-        Debug.Log("Muzzle flash disabled");
+        particles.Clear();
+        particles.Stop();
     }
 }

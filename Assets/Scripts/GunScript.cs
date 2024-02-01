@@ -28,18 +28,19 @@ public class GunScript : MonoBehaviour
 
     public string gunType;
 
-    private float nextTimeToFire = 0f;
+    public float nextTimeToFire = 0f;
 
     private void Start()
     {
         ammoInMag = magSize;
-        ammoCount-=magSize;
+        ammoCount -= magSize;
         server = GameObject.Find("Server").GetComponent<Server>();
 
         transform.localPosition = overridePosition;
         transform.localEulerAngles = overrideEulerAngles;
         StartCoroutine(Reload());
     }
+
 
     void OnEnable()
     {
@@ -55,7 +56,6 @@ public class GunScript : MonoBehaviour
     {
         if (Time.time >= nextTimeToFire && ammoInMag > 0)
         {
-            reloading = true;
             if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, Mathf.Infinity))
             {
                 if (hit.transform.tag != "Player")
