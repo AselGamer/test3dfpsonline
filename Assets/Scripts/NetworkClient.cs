@@ -9,6 +9,9 @@ using UnityEngine;
 
 public class NetworkClient : MonoBehaviour
 {
+
+    private int frames = 0;
+
     [Header("Network Settings")]
     public NetworkDriver m_Driver;
     public NetworkConnection m_Connection;
@@ -77,6 +80,7 @@ public class NetworkClient : MonoBehaviour
         m_Driver.Dispose();
     }
 
+
     void Update()
     {
         if (!empezar)
@@ -93,7 +97,7 @@ public class NetworkClient : MonoBehaviour
         Unity.Collections.DataStreamReader stream;
         NetworkEvent.Type cmd = m_Connection.PopEvent(m_Driver, out stream);
 
-        while(cmd != NetworkEvent.Type.Empty)
+        while (cmd != NetworkEvent.Type.Empty)
         {
             if (cmd == NetworkEvent.Type.Connect)
             {
@@ -164,9 +168,15 @@ public class NetworkClient : MonoBehaviour
         pInputMsg.fireInput = fireInput;
         pInputMsg.aimInput = aimInput;
         pInputMsg.reloadInput = reloadInput;
-        pInputMsg.mouseX = mouseX;
-        pInputMsg.mouseY = mouseY;
+        
+
         SendToServer(JsonUtility.ToJson(pInputMsg));
+
+        PlayerMoveCamera pMoveCamera = new PlayerMoveCamera();
+        pMoveCamera.id = idPlayer;
+        pMoveCamera.mouseX = mouseX;
+        pMoveCamera.mouseY = mouseY;
+        SendToServer(JsonUtility.ToJson(pMoveCamera));
     }
 
     private void OnData(DataStreamReader stream)
@@ -208,10 +218,14 @@ public class NetworkClient : MonoBehaviour
                     var eulerAngles = pPosMsg.pos.rotation.eulerAngles;
                     playerAux2.transform.position = pPosMsg.pos.position;
                     playerAux2.transform.localEulerAngles = new Vector3(eulerAngles.x, eulerAngles.y);
-                    playerAux2.transform.Find("Camara").localEulerAngles = new Vector3(pPosMsg.cameraRotation.x, pPosMsg.cameraRotation.y, eulerAngles.z);
-                    playerAux2.transform.Find("lean_angles").localEulerAngles = new Vector3(0, 0, eulerAngles.z);
-
+                    playerAux2.transform.GetChild(5).localEulerAngles = new Vector3(0, 0, eulerAngles.z);
                 }
+                break;
+            case Commands.PLAYER_CAM_ROT:
+                PlayerCameraRotationMsg pCamRotMsg = JsonUtility.FromJson<PlayerCameraRotationMsg>(recMsg);
+                var playerAux7 = FindPlayerById(pCamRotMsg.id);
+
+                playerAux7.transform.GetChild(0).localEulerAngles = pCamRotMsg.rotation;
                 break;
             case Commands.PLAYER_JOIN:
                 PlayerJoinMsg pJoinMsg = JsonUtility.FromJson<PlayerJoinMsg>(recMsg);
@@ -231,6 +245,8 @@ public class NetworkClient : MonoBehaviour
 
                 var playerCamera = FindPlayerById(pJoinMsg.id).transform.Find("Camara").GetComponent<Camera>();
                 var uiCamera = playerCamera.transform.Find("UI Camara").GetComponent<Camera>();
+                playerCamera.transform.GetChild(3).GetComponent<Camera>().enabled = true;
+
                 playerCamera.enabled = true;
                 uiCamera.enabled = true;
                 interfaz.SetActive(true);
@@ -240,11 +256,13 @@ public class NetworkClient : MonoBehaviour
                 interfazMuerte.GetComponent<Canvas>().worldCamera = uiCamera;
                 interfazMuerte.GetComponent<Canvas>().planeDistance = 1f;
                 break;
+
             case Commands.PLAYER_SWITCH_GUN:
                 PlayerSwitchGunClient pSwitchGunMsg = JsonUtility.FromJson<PlayerSwitchGunClient>(recMsg);
                 var playerAux4 = FindPlayerById(pSwitchGunMsg.id);
                 playerAux4.GetComponent<PlayerScriptClient>().SwitchGun(pSwitchGunMsg.gunIndex);
                 break;
+
             case Commands.PLAYER_DISCONNECT:
                 PlayerDisconnectMsg pDisconnectMsg = JsonUtility.FromJson<PlayerDisconnectMsg>(recMsg);
                 int id = int.Parse(pDisconnectMsg.id);
@@ -253,6 +271,7 @@ public class NetworkClient : MonoBehaviour
                 simulatedPlayers.Remove(id+"");
                 Destroy(playerAux5);
                 break;
+
             case Commands.PLAYER_INVENTORY:
                 PlayerInventoryMsg pInventoryMsg = JsonUtility.FromJson<PlayerInventoryMsg>(recMsg);
                 var uiScript = interfaz.GetComponent<UIScript>();
@@ -260,35 +279,44 @@ public class NetworkClient : MonoBehaviour
                 uiScript.ammoCount = pInventoryMsg.ammoCount;
                 uiScript.health = pInventoryMsg.health;
                 break;
+
             case Commands.CREATE_BULLET_HOLE:
                 CreateBulletHoleMsg cBulletHoleMsg = JsonUtility.FromJson<CreateBulletHoleMsg>(recMsg);
                 CreateBulletHole(cBulletHoleMsg.hit);
                 break;
+
             case Commands.PLAYER_KILL:
                 PlayerKillMsg pKillMsg = JsonUtility.FromJson<PlayerKillMsg>(recMsg);
                 playerAux5 = simulatedPlayers[pKillMsg.id];
                 playerAux5.transform.position = deathCamPos.position;
                 playerAux5.transform.rotation = deathCamPos.rotation;
+
                 if (pKillMsg.id == idPlayer)
                 {
                     muerto = true;
                     interfaz.SetActive(false);
                     interfazMuerte.SetActive(true);
                     playerAux5.GetComponent<Rigidbody>().useGravity = false;
-                    interfazMuerte.transform.Find("TxtRespawn").GetComponent<TMPro.TextMeshProUGUI>().text = "Espera "+ pKillMsg.respCountDown + " segundos para respawnear";
+                    interfazMuerte.transform.Find("TxtRespawn").GetComponent<TMPro.TextMeshProUGUI>().text = "Preparate para volver a MATAR";
                 }
                 else 
                 {
                     playerAux5.SetActive(false);
                 }
-
-                if (pKillMsg.respCountDown == 0)
+                break;
+            case Commands.PLAYER_RESPAWN:
+                PlayerRespawnMsg pRespawnMsg = JsonUtility.FromJson<PlayerRespawnMsg>(recMsg);
+                playerAux5 = simulatedPlayers[pRespawnMsg.id];
+                if (pRespawnMsg.id == idPlayer)
                 {
-                    playerAux5.GetComponent<Rigidbody>().useGravity = true;
-                    playerAux5.SetActive(true);
-                    interfazMuerte.SetActive(false);
-                    interfaz.SetActive(true);
                     muerto = false;
+                    interfaz.SetActive(true);
+                    interfazMuerte.SetActive(false);
+                    playerAux5.GetComponent<Rigidbody>().useGravity = true;
+                } 
+                else
+                {
+                    playerAux5.SetActive(true);
                 }
                 break;
             case Commands.PLAYER_ANIMATION:

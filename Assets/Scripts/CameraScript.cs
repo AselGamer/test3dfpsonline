@@ -14,7 +14,7 @@ public class CameraScript : MonoBehaviour
     public float mouseX;
     public float mouseY;
     
-    void Update()
+    void LateUpdate()
     {
         yRotation += mouseX;
         xRotation -= mouseY;

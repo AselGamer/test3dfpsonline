@@ -43,7 +43,9 @@ namespace NetworkMessages
     {
         HANDSHAKE,
         PLAYER_INPUT,
+        PLAYER_CAM_MOV,
         PLAYER_POS,
+        PLAYER_CAM_ROT,
         PLAYER_SPAWN,
         PLAYER_JOIN,
         PLAYER_JUMP,
@@ -51,6 +53,7 @@ namespace NetworkMessages
         PLAYER_SWITCH_GUN,
         PLAYER_DISCONNECT,
         PLAYER_KILL,
+        PLAYER_RESPAWN,
         PLAYER_ANIMATION,
         CREATE_BULLET_HOLE,
     }
@@ -83,9 +86,6 @@ namespace NetworkMessages
         public byte fireInput;
         public byte aimInput;
         public byte reloadInput;
-
-        public float mouseX;
-        public float mouseY;
         public PlayerInputMsg()
         {
             command = Commands.PLAYER_INPUT;
@@ -94,6 +94,18 @@ namespace NetworkMessages
             leanInput = 0;
             fireInput = 0;
             aimInput = 0;
+        }
+    }
+
+    [System.Serializable]
+    public class PlayerMoveCamera : NetworkHeader
+    {
+        public string id;
+        public float mouseX;
+        public float mouseY;
+        public PlayerMoveCamera()
+        {
+            command = Commands.PLAYER_CAM_MOV;
             mouseX = 0;
             mouseY = 0;
         }
@@ -115,12 +127,22 @@ namespace NetworkMessages
     {
         public string id;
         public NetworkObject.NetworkTransform pos;
-        public Vector3 cameraRotation;
         public PlayerPosMsg()
         {
             command = Commands.PLAYER_POS;
             pos = new NetworkObject.NetworkTransform();
-            cameraRotation = Vector3.zero;
+        }
+    }
+
+    [System.Serializable]
+    public class PlayerCameraRotationMsg : NetworkHeader
+    {
+        public string id;
+        public Vector3 rotation;
+        public PlayerCameraRotationMsg()
+        {
+            command = Commands.PLAYER_CAM_ROT;
+            rotation = new Vector3();
         }
     }
 
@@ -219,12 +241,21 @@ namespace NetworkMessages
     public class PlayerKillMsg : NetworkHeader
     {
         public string id;
-        public int respCountDown;
         public PlayerKillMsg()
         {
             command = Commands.PLAYER_KILL;
             id = "";
-            respCountDown = 0;
+        }
+    }
+
+    [System.Serializable]
+    public class PlayerRespawnMsg : NetworkHeader
+    {
+        public string id;
+        public PlayerRespawnMsg()
+        {
+            command = Commands.PLAYER_RESPAWN;
+            id = "";
         }
     }
 

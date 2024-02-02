@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 585540353698936899}
   - component: {fileID: 6989086896635737847}
   - component: {fileID: 6781028310096186903}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: firePoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4885,6 +4885,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 2011e880fe7255e4baec34d83dc5f9fa, type: 3}
       propertyPath: m_Name
       value: hl2_pistol_viewmodel
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 2011e880fe7255e4baec34d83dc5f9fa, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

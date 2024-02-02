@@ -8,6 +8,7 @@ using UnityEngine;
 using Unity.Jobs;
 using System;
 using NetworkObject;
+using GetGunsScript;
 
 public class Server : MonoBehaviour
 {
@@ -21,12 +22,15 @@ public class Server : MonoBehaviour
     JobHandle m_ServerJobHandle;
 
     [Header("Player variables")]
+    private GetGuns getGuns = new GetGuns();
     public GameObject playerPrefab;
     public Dictionary<string, GameObject> simulatedPlayers;
     public Dictionary<GameObject, string> simulatedPlayersInverse;
+    public List<Transform> spawnPoints;
     //This code is cringe
     public Dictionary<string, NetworkConnection> playerConnection;
     public List<GameObject> guns;
+    
 
     [Header("Bullet hole pool")]
     public GameObject bulletHolePrefab;
@@ -43,6 +47,8 @@ public class Server : MonoBehaviour
         playerConnection = new Dictionary<string, NetworkConnection>();
         pipeline = m_Driver.CreatePipeline(typeof(FragmentationPipelineStage),
             typeof(ReliableSequencedPipelineStage));
+
+        getGuns.FetchGuns();
 
         for (int i = 0; i < bulletHolePoolSize; i++)
         {
@@ -73,7 +79,6 @@ public class Server : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
         m_Driver.ScheduleUpdate().Complete();
@@ -109,7 +114,6 @@ public class Server : MonoBehaviour
                 {
                     Debug.Log("Client disconnected from server");
                     //Might need to handle when a player crashes on join
-                    StopCoroutine("KillPlayer");
                     m_Driver.Disconnect(m_Connections[i]);
                     m_Connections.RemoveAtSwapBack(i);
                     var idDisconnect = m_Players[i].id;
@@ -129,24 +133,35 @@ public class Server : MonoBehaviour
                 cmd = m_Driver.PopEventForConnection(m_Connections[i], out stream);
             }
         }
-
+    }
+    void FixedUpdate()
+    {        
         foreach (var playerKvp in simulatedPlayers)
         {
-            PlayerPosMsg pPosMsg = new PlayerPosMsg();
             var player = playerKvp.Value;
             var playerId = playerKvp.Key;
             var playerScript = player.GetComponent<PlayerScript>();
-            pPosMsg.id = playerId;
-            pPosMsg.pos.position = player.transform.position;
-            pPosMsg.pos.rotation = player.transform.rotation;
-            pPosMsg.cameraRotation = playerScript.camara.transform.localEulerAngles;
-            SendToAllClients(JsonUtility.ToJson(pPosMsg));
 
 
             if (playerScript.health <= 0 && !playerScript.dead)
             {
                 playerScript.dead = true;
-                StartCoroutine(KillPlayer(player));
+                playerScript.health = 100;
+                playerScript.timeUntilRespawn = 5f;
+                int randomSpawnIndex = UnityEngine.Random.Range(0, spawnPoints.Count - 1);
+                player.transform.position = spawnPoints[randomSpawnIndex].position;
+                PlayerKillMsg pKillMsg = new PlayerKillMsg();
+                pKillMsg.id = playerId;
+                SendToAllClients(JsonUtility.ToJson(pKillMsg));
+            }
+
+            if (playerScript.timeUntilRespawn == 0f && playerScript.dead)
+            {
+                player.SetActive(true);
+                player.GetComponent<PlayerScript>().dead = false;
+                PlayerRespawnMsg pRespawnMsg = new PlayerRespawnMsg();
+                pRespawnMsg.id = playerKvp.Key;
+                SendToAllClients(JsonUtility.ToJson(pRespawnMsg));
             }
 
             PlayerInventoryMsg pInventoryMsg = new PlayerInventoryMsg();
@@ -162,6 +177,7 @@ public class Server : MonoBehaviour
 
             SendToClient(JsonUtility.ToJson(pInventoryMsg), playerConnection[playerId]);
         }
+        
     }
 
     private void OnData(DataStreamReader stream, int numJugador)
@@ -186,10 +202,11 @@ public class Server : MonoBehaviour
 
                 playerConnection.Add(hsMsg.player.id, m_Connections[numJugador]);
 
-                //Menssage to spawn new player
+                //Message to spawn new player
                 PlayerSpawnMsg pSpawnMsg = new PlayerSpawnMsg();
+                int spawnRandomIndex = UnityEngine.Random.Range(0, spawnPoints.Count - 1);
                 pSpawnMsg.id = hsMsg.player.id;
-                var playerAux = Instantiate(playerPrefab);
+                var playerAux = Instantiate(playerPrefab, spawnPoints[spawnRandomIndex].position, Quaternion.identity);
                 playerAux.GetComponent<PlayerScript>().LoadLoadOut(GetLoadOut(hsMsg.player.arrGuns));
                 playerAux.GetComponent<PlayerScript>().playerId = pSpawnMsg.id;
                 pSpawnMsg.spawnPlayer.pos = playerAux.transform.position;
@@ -213,7 +230,12 @@ public class Server : MonoBehaviour
                 foreach (var auxPlayer in m_Players)
                 {
                     //Why am i like this
-                    auxPlayer.activeGunIndex = FindPlayerById(auxPlayer.id).GetComponent<PlayerScript>().activeGunIndex;
+                    var auxSimulatedPlayer3 = FindPlayerById(auxPlayer.id);
+                    if (auxSimulatedPlayer3 == null)
+                    {
+                        break;
+                    }
+                    auxPlayer.activeGunIndex = auxSimulatedPlayer3.GetComponent<PlayerScript>().activeGunIndex;
                     auxPlayers.Add(auxPlayer);
                 }
                 playerJoinMsg.playersList = auxPlayers;
@@ -227,16 +249,43 @@ public class Server : MonoBehaviour
                     return;
                 }
                 playerAux2.GetComponent<PlayerScript>().UpdateMovementVariables(pInputMsg);
-                playerAux2.GetComponentInChildren<CameraScript>().mouseX = pInputMsg.mouseX;
-                playerAux2.GetComponentInChildren<CameraScript>().mouseY = pInputMsg.mouseY;
+                
+
+                PlayerPosMsg pPosMsg = new PlayerPosMsg();
+                pPosMsg.id = simulatedPlayersInverse[playerAux2];
+                pPosMsg.pos.position = playerAux2.transform.position;
+                pPosMsg.pos.rotation = playerAux2.transform.rotation;
+                SendToAllClients(JsonUtility.ToJson(pPosMsg));
+                break;
+            case Commands.PLAYER_CAM_MOV:
+                PlayerMoveCamera pCamMovMsg = JsonUtility.FromJson<PlayerMoveCamera>(recMsg);
+                var playerAux6 = FindPlayerById(pCamMovMsg.id);
+                playerAux6.GetComponentInChildren<CameraScript>().mouseX = pCamMovMsg.mouseX;
+                playerAux6.GetComponentInChildren<CameraScript>().mouseY = pCamMovMsg.mouseY;
+
+                PlayerCameraRotationMsg pCamRotMsg = new PlayerCameraRotationMsg();
+                pCamRotMsg.id = pCamMovMsg.id;
+                var eulerRot = playerAux6.transform.GetChild(0).transform.localEulerAngles;
+                pCamRotMsg.rotation = new Vector3(eulerRot.x, eulerRot.y, playerAux6.transform.localEulerAngles.z);
+                SendToAllClients(JsonUtility.ToJson(pCamRotMsg));
                 break;
             case Commands.PLAYER_JUMP:
                 PlayerJumpMsg pJumpMsg = JsonUtility.FromJson<PlayerJumpMsg>(recMsg);
-                FindPlayerById(pJumpMsg.id).GetComponent<PlayerScript>().jumpInput = true;
+                var auxSimulatedPlayer = FindPlayerById(pJumpMsg.id);
+                if (auxSimulatedPlayer == null)
+                {
+                    return;
+                }
+                auxSimulatedPlayer.GetComponent<PlayerScript>().jumpInput = true;
                 break;
             case Commands.PLAYER_SWITCH_GUN:
                 PlayerSwitchGunMsg pSwitchGunMsg = JsonUtility.FromJson<PlayerSwitchGunMsg>(recMsg);
-                var playerScriptAux = FindPlayerById(pSwitchGunMsg.id).GetComponent<PlayerScript>();
+                var auxSimulatedPlayer2 = FindPlayerById(pSwitchGunMsg.id);
+                if (auxSimulatedPlayer2 == null)
+                {
+                    return;
+                }
+                var playerScriptAux = auxSimulatedPlayer2.GetComponent<PlayerScript>();
                 playerScriptAux.SwitchGun(pSwitchGunMsg);
 
                 PlayerSwitchGunClient pSwitchGunMsgSend = new PlayerSwitchGunClient();
@@ -249,17 +298,21 @@ public class Server : MonoBehaviour
         }
     }
 
-    public GameObject[] GetLoadOut(short[] arrGuns)
+    public GameObject[] GetLoadOut(short[] gunIds)
     {
-        GameObject[] gunsArr = new GameObject[arrGuns.Length];
-        arrGuns.ToList().ForEach(x => gunsArr[arrGuns.ToList().IndexOf(x)] = guns[x]);
+        GameObject[] gunsArr = new GameObject[gunIds.Length];
+        for (int i = 0; i < gunIds.Length; i++)
+        {
+            gunsArr[i] = getGuns.GetGun(gunIds[i]).GetPrefabServer();
+        }
 
         return gunsArr;
     }
 
     public GameObject FindPlayerById(string idJugador)
     {
-        return simulatedPlayers[idJugador];
+        simulatedPlayers.TryGetValue(idJugador, out GameObject jugador);
+        return jugador;
     }
 
     void OnConnect(NetworkConnection c)
@@ -282,6 +335,10 @@ public class Server : MonoBehaviour
 
         DataStreamWriter writer;
         m_Driver.BeginSend(pipeline, c, out writer);
+        if (!writer.IsCreated)
+        {
+            return;
+        }
         NativeArray<byte> bytes = new NativeArray<byte>(System.Text.Encoding.ASCII.GetBytes(message), Allocator.Temp);
         writer.WriteBytes(bytes);
         m_Driver.EndSend(writer);
@@ -306,7 +363,7 @@ public class Server : MonoBehaviour
             CreateBulletHoleMsg bHoleMsg = new CreateBulletHoleMsg();
             bHoleMsg.hit.position = bulletHole.transform.position;
             bHoleMsg.hit.rotation = bulletHole.transform.rotation;
-            SendToAllClients(JsonUtility.ToJson(bHoleMsg));
+            //SendToAllClients(JsonUtility.ToJson(bHoleMsg));
         }
     }
 
@@ -325,13 +382,19 @@ public class Server : MonoBehaviour
         }
     }
 
+    /*
     public IEnumerator KillPlayer(GameObject playerToKill)
     { 
         playerToKill.SetActive(false);
         playerToKill.GetComponent<PlayerScript>().health = 100;
         //Change to random later
-        playerToKill.transform.position = new Vector3(0, 1, 0);
+        int spawnRandomIndex = UnityEngine.Random.Range(0, spawnPoints.Count - 1);
+        playerToKill.transform.position = spawnPoints[spawnRandomIndex].position;
         var idPlayer = simulatedPlayersInverse[playerToKill];
+
+        PlayerKillMsg pKillMsg = new PlayerKillMsg();
+        pKillMsg.id = idPlayer;
+        SendToAllClients(JsonUtility.ToJson(pKillMsg));
 
         for (int respCountDown = 5; respCountDown > -1; respCountDown--)
         {
@@ -339,18 +402,19 @@ public class Server : MonoBehaviour
             {
                 yield break;
             }
-            PlayerKillMsg pKillMsg = new PlayerKillMsg();
-            pKillMsg.id = idPlayer;
-            pKillMsg.respCountDown = respCountDown;
-            SendToAllClients(JsonUtility.ToJson(pKillMsg));
+            
             if (respCountDown == 0)
             {
                 playerToKill.SetActive(true);
                 playerToKill.GetComponent<PlayerScript>().dead = false;
+                PlayerRespawnMsg pRespawnMsg = new PlayerRespawnMsg();
+                pRespawnMsg.id = idPlayer;
+                SendToAllClients(JsonUtility.ToJson(pRespawnMsg));
             }
             yield return new WaitForSeconds(1f);
         }
     }
+    */
 
     /*For the love of god move this to the player script it doesen't make sense it being here
      */

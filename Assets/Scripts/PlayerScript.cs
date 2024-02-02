@@ -27,6 +27,8 @@ public class PlayerScript : MonoBehaviour
 
     public bool dead = false;
 
+    public float timeUntilRespawn = 0f;
+
     [Header("Controller variables")]
 
     public float speedQuantity = 1;
@@ -71,15 +73,8 @@ public class PlayerScript : MonoBehaviour
         Cursor.visible = false;
     }
 
-    void Update()
+    void FixedUpdate()
     {
-        if (health <= 0)
-        {
-            health = 0;
-        }
-
-        
-
         miAnimator.SetFloat("walk_axis", Mathf.Clamp01(Mathf.Abs(horizontalInput) + Mathf.Abs(verticalInput)));
         miAnimator.SetFloat("fire_aim_axis", Mathf.Clamp01(Mathf.Abs(fireInput) + Mathf.Abs(aimInput)));
         miAnimator.SetFloat("velocidad_x", horizontalInput);
@@ -98,8 +93,21 @@ public class PlayerScript : MonoBehaviour
         server.SendPlayerAnimation(playerId, networkAnimation);
     }
 
-    void FixedUpdate()
+    void Update()
     {
+        if (health <= 0)
+        {
+            health = 0;
+        }
+
+        if (timeUntilRespawn > 0f)
+        {
+            timeUntilRespawn -= Time.deltaTime;
+            if (timeUntilRespawn <= Mathf.Epsilon)
+            {
+                timeUntilRespawn = 0f;
+            }
+        }
 
         isGrounded = false;
         playFireAnimation = 0;

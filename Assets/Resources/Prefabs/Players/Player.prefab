@@ -175,6 +175,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98bfa7bb2bd752c419552e8b7cbe99b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerId: 
   camara: {fileID: 3791362954030846917}
   activeGun: {fileID: 0}
   activeGunIndex: -1
@@ -185,14 +186,17 @@ MonoBehaviour:
   gunPosition: {fileID: 3205177256211226675}
   health: 100
   dead: 0
-  moveSpeed: 2
-  jumpForce: 6
+  speedQuantity: 1
+  moveSpeed: 4
+  jumpForce: 4.5
   isGrounded: 0
   verticalInput: 0
   horizontalInput: 0
   leanInput: 0
   jumpInput: 0
+  reloadInput: 0
   fireInput: 0
+  aimInput: 0
   miAnimator: {fileID: 0}
   server: {fileID: 0}
 --- !u!95 &4235955251370392810
