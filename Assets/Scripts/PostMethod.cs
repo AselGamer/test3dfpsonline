@@ -17,6 +17,9 @@ public class PostMethod : MonoBehaviour
     public GameObject panelInicio;
     public GameObject mensaje;
     public TextMeshProUGUI bienvenida;
+    public GameObject moneda;
+    public GameObject dinero;
+    public int idUsuario;
 
     void Start()
     {
@@ -40,8 +43,8 @@ public class PostMethod : MonoBehaviour
     IEnumerator PostData_Coroutine()
     {
         outputArea.text = "Loading...";
-        string uri = "https://retoiraitz.duckdns.org/auth";
-        //string uri = "http://localhost:8069/auth";
+        //string uri = "https://retoiraitz.duckdns.org/auth";
+        string uri = "http://localhost:8069/auth";
         //WWWForm form = new WWWForm();
         //form.AddField("params", body);
         //using (UnityWebRequest request = UnityWebRequest.Post(uri, form))
@@ -77,13 +80,17 @@ public class PostMethod : MonoBehaviour
             }
             else
             {
+                idUsuario = respuesta.result.uid;
                 outputArea.text = request.downloadHandler.text;
                 mensaje.SetActive(false);
                 panelSesion.SetActive(false);
                 panelInicio.SetActive(true);
+                moneda.SetActive(true);
+                dinero.SetActive(true);
                 bienvenida.text = "Hola " + nombre;
                 isUsuario = true;
                 Debug.Log("Entra+++++++++");
+                panelInicio.GetComponent<GetMethod>().GetDataDinero(idUsuario);
             }
         }
         //}

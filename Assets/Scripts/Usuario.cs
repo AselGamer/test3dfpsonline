@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class Respuesta
+public class Usuario
 {
-    public string jsonrpc;
     public int id;
-    public Result result;
-    public string error;
+    public string name;
+    public int x_dinero;
 }

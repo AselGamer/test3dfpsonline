@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
+using TMPro;
 
 public class Eventos : MonoBehaviour
 {
@@ -17,6 +18,10 @@ public class Eventos : MonoBehaviour
         panelInicio.SetActive(false);
         panelSesion.SetActive(true);
         panelSesion.GetComponent<PostMethod>().isUsuario = false;
+        panelSesion.GetComponent<PostMethod>().moneda.SetActive(false);
+        panelSesion.GetComponent<PostMethod>().dinero.SetActive(false);
+        GameObject.Find("Login Usuario").GetComponent<TMP_InputField>().text = "";
+        GameObject.Find("Login Password").GetComponent<TMP_InputField>().text = "";
     }
     public void avanzarAlPanelCompras()
     {
