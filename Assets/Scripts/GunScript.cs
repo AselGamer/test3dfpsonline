@@ -28,8 +28,6 @@ public class GunScript : MonoBehaviour
 
     public string gunType;
 
-    public float nextTimeToFire = 0f;
-
     private void Start()
     {
         ammoInMag = magSize;
@@ -38,13 +36,12 @@ public class GunScript : MonoBehaviour
 
         transform.localPosition = overridePosition;
         transform.localEulerAngles = overrideEulerAngles;
-        StartCoroutine(Reload());
+        StartCoroutineReload();
     }
-
 
     void OnEnable()
     {
-        StartCoroutine(Reload());
+        StartCoroutineReload();
     }
 
     void OnDisable()
@@ -54,8 +51,6 @@ public class GunScript : MonoBehaviour
 
     public virtual void Fire()
     {
-        if (Time.time >= nextTimeToFire && ammoInMag > 0)
-        {
             if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, Mathf.Infinity))
             {
                 if (hit.transform.tag != "Player")
@@ -67,9 +62,13 @@ public class GunScript : MonoBehaviour
                     hit.collider.gameObject.GetComponent<PlayerScript>().TakeDamage(damage, hit.distance);
                 }
             }
-            nextTimeToFire = Time.time + 1f / fireRate;
             ammoInMag--;
-        }
+    }
+
+    public void StartCoroutineReload()
+    {
+        StopAllCoroutines();
+        StartCoroutine(Reload());
     }
 
     public virtual IEnumerator Reload()

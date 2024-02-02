@@ -50,6 +50,10 @@ public class PlayerScript : MonoBehaviour
 
     public byte aimInput;
 
+    private float playFireAnimation = 0;
+
+    private float nextTimeToFire = 0f;
+
     private Rigidbody rb;
 
     [Header("Animator variables")]
@@ -81,13 +85,13 @@ public class PlayerScript : MonoBehaviour
         miAnimator.SetFloat("velocidad_x", horizontalInput);
         miAnimator.SetFloat("velocidad_y", verticalInput);
         miAnimator.SetFloat("aim_axis", aimInput);
-        miAnimator.SetFloat("fire_axis", fireInput);
+        miAnimator.SetFloat("fire_axis", playFireAnimation);
         miAnimator.SetBool("isGrounded", isGrounded);
 
         NetworkAnimation networkAnimation = new NetworkAnimation();
         networkAnimation.velocidad_x = horizontalInput;
         networkAnimation.velocidad_y = verticalInput;
-        networkAnimation.fire_axis = fireInput;
+        networkAnimation.fire_axis = (int)playFireAnimation;
         networkAnimation.aim_axis = aimInput;
         networkAnimation.isGrounded = isGrounded;
 
@@ -98,6 +102,7 @@ public class PlayerScript : MonoBehaviour
     {
 
         isGrounded = false;
+        playFireAnimation = 0;
 
 
         if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down), 1.10f))
@@ -126,9 +131,11 @@ public class PlayerScript : MonoBehaviour
 
         if (activeGun.TryGetComponent<GunScript>(out GunScript gunScript))
         {
-            if (fireInput == 1)
+            if (fireInput == 1 && Time.time >= nextTimeToFire && gunScript.ammoInMag > 0)
             {
+                playFireAnimation = 1;
                 gunScript.Fire();
+                nextTimeToFire = Time.time + 1f / gunScript.fireRate;
             }
 
             if (reloadInput == 1 && fireInput == 0)

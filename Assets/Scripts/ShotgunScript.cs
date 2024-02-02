@@ -9,35 +9,46 @@ public class ShotgunScript : GunScript
     public float spreadAngle = 30f;
     public float shotRange = 10f;
 
-    private float nextTimeToShoot = 0f;
 
     public override void Fire()
     {
-        if (Time.time >= nextTimeToShoot && ammoInMag > 0)
+        reloading = true;
+        for (int i = 0; i < pelletsCount; i++)
         {
-            reloading = true;
-            for (int i = 0; i < pelletsCount; i++)
+            float currentSpread = Random.Range(-spreadAngle / 2f, spreadAngle / 2f);
+
+            Vector3 direction = Quaternion.Euler(0, currentSpread, 0) * cameraTransform.forward;
+
+            if (Physics.Raycast(cameraTransform.position, direction, out RaycastHit hit, shotRange))
             {
-                float currentSpread = Random.Range(-spreadAngle / 2f, spreadAngle / 2f);
-
-                Vector3 direction = Quaternion.Euler(0, currentSpread, 0) * cameraTransform.forward;
-
-                if (Physics.Raycast(cameraTransform.position, direction, out RaycastHit hit, shotRange))
+                if (hit.transform.tag != "Player")
                 {
-                    if (hit.transform.tag != "Player")
-                    {
-                        server.CreateBulletHole(hit);
-                    }
-                    else 
-                    {
-                        hit.collider.gameObject.GetComponent<PlayerScript>().TakeDamage(damage, hit.distance);
-                    }
+                    server.CreateBulletHole(hit);
                 }
-
-                //Debug.DrawRay(cameraTransform.position, cameraTransform.forward * 20f, Color.magenta, 0.5f);
-                nextTimeToShoot = Time.time + 1f / fireRate;
+                else 
+                {
+                    hit.collider.gameObject.GetComponent<PlayerScript>().TakeDamage(damage, hit.distance);
+                }
             }
-            ammoInMag--;
+
+            //Debug.DrawRay(cameraTransform.position, cameraTransform.forward * 20f, Color.magenta, 0.5f);
+        }
+        ammoInMag--;
+    }
+
+    public override IEnumerator Reload()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(reloadTime);
+            if (ammoInMag < magSize && ammoCount > 0 && !reloading)
+            {
+                reloading = true;
+                ammoInMag++;
+                ammoCount--;
+                reloading = false;
+
+            }
         }
     }
 }
