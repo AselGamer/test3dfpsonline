@@ -186,6 +186,7 @@ MonoBehaviour:
   gunPosition: {fileID: 3205177256211226675}
   health: 100
   dead: 0
+  timeUntilRespawn: 0
   speedQuantity: 1
   moveSpeed: 4
   jumpForce: 4.5
@@ -197,7 +198,7 @@ MonoBehaviour:
   reloadInput: 0
   fireInput: 0
   aimInput: 0
-  miAnimator: {fileID: 0}
+  miAnimator: {fileID: 4235955251370392810}
   server: {fileID: 0}
 --- !u!95 &4235955251370392810
 Animator:

@@ -150,6 +150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f11a6ef3745ad6c4d898833026f17dc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  idPlayer: 
   firePoint: {fileID: 903286984404909679}
   bulletHolePrefab: {fileID: 3605365342191440416, guid: 35f8cdaa04ae1084bb01e99f9c015c56, type: 3}
   server: {fileID: 0}
@@ -161,8 +162,8 @@ MonoBehaviour:
   magSize: 4
   ammoInMag: 0
   damage: 10
-  fireRate: 4
-  reloadTime: 1
+  fireRate: 1
+  reloadTime: 1.2
   reloading: 0
   gunType: Shotgun
   pelletsCount: 10

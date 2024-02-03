@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GunScript : MonoBehaviour
 {
+    public string idPlayer;
+
     public Transform firePoint;
 
     public GameObject bulletHolePrefab;
@@ -23,6 +25,7 @@ public class GunScript : MonoBehaviour
     public int damage;
     public float fireRate;
     public float reloadTime;
+
 
     public bool reloading = true;
 
@@ -51,6 +54,7 @@ public class GunScript : MonoBehaviour
 
     public virtual void Fire()
     {
+        reloading = true;
             if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, Mathf.Infinity))
             {
                 if (hit.transform.tag != "Player")
@@ -62,7 +66,7 @@ public class GunScript : MonoBehaviour
                     hit.collider.gameObject.GetComponent<PlayerScript>().TakeDamage(damage, hit.distance);
                 }
             }
-            ammoInMag--;
+        ammoInMag--;
     }
 
     public void StartCoroutineReload()

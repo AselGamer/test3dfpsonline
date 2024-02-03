@@ -116,4 +116,14 @@ public class PlayerScriptClient : MonoBehaviour
             
         }
     }
+
+    public void StopGunFireAnimation()
+    {
+        
+    }
+
+    void FireGun()
+    {
+        
+    }
 }

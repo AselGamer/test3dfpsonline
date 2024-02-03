@@ -160,6 +160,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3491bc6b26098749bf9a9688b8e04b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  idPlayer: 
   firePoint: {fileID: 4583071987479549965}
   bulletHolePrefab: {fileID: 3605365342191440416, guid: 35f8cdaa04ae1084bb01e99f9c015c56, type: 3}
   server: {fileID: 0}
@@ -171,7 +172,7 @@ MonoBehaviour:
   magSize: 18
   ammoInMag: 0
   damage: 10
-  fireRate: 10
+  fireRate: 2
   reloadTime: 0.8
   reloading: 0
   gunType: Pistol

@@ -9,9 +9,6 @@ using UnityEngine;
 
 public class NetworkClient : MonoBehaviour
 {
-
-    private int frames = 0;
-
     [Header("Network Settings")]
     public NetworkDriver m_Driver;
     public NetworkConnection m_Connection;
@@ -224,6 +221,11 @@ public class NetworkClient : MonoBehaviour
             case Commands.PLAYER_CAM_ROT:
                 PlayerCameraRotationMsg pCamRotMsg = JsonUtility.FromJson<PlayerCameraRotationMsg>(recMsg);
                 var playerAux7 = FindPlayerById(pCamRotMsg.id);
+
+                if (playerAux7 == null)
+                {
+                    return;
+                }
 
                 playerAux7.transform.GetChild(0).localEulerAngles = pCamRotMsg.rotation;
                 break;

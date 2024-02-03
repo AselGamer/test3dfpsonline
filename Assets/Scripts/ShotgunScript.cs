@@ -47,7 +47,6 @@ public class ShotgunScript : GunScript
                 ammoInMag++;
                 ammoCount--;
                 reloading = false;
-
             }
         }
     }
