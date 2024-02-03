@@ -158,6 +158,7 @@ MonoBehaviour:
   handlePoint: {fileID: 4619086558392662828}
   overrideEulerAngles: {x: 45, y: 0, z: 90}
   overridePosition: {x: -0.014, y: 0.293, z: -0.252}
+  startingAmmo: 24
   ammoCount: 20
   magSize: 4
   ammoInMag: 0

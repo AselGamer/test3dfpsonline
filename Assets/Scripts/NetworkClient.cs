@@ -37,6 +37,9 @@ public class NetworkClient : MonoBehaviour
     public int bulletHolePoolSize = 30;
     public List<GameObject> bulletHolePool;
 
+    [Header("Items list")]
+    public List<GameObject> itemsList;
+
     void Start()
     {
         m_Driver = NetworkDriver.Create();
@@ -236,7 +239,16 @@ public class NetworkClient : MonoBehaviour
                     var playerAux3 = Instantiate(playerPrefab, pJoinMsg.playersList[i].pos, Quaternion.identity);
                     playerAux3.GetComponent<PlayerScriptClient>().LoadLoadOut(GetLoadOut(pJoinMsg.playersList[i].arrGuns));
                     playerAux3.GetComponent<PlayerScriptClient>().SwitchGun(pJoinMsg.playersList[i].activeGunIndex);
+                    if (pJoinMsg.playersList[i].isDead)
+                    {
+                        playerAux3.SetActive(false);
+                    }
                     simulatedPlayers.Add(pJoinMsg.playersList[i].id, playerAux3);
+                }
+
+                for (int i = 0; i < pJoinMsg.itemList.Count; i++)
+                {
+                    itemsList[i].SetActive(pJoinMsg.itemList[i].enabled);
                 }
                 /*
                  * Reload loadout of the client
@@ -328,6 +340,10 @@ public class NetworkClient : MonoBehaviour
                 {
                     playerAux6.GetComponent<PlayerScriptClient>().PlayAnimations(pAnimationMsg.animation);
                 }
+                break;
+            case Commands.ITEM_STATE:
+                StateItemMsg iStateMsg = JsonUtility.FromJson<StateItemMsg>(recMsg);
+                itemsList[iStateMsg.itemId].SetActive(iStateMsg.enabled);
                 break;
             default:
                 break;

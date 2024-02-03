@@ -76,7 +76,6 @@ public class PlayerScript : MonoBehaviour
 
     void FixedUpdate()
     {
-        Debug.Log(playFireAnimation);
 
         miAnimator.SetFloat("walk_axis", Mathf.Clamp01(Mathf.Abs(horizontalInput) + Mathf.Abs(verticalInput)));
         miAnimator.SetFloat("fire_aim_axis", Mathf.Clamp01(Mathf.Abs(playFireAnimation) + Mathf.Abs(aimInput)));
@@ -101,6 +100,11 @@ public class PlayerScript : MonoBehaviour
         if (health <= 0)
         {
             health = 0;
+        }
+
+        if (health > 100)
+        {
+            health = 100;
         }
 
         if (timeUntilRespawn > 0f)
@@ -142,11 +146,10 @@ public class PlayerScript : MonoBehaviour
 
         if (activeGun.TryGetComponent<GunScript>(out GunScript gunScript))
         {
-            //if (fireInput == 1 && gunScript.ammoInMag > 0)
+            //This didn't work before, but now it does
             if (fireInput == 1 && Time.time >= nextTimeToFire && gunScript.ammoInMag > 0)
             {
                 playFireAnimation = 1f;
-                //gunScript.Fire();
                 nextTimeToFire = Time.time + 1f / gunScript.fireRate;
             }
 
@@ -287,5 +290,38 @@ public class PlayerScript : MonoBehaviour
         {
             gunScript.Fire();
         }
+    }
+
+    public void RestoreAmmo()
+    {
+        foreach (GameObject gun in gunInventory)
+        {
+            if (gun.TryGetComponent<GunScript>(out GunScript gunScript))
+            {
+                gunScript.RestoreAmmo();
+            }
+        }
+    }
+
+    private void OnTriggerEnter(Collider colldier)
+    {
+        if (colldier.tag == "Medkit")
+        {
+            if (health >= 100)
+            {
+                return;
+            }
+            health += 50;
+        }
+
+        if (colldier.tag == "ammo")
+        {
+            if (activeGun.TryGetComponent<GunScript>(out GunScript gunScript))
+            {
+                gunScript.ammoCount += (int)Mathf.Round(gunScript.startingAmmo / 2f);
+            }
+        }
+
+        colldier.gameObject.SetActive(false);
     }
 }

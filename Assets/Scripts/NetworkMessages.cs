@@ -17,6 +17,7 @@ namespace NetworkObject
         public string nombre;
         public short[] arrGuns;
         public int activeGunIndex;
+        public bool isDead;
     }
 
     [System.Serializable]
@@ -34,6 +35,13 @@ namespace NetworkObject
         public int fire_axis;
         public int aim_axis;
         public bool isGrounded;
+    }
+
+    [System.Serializable]
+    public class NetworkItem : NetworkObject
+    {
+        public int itemId;
+        public bool enabled;
     }
 }
 
@@ -56,6 +64,7 @@ namespace NetworkMessages
         PLAYER_RESPAWN,
         PLAYER_ANIMATION,
         CREATE_BULLET_HOLE,
+        ITEM_STATE
     }
 
     [System.Serializable]
@@ -163,10 +172,12 @@ namespace NetworkMessages
     {
         public string id;
         public List<NetworkObject.NetworkPlayer> playersList;
+        public List<NetworkObject.NetworkItem> itemList;
         public PlayerJoinMsg()
         {
             command = Commands.PLAYER_JOIN;
             playersList = new List<NetworkObject.NetworkPlayer>();
+            itemList = new List<NetworkObject.NetworkItem>();
         }
     }
 
@@ -269,6 +280,19 @@ namespace NetworkMessages
             command = Commands.PLAYER_ANIMATION;
             id = "";
             animation = new NetworkObject.NetworkAnimation();
+        }
+    }
+
+    [System.Serializable]
+    public class StateItemMsg : NetworkHeader
+    {
+        public int itemId;
+        public bool enabled;
+        public StateItemMsg()
+        {
+            command = Commands.ITEM_STATE;
+            itemId = 0;
+            enabled = false;
         }
     }
 }

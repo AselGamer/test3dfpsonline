@@ -19,6 +19,7 @@ public class GunScript : MonoBehaviour
     public Vector3 overrideEulerAngles;
     public Vector3 overridePosition;
 
+    public int startingAmmo;
     public int ammoCount;
     public int magSize;
     public int ammoInMag;
@@ -34,7 +35,7 @@ public class GunScript : MonoBehaviour
     private void Start()
     {
         ammoInMag = magSize;
-        ammoCount -= magSize;
+        ammoCount = startingAmmo;
         server = GameObject.Find("Server").GetComponent<Server>();
 
         transform.localPosition = overridePosition;
@@ -89,5 +90,12 @@ public class GunScript : MonoBehaviour
                 
             }
         }
+    }
+
+    public void RestoreAmmo()
+    {
+        ammoCount = startingAmmo;
+        ammoInMag = magSize;
+        Debug.Log(magSize);
     }
 }

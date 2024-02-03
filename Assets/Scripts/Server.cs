@@ -37,6 +37,9 @@ public class Server : MonoBehaviour
     public int bulletHolePoolSize;
     public List<GameObject> bulletHolePool;
 
+    [Header("Items list")]
+    public List<GameObject> itemsList;
+
     void Start()
     {
         m_Driver = NetworkDriver.Create();
@@ -55,6 +58,11 @@ public class Server : MonoBehaviour
             var auxBulletHole = Instantiate(bulletHolePrefab);
             auxBulletHole.SetActive(false);
             bulletHolePool.Add(auxBulletHole);
+        }
+
+        foreach (var item in itemsList)
+        {
+            item.GetComponent<ItemScript>().itemId = itemsList.IndexOf(item);
         }
 
         StartCoroutine(DestroyBulletHole());
@@ -136,6 +144,7 @@ public class Server : MonoBehaviour
     }
     void FixedUpdate()
     {        
+        //welcome to hell, population unoptimized code
         foreach (var playerKvp in simulatedPlayers)
         {
             var player = playerKvp.Value;
@@ -147,7 +156,10 @@ public class Server : MonoBehaviour
             {
                 playerScript.dead = true;
                 playerScript.health = 100;
-                playerScript.timeUntilRespawn = 5f;
+                playerScript.timeUntilRespawn = 60f;
+                playerScript.RestoreAmmo();
+                player.GetComponent<CapsuleCollider>().enabled = false;
+                player.GetComponent<Rigidbody>().useGravity = false;
                 int randomSpawnIndex = UnityEngine.Random.Range(0, spawnPoints.Count - 1);
                 player.transform.position = spawnPoints[randomSpawnIndex].position;
                 PlayerKillMsg pKillMsg = new PlayerKillMsg();
@@ -157,7 +169,8 @@ public class Server : MonoBehaviour
 
             if (playerScript.timeUntilRespawn == 0f && playerScript.dead)
             {
-                player.SetActive(true);
+                player.GetComponent<CapsuleCollider>().enabled = true;
+                player.GetComponent<Rigidbody>().useGravity = true;
                 player.GetComponent<PlayerScript>().dead = false;
                 PlayerRespawnMsg pRespawnMsg = new PlayerRespawnMsg();
                 pRespawnMsg.id = playerKvp.Key;
@@ -226,6 +239,7 @@ public class Server : MonoBehaviour
                 PlayerJoinMsg playerJoinMsg = new PlayerJoinMsg();
                 playerJoinMsg.id = hsMsg.player.id;
                 var auxPlayers = new List<NetworkObject.NetworkPlayer>();
+                var auxItems = new List<NetworkObject.NetworkItem>();
 
                 foreach (var auxPlayer in m_Players)
                 {
@@ -236,9 +250,19 @@ public class Server : MonoBehaviour
                         break;
                     }
                     auxPlayer.activeGunIndex = auxSimulatedPlayer3.GetComponent<PlayerScript>().activeGunIndex;
+                    auxPlayer.isDead = auxSimulatedPlayer3.GetComponent<PlayerScript>().dead;
                     auxPlayers.Add(auxPlayer);
                 }
+
+                foreach (var item in itemsList)
+                {
+                    var auxItem = new NetworkObject.NetworkItem();
+                    auxItem.itemId = itemsList.IndexOf(item);
+                    auxItem.enabled = item.activeSelf;
+                    auxItems.Add(auxItem);
+                }
                 playerJoinMsg.playersList = auxPlayers;
+                playerJoinMsg.itemList = auxItems;
                 SendToClient(JsonUtility.ToJson(playerJoinMsg), m_Connections[numJugador]);
                 break;
             case Commands.PLAYER_INPUT:
@@ -363,7 +387,7 @@ public class Server : MonoBehaviour
             CreateBulletHoleMsg bHoleMsg = new CreateBulletHoleMsg();
             bHoleMsg.hit.position = bulletHole.transform.position;
             bHoleMsg.hit.rotation = bulletHole.transform.rotation;
-            //SendToAllClients(JsonUtility.ToJson(bHoleMsg));
+            SendToAllClients(JsonUtility.ToJson(bHoleMsg));
         }
     }
 
@@ -382,40 +406,6 @@ public class Server : MonoBehaviour
         }
     }
 
-    /*
-    public IEnumerator KillPlayer(GameObject playerToKill)
-    { 
-        playerToKill.SetActive(false);
-        playerToKill.GetComponent<PlayerScript>().health = 100;
-        //Change to random later
-        int spawnRandomIndex = UnityEngine.Random.Range(0, spawnPoints.Count - 1);
-        playerToKill.transform.position = spawnPoints[spawnRandomIndex].position;
-        var idPlayer = simulatedPlayersInverse[playerToKill];
-
-        PlayerKillMsg pKillMsg = new PlayerKillMsg();
-        pKillMsg.id = idPlayer;
-        SendToAllClients(JsonUtility.ToJson(pKillMsg));
-
-        for (int respCountDown = 5; respCountDown > -1; respCountDown--)
-        {
-            if (playerToKill == null)
-            {
-                yield break;
-            }
-            
-            if (respCountDown == 0)
-            {
-                playerToKill.SetActive(true);
-                playerToKill.GetComponent<PlayerScript>().dead = false;
-                PlayerRespawnMsg pRespawnMsg = new PlayerRespawnMsg();
-                pRespawnMsg.id = idPlayer;
-                SendToAllClients(JsonUtility.ToJson(pRespawnMsg));
-            }
-            yield return new WaitForSeconds(1f);
-        }
-    }
-    */
-
     /*For the love of god move this to the player script it doesen't make sense it being here
      */
     public void SendPlayerAnimation(string playerId, NetworkAnimation animationVariables)
@@ -424,5 +414,23 @@ public class Server : MonoBehaviour
         pAnimationMsg.id = playerId;
         pAnimationMsg.animation = animationVariables;
         SendToAllClients(JsonUtility.ToJson(pAnimationMsg));
+    }
+
+    public void SendItemStateChange(int itemId)
+    {
+        StateItemMsg stateItemMsg = new StateItemMsg();
+        stateItemMsg.itemId = itemId;
+        stateItemMsg.enabled = itemsList[itemId].activeSelf;
+        SendToAllClients(JsonUtility.ToJson(stateItemMsg));
+
+        var coroutine = itemsList[itemId].GetComponent<ItemScript>().RespawnItem();
+
+        if (!itemsList[itemId].activeSelf) 
+        {
+            StartCoroutine(coroutine);
+        } else
+        {
+            StopCoroutine(coroutine);
+        }
     }
 }
