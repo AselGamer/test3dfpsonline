@@ -12,6 +12,14 @@ public class PlayerScriptClient : MonoBehaviour
 
     private int activeGunIndex = -1;
 
+    public float defaultFov = 60f;
+
+    public float zoomMultiplier = 2;
+
+    public float zoomSpeed = 4f;
+
+    public float zoomDuration = 2;
+
     public GameObject camara;
 
     public GameObject playerModel;
@@ -28,9 +36,10 @@ public class PlayerScriptClient : MonoBehaviour
     public Transform aimDirection;
     public Transform leanAngles;
 
+    private int walkAxis;
+
     void Update()
     {
-
         Vector3 newPosition = camara.transform.position + camara.transform.forward * 2 + Vector3.zero;
         aimDirection.transform.position = newPosition;
     }
@@ -98,7 +107,8 @@ public class PlayerScriptClient : MonoBehaviour
 
     public void PlayAnimations(NetworkObject.NetworkAnimation animation)
     {
-        miAnimator.SetFloat("walk_axis", (int)Mathf.Clamp01(Mathf.Abs(animation.velocidad_x) + Mathf.Abs(animation.velocidad_y)));
+        walkAxis = (int)Mathf.Clamp01(Mathf.Abs(animation.velocidad_x) + Mathf.Abs(animation.velocidad_y));
+        miAnimator.SetFloat("walk_axis", walkAxis);
         miAnimator.SetFloat("fire_aim_axis", Mathf.Clamp01(Mathf.Abs(animation.fire_axis) + Mathf.Abs(animation.aim_axis)));
         miAnimator.SetFloat("fire_axis", animation.fire_axis);
         miAnimator.SetFloat("aim_axis", animation.aim_axis);
@@ -113,8 +123,24 @@ public class PlayerScriptClient : MonoBehaviour
                 viewModelScript.aiming = animation.aim_axis > 0;
                 viewModelScript.firing = animation.fire_axis > 0;
             }
-            
         }
+
+        if (animation.aim_axis == 1)
+        {
+            ZoomCamera(defaultFov / zoomMultiplier);
+        }
+        else if(animation.aim_axis == 0 && camara.GetComponent<Camera>().fieldOfView != defaultFov)
+        {
+            ZoomCamera(defaultFov);
+        }
+    }
+
+    private void ZoomCamera(float target)
+    {
+        float angle = Mathf.Abs((defaultFov / zoomSpeed) - defaultFov);
+        camara.GetComponent<Camera>().fieldOfView = Mathf.MoveTowards(camara.GetComponent<Camera>().fieldOfView, target, angle / zoomDuration * Time.deltaTime);
+        camara.transform.GetChild(2).GetComponent<Camera>().fieldOfView = camara.GetComponent<Camera>().fieldOfView;
+        camara.transform.GetChild(3).GetComponent<Camera>().fieldOfView = camara.GetComponent<Camera>().fieldOfView;
     }
 
     public void StopGunFireAnimation()

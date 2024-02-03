@@ -91,6 +91,7 @@ namespace NetworkMessages
         public short verticalInput;
         public short horizontalInput;
         public short leanInput;
+        public short runInput;
 
         public byte fireInput;
         public byte aimInput;
@@ -101,8 +102,11 @@ namespace NetworkMessages
             verticalInput = 0;
             horizontalInput = 0;
             leanInput = 0;
+            runInput = 0;
+
             fireInput = 0;
             aimInput = 0;
+            reloadInput = 0;
         }
     }
 

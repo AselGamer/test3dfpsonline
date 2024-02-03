@@ -129,6 +129,8 @@ public class NetworkClient : MonoBehaviour
         short verticalInput = (short)(Input.GetKey("d") ? 1 : Input.GetKey("a") ? -1 : 0);
         short horizontalInput = (short)(Input.GetKey("w") ? 1 : Input.GetKey("s") ? -1 : 0);
 
+        short runInput = (short)(Input.GetKey("x") ? 1 : 0);
+
         short leanInput = (short)(Input.GetKey("e") ? -1 : Input.GetKey("q") ? 1 : 0);
 
         byte fireInput = (byte)(Input.GetMouseButton(0) ? 1 : 0);
@@ -164,6 +166,7 @@ public class NetworkClient : MonoBehaviour
         pInputMsg.id = idPlayer;
         pInputMsg.horizontalInput = horizontalInput;
         pInputMsg.verticalInput = verticalInput;
+        pInputMsg.runInput = runInput;
         pInputMsg.leanInput = leanInput;
         pInputMsg.fireInput = fireInput;
         pInputMsg.aimInput = aimInput;

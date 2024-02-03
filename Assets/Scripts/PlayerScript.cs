@@ -42,6 +42,8 @@ public class PlayerScript : MonoBehaviour
     public short verticalInput;
     public short horizontalInput;
 
+    public short runInput;
+
     public short leanInput;
 
     public bool jumpInput;
@@ -161,11 +163,18 @@ public class PlayerScript : MonoBehaviour
                 gunScript.reloading = true;
             }
 
+            if (runInput == 1)
+            {
+                speedQuantity = 1.5f;
+            }
+
             if (aimInput == 1)
             {
                 speedQuantity = 0.75f;
             }
-            else
+
+            
+            if (aimInput == 0 && runInput == 0)
             {
                 speedQuantity = 1f;
             }
@@ -176,6 +185,7 @@ public class PlayerScript : MonoBehaviour
     {
         verticalInput = pInputMsg.verticalInput;
         horizontalInput = pInputMsg.horizontalInput;
+        runInput = pInputMsg.runInput;
         leanInput = pInputMsg.leanInput;
         fireInput = pInputMsg.fireInput;
         aimInput = pInputMsg.aimInput;
