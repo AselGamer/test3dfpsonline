@@ -85,7 +85,8 @@ public class PlayerScript : MonoBehaviour
         miAnimator.SetFloat("velocidad_y", verticalInput);
         miAnimator.SetFloat("aim_axis", aimInput);
         miAnimator.SetFloat("fire_axis", playFireAnimation);
-        miAnimator.SetBool("isGrounded", isGrounded);
+        miAnimator.SetFloat("jump_axis", isGrounded ? 0 : 1);
+        //miAnimator.SetBool("isGrounded", isGrounded);
 
         NetworkAnimation networkAnimation = new NetworkAnimation();
         networkAnimation.velocidad_x = horizontalInput;
@@ -149,11 +150,12 @@ public class PlayerScript : MonoBehaviour
         if (activeGun.TryGetComponent<GunScript>(out GunScript gunScript))
         {
             //This didn't work before, but now it does
-            if (fireInput == 1 && Time.time >= nextTimeToFire && gunScript.ammoInMag > 0)
+            if (fireInput == 1 && Time.time >= nextTimeToFire && gunScript.ammoInMag > 0 && isGrounded)
             {
                 playFireAnimation = 1f;
                 nextTimeToFire = Time.time + 1f / gunScript.fireRate;
             }
+
 
             if (reloadInput == 1 && fireInput == 0)
             {

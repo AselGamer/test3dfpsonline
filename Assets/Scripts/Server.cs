@@ -156,7 +156,7 @@ public class Server : MonoBehaviour
             {
                 playerScript.dead = true;
                 playerScript.health = 100;
-                playerScript.timeUntilRespawn = 60f;
+                playerScript.timeUntilRespawn = 10f;
                 playerScript.RestoreAmmo();
                 player.GetComponent<CapsuleCollider>().enabled = false;
                 player.GetComponent<Rigidbody>().useGravity = false;

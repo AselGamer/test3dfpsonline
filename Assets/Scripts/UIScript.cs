@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIScript : MonoBehaviour
 {
@@ -10,12 +11,12 @@ public class UIScript : MonoBehaviour
 
     public int health;
 
-    public TextMeshProUGUI healthPoints;
+    public Slider healthPoints;
     public TextMeshProUGUI ammoCounter;
 
     void Update()
     {
-        healthPoints.text = "Vida: " + health.ToString();
+        healthPoints.value = health;
         ammoCounter.text = ammoInMag.ToString() + "|" + ammoCount.ToString();
         
     }

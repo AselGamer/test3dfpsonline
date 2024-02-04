@@ -324,6 +324,7 @@ public class NetworkClient : MonoBehaviour
             case Commands.PLAYER_RESPAWN:
                 PlayerRespawnMsg pRespawnMsg = JsonUtility.FromJson<PlayerRespawnMsg>(recMsg);
                 playerAux5 = simulatedPlayers[pRespawnMsg.id];
+                Debug.Log(pRespawnMsg.id);
                 if (pRespawnMsg.id == idPlayer)
                 {
                     muerto = false;

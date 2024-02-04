@@ -114,7 +114,7 @@ public class PlayerScriptClient : MonoBehaviour
         miAnimator.SetFloat("aim_axis", animation.aim_axis);
         miAnimator.SetFloat("velocidad_x", animation.velocidad_x);
         miAnimator.SetFloat("velocidad_y", animation.velocidad_y);
-        miAnimator.SetBool("isGrounded", animation.isGrounded);
+        miAnimator.SetFloat("jump_axis", animation.isGrounded ? 0 : 1);
         //Gun Animations
         if (activeGun != null)
         {
