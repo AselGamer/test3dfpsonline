@@ -364,14 +364,16 @@ public class Server : MonoBehaviour
         {
             return;
         }
-        Debug.Log(Aes256CbcEncrypter.EncryptString(message));
+
+        var encrypMsg = Aes256CbcEncrypter.EncryptString(message);
+
         DataStreamWriter writer;
         m_Driver.BeginSend(pipeline, c, out writer);
         if (!writer.IsCreated)
         {
             return;
         }
-        NativeArray<byte> bytes = new NativeArray<byte>(System.Text.Encoding.ASCII.GetBytes(message), Allocator.Temp);
+        NativeArray<byte> bytes = new NativeArray<byte>(System.Text.Encoding.ASCII.GetBytes(encrypMsg), Allocator.Temp);
         writer.WriteBytes(bytes);
         m_Driver.EndSend(writer);
     }

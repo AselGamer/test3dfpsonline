@@ -3,17 +3,20 @@ using System.Security.Cryptography;
 using System.Text;
 using System;
 using System.IO;
+using System.Diagnostics;
 
 
 public class Aes256CbcEncrypter
 {
-    private static readonly byte[] Key = Encoding.UTF8.GetBytes("tcqMIij0t5r9GLcbn5DkriRxmSiQQCJzaku32xVlFds=");
-    private static readonly byte[] IV = Encoding.UTF8.GetBytes("57f827b1fc556f74b7777625fc3358dd");
+    private static readonly byte[] Key = Convert.FromBase64String("GqFwSvvE1rFnEcEfqjMQkNxV3Pnpb/v/DD9E+D+9CPI=");
+    private static readonly byte[] IV = Convert.FromBase64String("xz+fiW40M2mKRGAd1sqT0w==");
 
     public static string EncryptString(string plainText)
     {
         using (Aes aesAlg = Aes.Create())
         {
+            aesAlg.KeySize = 256;
+            aesAlg.Mode = CipherMode.CBC;
 
             aesAlg.Key = Key;
             aesAlg.IV = IV;
@@ -38,6 +41,9 @@ public class Aes256CbcEncrypter
     {
         using (Aes aesAlg = Aes.Create())
         {
+            aesAlg.KeySize = 256;
+            aesAlg.Mode = CipherMode.CBC;
+
             aesAlg.Key = Key;
             aesAlg.IV = IV;
 
@@ -53,6 +59,24 @@ public class Aes256CbcEncrypter
                     }
                 }
             }
+        }
+    }
+
+    public static string GiveKey()
+    {
+        using (Aes aesAlg = Aes.Create())
+        {
+            aesAlg.GenerateKey();
+            return Convert.ToBase64String(aesAlg.Key);
+        }
+    }
+
+    public static string GiveIV()
+    {
+        using (Aes aesAlg = Aes.Create())
+        {
+            aesAlg.GenerateIV();
+            return Convert.ToBase64String(aesAlg.IV);
         }
     }
 }

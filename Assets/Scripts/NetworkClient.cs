@@ -186,7 +186,8 @@ public class NetworkClient : MonoBehaviour
     { 
         NativeArray<byte> bytes = new NativeArray<byte>(stream.Length, Allocator.Temp);
         stream.ReadBytes(bytes);
-        string recMsg = System.Text.Encoding.ASCII.GetString(bytes.ToArray());
+        string recMsgEnc = System.Text.Encoding.ASCII.GetString(bytes.ToArray());
+        string recMsg = Aes256CbcEncrypter.DecryptString(recMsgEnc);
         NetworkHeader header = JsonUtility.FromJson<NetworkHeader>(recMsg);
 
         switch(header.command)
