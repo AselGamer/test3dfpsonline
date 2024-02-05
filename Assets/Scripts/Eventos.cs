@@ -12,7 +12,13 @@ public class Eventos : MonoBehaviour
     public GameObject panelCompras;
     public GameObject panelArmas;
     public GameObject panelDetalle;
+    public GameObject panelJugar;
+    public GameObject empezar;
 
+    public void jugarPartida()
+    {
+        SceneManager.LoadScene("Client");
+    }
     public void retrocederAlPanelSesion()
     {
         panelInicio.SetActive(false);
@@ -22,6 +28,17 @@ public class Eventos : MonoBehaviour
         panelSesion.GetComponent<PostMethod>().dinero.SetActive(false);
         GameObject.Find("Login Usuario").GetComponent<TMP_InputField>().text = "";
         GameObject.Find("Login Password").GetComponent<TMP_InputField>().text = "";
+    }
+    public void avanzarAlPanelJugar()
+    {
+        panelInicio.SetActive(false);
+        panelJugar.SetActive(true);
+        panelJugar.GetComponent<GetMethod>().GetDataArmas("jugar");
+    }
+    public void retrocederDePanelJugarAlPanelInicio()
+    {
+        panelJugar.SetActive(false);
+        panelInicio.SetActive(true);
     }
     public void avanzarAlPanelCompras()
     {
@@ -37,19 +54,19 @@ public class Eventos : MonoBehaviour
     {
         panelCompras.SetActive(false);
         panelArmas.SetActive(true);
-        panelArmas.GetComponent<GetMethod>().GetDataArmas();
+        panelArmas.GetComponent<GetMethod>().GetDataArmas("comprar");
     }
     public void avanzarAlPanelArmaduras()
     {
         panelCompras.SetActive(false);
         panelArmas.SetActive(true);
-        panelArmas.GetComponent<GetMethod>().GetDataArmaduras();
+        panelArmas.GetComponent<GetMethod>().GetDataArmaduras("comprar");
     }
     public void avanzarAlPanelMedicamentos()
     {
         panelCompras.SetActive(false);
         panelArmas.SetActive(true);
-        panelArmas.GetComponent<GetMethod>().GetDataMedicamentos();
+        panelArmas.GetComponent<GetMethod>().GetDataMedicamentos("comprar");
     }
     public void retrocederAlPanelCompras()
     {
@@ -77,14 +94,14 @@ public class Eventos : MonoBehaviour
         }
         if(tipo == "arma")
         {
-            panelArmas.GetComponent<GetMethod>().GetDataArmas();
+            panelArmas.GetComponent<GetMethod>().GetDataArmas("comprar");
         }else if (tipo == "armadura")
         {
-            panelArmas.GetComponent<GetMethod>().GetDataArmaduras();
+            panelArmas.GetComponent<GetMethod>().GetDataArmaduras("comprar");
         }
         else if (tipo == "medicamento")
         {
-            panelArmas.GetComponent<GetMethod>().GetDataMedicamentos();
+            panelArmas.GetComponent<GetMethod>().GetDataMedicamentos("comprar");
         }
         for (int i = 0; i < panelArmas.GetComponent<GetMethod>().articulos.Length; i++)
         {

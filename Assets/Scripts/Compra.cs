@@ -17,6 +17,7 @@ public class Compra : MonoBehaviour
     public GameObject id;
     public GameObject tipoEquipamiento;
     public GameObject nombre;
+    public GameObject precio;
 
     // Start is called before the first frame update
     void Start()
@@ -25,7 +26,8 @@ public class Compra : MonoBehaviour
     }
 
     void PostData() => StartCoroutine(PostData_Coroutine());
-
+    //void PostDataDinero(float precioVenta) => StartCoroutine(PostData_Coroutine_Dinero(precioVenta));
+    ////////////////////////////////////////////////////////////////
     IEnumerator PostData_Coroutine()
     {
         string uri = "https://retoiraitz.duckdns.org/api/venta/";
@@ -80,7 +82,17 @@ public class Compra : MonoBehaviour
             {
                 idVenta = respuestaVenta.result;
                 Debug.Log("idVenta--------->" + idVenta);
+                float precioVenta = float.Parse(precio.GetComponent<TextMeshProUGUI>().text);
+                Debug.Log("precio--------->" + precioVenta);
+                //PostDataDinero(precioVenta);/////////////////////
             }
         }
     }
+
+    /*IEnumerator PostData_Coroutine_Dinero(float precioVenta)//////////////////////////
+    {
+        string uri = "https://retoiraitz.duckdns.org/api/res.users/";
+        //string uri = "http://localhost:8069/api/res.users/";
+
+    }*/
 }
