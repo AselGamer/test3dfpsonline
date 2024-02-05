@@ -27,7 +27,7 @@ public class GetMethod : MonoBehaviour
     public GameObject atras;
     public GameObject atrasArma, atrasArmadura, atrasMedicamento;
     public GameObject bienvenida;
-    public GameObject nombre, descripcion, danyo, velocidad, precio, defensa, curacion;
+    public GameObject id, tipoEquipamiento, nombre, descripcion, danyo, velocidad, precio, defensa, curacion;
     public Usuario usuario;
     public GameObject dinero;
 
@@ -58,23 +58,23 @@ public class GetMethod : MonoBehaviour
             atrasArma.SetActive(true);
             atrasArmadura.SetActive(false);
             atrasMedicamento.SetActive(false);
-            //uri = "https://retoiraitz.duckdns.org/api/arma/?query={id, name, descripcion, danyo, velocidad, precio, imagen, ventas, priority}";
-            uri = "http://localhost:8069/api/arma/?query={id, name, descripcion, danyo, velocidad, precio, imagen, ventas, priority}";
+            uri = "https://retoiraitz.duckdns.org/api/arma/?query={id, name, descripcion, danyo, velocidad, precio, imagen, ventas, priority}";
+            //uri = "http://localhost:8069/api/arma/?query={id, name, descripcion, danyo, velocidad, precio, imagen, ventas, priority}";
         }else if(tipo == "armadura")
         {
             atrasArma.SetActive(false);
             atrasArmadura.SetActive(true);
             atrasMedicamento.SetActive(false);
-            //uri = "https://retoiraitz.duckdns.org/api/armadura/?query={id, name, descripcion, defensa, precio, imagen, ventas, priority}";
-            uri = "http://localhost:8069/api/armadura/?query={id, name, descripcion, defensa, precio, imagen, ventas, priority}";
+            uri = "https://retoiraitz.duckdns.org/api/armadura/?query={id, name, descripcion, defensa, precio, imagen, ventas, priority}";
+            //uri = "http://localhost:8069/api/armadura/?query={id, name, descripcion, defensa, precio, imagen, ventas, priority}";
         }
         else if (tipo == "medicamento")
         {
             atrasArma.SetActive(false);
             atrasArmadura.SetActive(false);
             atrasMedicamento.SetActive(true);
-            //uri = "https://retoiraitz.duckdns.org/api/medicamento/?query={id, name, descripcion, curacion, precio, imagen, ventas, priority}";
-            uri = "http://localhost:8069/api/medicamento/?query={id, name, descripcion, curacion, precio, imagen, ventas, priority}";
+            uri = "https://retoiraitz.duckdns.org/api/medicamento/?query={id, name, descripcion, curacion, precio, imagen, ventas, priority}";
+            //uri = "http://localhost:8069/api/medicamento/?query={id, name, descripcion, curacion, precio, imagen, ventas, priority}";
         }
 
         using (UnityWebRequest request = UnityWebRequest.Get(uri))
@@ -178,8 +178,8 @@ public class GetMethod : MonoBehaviour
 
         if(tipo == "arma")
         {
-            //string uri = "https://retoiraitz.duckdns.org/api/arma/" + articulo.name + "/?query={id, name, descripcion, danyo, velocidad, precio, imagen, ventas, priority}";
-            string uri = "http://localhost:8069/api/arma/" + articulo.name + "/?query={id, name, descripcion, danyo, velocidad, precio, imagen, ventas, priority}";
+            string uri = "https://retoiraitz.duckdns.org/api/arma/" + articulo.name + "/?query={id, name, descripcion, danyo, velocidad, precio, imagen, ventas, priority}";
+            //string uri = "http://localhost:8069/api/arma/" + articulo.name + "/?query={id, name, descripcion, danyo, velocidad, precio, imagen, ventas, priority}";
             using (UnityWebRequest request = UnityWebRequest.Get(uri))
             {
                 yield return request.SendWebRequest();
@@ -206,6 +206,8 @@ public class GetMethod : MonoBehaviour
 
                     //articulos[0].GetComponent<Image>().sprite = sprite;
                     danyo.SetActive(true);
+                    id.GetComponent<TextMeshProUGUI>().text = arma.id.ToString();
+                    tipoEquipamiento.GetComponent<TextMeshProUGUI>().text = tipo;
                     nombre.GetComponent<TextMeshProUGUI>().text = arma.name;
                     descripcion.GetComponent<TextMeshProUGUI>().text = arma.descripcion;
                     danyo.GetComponent<TextMeshProUGUI>().text = "Daño: " + arma.danyo;
@@ -215,8 +217,8 @@ public class GetMethod : MonoBehaviour
             }
         }else if(tipo == "armadura")
         {
-            //string uri = "https://retoiraitz.duckdns.org/api/armadura/" + articulo.name + "/?query={id, name, descripcion, defensa, precio, imagen, ventas, priority}";
-            string uri = "http://localhost:8069/api/armadura/" + articulo.name + "/?query={id, name, descripcion, defensa, precio, imagen, ventas, priority}";
+            string uri = "https://retoiraitz.duckdns.org/api/armadura/" + articulo.name + "/?query={id, name, descripcion, defensa, precio, imagen, ventas, priority}";
+            //string uri = "http://localhost:8069/api/armadura/" + articulo.name + "/?query={id, name, descripcion, defensa, precio, imagen, ventas, priority}";
             using (UnityWebRequest request = UnityWebRequest.Get(uri))
             {
                 yield return request.SendWebRequest();
@@ -243,6 +245,8 @@ public class GetMethod : MonoBehaviour
 
                     //articulos[0].GetComponent<Image>().sprite = sprite;
                     danyo.SetActive(false);
+                    id.GetComponent<TextMeshProUGUI>().text = armadura.id.ToString();
+                    tipoEquipamiento.GetComponent<TextMeshProUGUI>().text = tipo;
                     nombre.GetComponent<TextMeshProUGUI>().text = armadura.name;
                     descripcion.GetComponent<TextMeshProUGUI>().text = armadura.descripcion;
                     defensa.GetComponent<TextMeshProUGUI>().text = "Defensa: " + armadura.defensa.ToString();
@@ -252,8 +256,8 @@ public class GetMethod : MonoBehaviour
         }
         else if (tipo == "medicamento")
         {
-            //string uri = "https://retoiraitz.duckdns.org/api/medicamento/" + articulo.name + "/?query={id, name, descripcion, curacion, precio, imagen, ventas, priority}";
-            string uri = "http://localhost:8069/api/medicamento/" + articulo.name + "/?query={id, name, descripcion, curacion, precio, imagen, ventas, priority}";
+            string uri = "https://retoiraitz.duckdns.org/api/medicamento/" + articulo.name + "/?query={id, name, descripcion, curacion, precio, imagen, ventas, priority}";
+            //string uri = "http://localhost:8069/api/medicamento/" + articulo.name + "/?query={id, name, descripcion, curacion, precio, imagen, ventas, priority}";
             using (UnityWebRequest request = UnityWebRequest.Get(uri))
             {
                 yield return request.SendWebRequest();
@@ -280,6 +284,8 @@ public class GetMethod : MonoBehaviour
 
                     //articulos[0].GetComponent<Image>().sprite = sprite;
                     danyo.SetActive(false);
+                    id.GetComponent<TextMeshProUGUI>().text = medicamento.id.ToString();
+                    tipoEquipamiento.GetComponent<TextMeshProUGUI>().text = tipo;
                     nombre.GetComponent<TextMeshProUGUI>().text = medicamento.name;
                     descripcion.GetComponent<TextMeshProUGUI>().text = medicamento.descripcion;
                     curacion.GetComponent<TextMeshProUGUI>().text = "Defensa: " + medicamento.curacion.ToString();
@@ -293,8 +299,8 @@ public class GetMethod : MonoBehaviour
 
     IEnumerator GetData_Coroutine_Dinero(int idUsuario)
     {
-        //string uri = "https://retoiraitz.duckdns.org/api/res.users/" + idUsuario + "/?query={id, name, x_dinero}";
-        string uri = "http://localhost:8069/api/res.users/" + idUsuario + "/?query={id, name, x_dinero}";
+        string uri = "https://retoiraitz.duckdns.org/api/res.users/" + idUsuario + "/?query={id, name, x_dinero}";
+        //string uri = "http://localhost:8069/api/res.users/" + idUsuario + "/?query={id, name, x_dinero}";
         using (UnityWebRequest request = UnityWebRequest.Get(uri))
         {
             yield return request.SendWebRequest();
