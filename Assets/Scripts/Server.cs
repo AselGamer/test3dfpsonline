@@ -9,6 +9,8 @@ using Unity.Jobs;
 using System;
 using NetworkObject;
 using GetGunsScript;
+using System.Security.Cryptography;
+using System.Text;
 
 public class Server : MonoBehaviour
 {
@@ -17,7 +19,7 @@ public class Server : MonoBehaviour
     public ushort serverPort;
     private NativeList<NetworkConnection> m_Connections;
     public List<NetworkObject.NetworkPlayer> m_Players;
-    private static int nextId = 0;
+    //private static int nextId = 0;
     public static NetworkPipeline pipeline;
     JobHandle m_ServerJobHandle;
 
@@ -135,10 +137,12 @@ public class Server : MonoBehaviour
                     playerConnection.Remove(idDisconnect);
                     cmd = NetworkEvent.Type.Empty;
                     SendToAllClients(JsonUtility.ToJson(pDisconnectMsg));
-                    --i;
                     continue;
                 }
-                cmd = m_Driver.PopEventForConnection(m_Connections[i], out stream);
+                if (m_Connections[i] != null)
+                {
+                    cmd = m_Driver.PopEventForConnection(m_Connections[i], out stream);
+                }
             }
         }
     }
@@ -156,7 +160,7 @@ public class Server : MonoBehaviour
             {
                 playerScript.dead = true;
                 playerScript.health = 100;
-                playerScript.timeUntilRespawn = 10f;
+                playerScript.timeUntilRespawn = 5f;
                 playerScript.RestoreAmmo();
                 player.GetComponent<CapsuleCollider>().enabled = false;
                 player.GetComponent<Rigidbody>().useGravity = false;
@@ -174,6 +178,7 @@ public class Server : MonoBehaviour
                 player.GetComponent<PlayerScript>().dead = false;
                 PlayerRespawnMsg pRespawnMsg = new PlayerRespawnMsg();
                 pRespawnMsg.id = playerKvp.Key;
+                Debug.Log(pRespawnMsg.id);
                 SendToAllClients(JsonUtility.ToJson(pRespawnMsg));
             }
 
@@ -284,6 +289,10 @@ public class Server : MonoBehaviour
             case Commands.PLAYER_CAM_MOV:
                 PlayerMoveCamera pCamMovMsg = JsonUtility.FromJson<PlayerMoveCamera>(recMsg);
                 var playerAux6 = FindPlayerById(pCamMovMsg.id);
+                if (playerAux6 == null)
+                {
+                    return;
+                }
                 playerAux6.GetComponentInChildren<CameraScript>().mouseX = pCamMovMsg.mouseX;
                 playerAux6.GetComponentInChildren<CameraScript>().mouseY = pCamMovMsg.mouseY;
 
@@ -345,8 +354,7 @@ public class Server : MonoBehaviour
         Debug.Log("Accepted a connection");
 
         HandshakeMsg m = new HandshakeMsg();
-        m.player.id = nextId.ToString();
-        nextId++;
+        m.player.id = Guid.NewGuid().ToString();
         SendToClient(JsonUtility.ToJson(m), c);
     }
 
@@ -356,7 +364,7 @@ public class Server : MonoBehaviour
         {
             return;
         }
-
+        Debug.Log(Aes256CbcEncrypter.EncryptString(message));
         DataStreamWriter writer;
         m_Driver.BeginSend(pipeline, c, out writer);
         if (!writer.IsCreated)
@@ -433,4 +441,5 @@ public class Server : MonoBehaviour
             StopCoroutine(coroutine);
         }
     }
+
 }

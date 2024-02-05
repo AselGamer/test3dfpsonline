@@ -498,7 +498,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39cc6f4156480504bbc1f3f59a8615e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  serverIp: 127.0.0.1
+  serverIp: 192.168.0.244
   serverPort: 1234
   idPlayer: 
   empezar: 0
@@ -506,7 +506,7 @@ MonoBehaviour:
   interfaz: {fileID: 565321454}
   interfazMuerte: {fileID: 7566536268582623223}
   deathCamPos: {fileID: 480604834}
-  sensitivity: 0.01
+  sensitivity: 0.3
   arrGuns: 00000100
   muerto: 0
   guns:
@@ -541,6 +541,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 172577971893996338, guid: 96040c408963ebb4085fceabfcf5bd67, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 172577971893996338, guid: 96040c408963ebb4085fceabfcf5bd67, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1596319880379158130, guid: 96040c408963ebb4085fceabfcf5bd67, type: 3}
       propertyPath: m_Pivot.x
       value: 0

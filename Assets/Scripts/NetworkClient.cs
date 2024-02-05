@@ -159,8 +159,8 @@ public class NetworkClient : MonoBehaviour
             SendToServer(JsonUtility.ToJson(pJumpMsg));
         }
 
-        float mouseX = Input.GetAxisRaw("Mouse X") * sensitivity;
-        float mouseY = Input.GetAxisRaw("Mouse Y") * sensitivity;
+        float mouseX = Input.GetAxisRaw("Mouse X") * sensitivity * Time.deltaTime;
+        float mouseY = Input.GetAxisRaw("Mouse Y") * sensitivity * Time.deltaTime;
 
         PlayerInputMsg pInputMsg = new PlayerInputMsg();
         pInputMsg.id = idPlayer;
@@ -282,10 +282,9 @@ public class NetworkClient : MonoBehaviour
 
             case Commands.PLAYER_DISCONNECT:
                 PlayerDisconnectMsg pDisconnectMsg = JsonUtility.FromJson<PlayerDisconnectMsg>(recMsg);
-                int id = int.Parse(pDisconnectMsg.id);
-                Debug.Log("Player " + id + " disconnected");
-                var playerAux5 = simulatedPlayers[id+""];
-                simulatedPlayers.Remove(id+"");
+                Debug.Log("Player " + pDisconnectMsg.id + " disconnected");
+                var playerAux5 = simulatedPlayers[pDisconnectMsg.id];
+                simulatedPlayers.Remove(pDisconnectMsg.id);
                 Destroy(playerAux5);
                 break;
 
@@ -313,7 +312,6 @@ public class NetworkClient : MonoBehaviour
                     muerto = true;
                     interfaz.SetActive(false);
                     interfazMuerte.SetActive(true);
-                    playerAux5.GetComponent<Rigidbody>().useGravity = false;
                     interfazMuerte.transform.Find("TxtRespawn").GetComponent<TMPro.TextMeshProUGUI>().text = "Preparate para volver a MATAR";
                 }
                 else 
@@ -330,7 +328,6 @@ public class NetworkClient : MonoBehaviour
                     muerto = false;
                     interfaz.SetActive(true);
                     interfazMuerte.SetActive(false);
-                    playerAux5.GetComponent<Rigidbody>().useGravity = true;
                 } 
                 else
                 {
@@ -354,7 +351,7 @@ public class NetworkClient : MonoBehaviour
         }
     }
 
-    //Can be removed later
+    //Can't be removed later
     public GameObject FindPlayerById(string idJugador)
     {
         simulatedPlayers.TryGetValue(idJugador, out GameObject player);

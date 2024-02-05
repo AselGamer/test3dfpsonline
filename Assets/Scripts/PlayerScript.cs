@@ -80,10 +80,10 @@ public class PlayerScript : MonoBehaviour
     {
 
         miAnimator.SetFloat("walk_axis", Mathf.Clamp01(Mathf.Abs(horizontalInput) + Mathf.Abs(verticalInput)));
-        miAnimator.SetFloat("fire_aim_axis", Mathf.Clamp01(Mathf.Abs(playFireAnimation) + Mathf.Abs(aimInput)));
+        //miAnimator.SetFloat("fire_aim_axis", Mathf.Clamp01(Mathf.Abs(playFireAnimation) + Mathf.Abs(aimInput)));
         miAnimator.SetFloat("velocidad_x", horizontalInput);
         miAnimator.SetFloat("velocidad_y", verticalInput);
-        miAnimator.SetFloat("aim_axis", aimInput);
+        //miAnimator.SetFloat("aim_axis", aimInput);
         miAnimator.SetFloat("fire_axis", playFireAnimation);
         miAnimator.SetFloat("jump_axis", isGrounded ? 0 : 1);
         //miAnimator.SetBool("isGrounded", isGrounded);
@@ -149,6 +149,7 @@ public class PlayerScript : MonoBehaviour
 
         if (activeGun.TryGetComponent<GunScript>(out GunScript gunScript))
         {
+
             //This didn't work before, but now it does
             if (fireInput == 1 && Time.time >= nextTimeToFire && gunScript.ammoInMag > 0 && isGrounded)
             {
@@ -170,10 +171,6 @@ public class PlayerScript : MonoBehaviour
                 speedQuantity = 1.5f;
             }
 
-            if (aimInput == 1)
-            {
-                speedQuantity = 0.75f;
-            }
 
             
             if (aimInput == 0 && runInput == 0)

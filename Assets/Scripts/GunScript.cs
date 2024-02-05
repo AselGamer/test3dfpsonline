@@ -96,6 +96,5 @@ public class GunScript : MonoBehaviour
     {
         ammoCount = startingAmmo;
         ammoInMag = magSize;
-        Debug.Log(magSize);
     }
 }
