@@ -331,6 +331,12 @@ public class PlayerScript : MonoBehaviour
             }
         }
 
+        if (colldier.tag == "teleport")
+        {
+            transform.position = new Vector3(-2, 3, 95);
+            return;
+        }
+
         colldier.gameObject.SetActive(false);
     }
 }

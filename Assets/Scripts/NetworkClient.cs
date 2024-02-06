@@ -22,6 +22,7 @@ public class NetworkClient : MonoBehaviour
     [Header("Player variables")]
     public GameObject playerPrefab;
     public GameObject interfaz;
+    public GameObject interfazPausa;
     public GameObject interfazMuerte;
     public Transform deathCamPos;
     [SerializedDictionary("id", "player")]
@@ -127,6 +128,26 @@ public class NetworkClient : MonoBehaviour
         /*Most of the code in this script should be place in jobs but i don't know how to do that
          */
         if (!empezar || !m_Connection.IsCreated || idPlayer == string.Empty || muerto)
+        {
+            return;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            interfazPausa.SetActive(!interfazPausa.activeSelf);
+            if (interfazPausa.activeSelf)
+            {
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
+            else
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
+        }
+
+        if (interfazPausa.activeSelf)
         {
             return;
         }
@@ -277,6 +298,9 @@ public class NetworkClient : MonoBehaviour
 
                 interfazMuerte.GetComponent<Canvas>().worldCamera = uiCamera;
                 interfazMuerte.GetComponent<Canvas>().planeDistance = 1f;
+
+                interfazPausa.GetComponent<Canvas>().worldCamera = uiCamera;
+                interfazPausa.GetComponent<Canvas>().planeDistance = 0.5f;
                 break;
 
             case Commands.PLAYER_SWITCH_GUN:

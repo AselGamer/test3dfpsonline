@@ -6,6 +6,8 @@ TagManager:
   tags:
   - medkit
   - ammo
+  - Medkit
+  - teleport
   layers:
   - Default
   - TransparentFX
