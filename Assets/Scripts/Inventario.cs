@@ -39,35 +39,21 @@ public class Inventario : MonoBehaviour
                 json = request.downloadHandler.text;
                 arma = JsonUtility.FromJson<Arma>(json);
 
-                //Pasamos de Base64 a sprite
-                /*danyo.SetActive(true);
-                id.GetComponent<TextMeshProUGUI>().text = arma.id.ToString();
-                tipoEquipamiento.GetComponent<TextMeshProUGUI>().text = tipo;
-                nombre.GetComponent<TextMeshProUGUI>().text = arma.name;
-                descripcion.GetComponent<TextMeshProUGUI>().text = arma.descripcion;
-                danyo.GetComponent<TextMeshProUGUI>().text = "Daño: " + arma.danyo;
-                velocidad.GetComponent<TextMeshProUGUI>().text = "Velocidad: " + arma.velocidad.ToString();
-                precio.GetComponent<TextMeshProUGUI>().text = arma.precio.ToString();*/
-
                 click++;
                 if (click % 2 == 1)
                 {
-                    Debug.Log("-1");
                     if (panelJugar.GetComponent<Seleccion>().armasSeleccionadas[0] == null || panelJugar.GetComponent<Seleccion>().armasSeleccionadas[0].id == 0)
                     {
-                        Debug.Log("0");
                         panelJugar.GetComponent<Seleccion>().armasSeleccionadas[0] = arma;
                         articulo.transform.position = new Vector3(3, -3.5f, articulo.transform.position.z);
                     }
                     else if (panelJugar.GetComponent<Seleccion>().armasSeleccionadas[1] == null || panelJugar.GetComponent<Seleccion>().armasSeleccionadas[1].id == 0)
                     {
-                        Debug.Log("1");
                         panelJugar.GetComponent<Seleccion>().armasSeleccionadas[1] = arma;
                         articulo.transform.position = new Vector3(5, -3.5f, articulo.transform.position.z);
                     }
                     else if (panelJugar.GetComponent<Seleccion>().armasSeleccionadas[2] == null || panelJugar.GetComponent<Seleccion>().armasSeleccionadas[2].id == 0)
                     {
-                        Debug.Log("2");
                         panelJugar.GetComponent<Seleccion>().armasSeleccionadas[2] = arma;
                         articulo.transform.position = new Vector3(7, -3.5f, articulo.transform.position.z);
                     }

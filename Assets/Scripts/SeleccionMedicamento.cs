@@ -1,16 +1,15 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
-public class Seleccion : MonoBehaviour
+public class SeleccionMedicamento : MonoBehaviour
 {
     public string json;
     public GameObject articulo;
-    public Arma[] armasSeleccionadas;
+    public Medicamento[] medicamentosSeleccionados;
     public ResultadoVenta resultadoVenta;
     public GameObject[] articulos;
     public Venta[] ventas;
@@ -21,19 +20,19 @@ public class Seleccion : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        armasSeleccionadas = new Arma[3];
+        medicamentosSeleccionados = new Medicamento[1];
     }
 
-    public void GetDataArmas() => StartCoroutine(GetData_Coroutine_Armas());
+    public void GetDataMedicamentos() => StartCoroutine(GetData_Coroutine_Medicamentos());
 
-    public IEnumerator GetData_Coroutine_Armas()
+    public IEnumerator GetData_Coroutine_Medicamentos()
     {
         //this.tipo = tipo;
         //articulo.GetComponent<GetMethod>().tipo = tipo;
         //outputArea.text = "Loading...";
         string uri = "";
         int usuario_id = panelSesion.GetComponent<PostMethod>().idUsuario;
-        uri = "https://retoiraitz.duckdns.org/api/venta/?query={*}&filter=[[\"usuario_id\", \"=\", " + usuario_id + "], [\"tipo\", \"=\", \"arma\"], [\"state\", \"=\", \"comprado\"]]";
+        uri = "https://retoiraitz.duckdns.org/api/venta/?query={*}&filter=[[\"usuario_id\", \"=\", " + usuario_id + "], [\"tipo\", \"=\", \"medicamento\"], [\"state\", \"=\", \"comprado\"]]";
         //uri = "http://localhost:8069/api/venta/?query={*}&filter=[[\"usuario_id\", \"=\", " + usuario_id + "], [\"tipo\", \"=\", \"arma\"], [\"state\", \"=\", \"comprado\"]]";
 
         using (UnityWebRequest request = UnityWebRequest.Get(uri))
@@ -72,17 +71,13 @@ public class Seleccion : MonoBehaviour
                                 articulos[i - 6].transform.position.y - 2, articulos[i].transform.position.z);
                         }
                     }
-                    byte[] imageBytes = Convert.FromBase64String(resultadoVenta.result[i].arma_imagen);
+                    byte[] imageBytes = Convert.FromBase64String(resultadoVenta.result[i].medicamento_imagen);
                     Texture2D tex = new Texture2D(2, 2);
                     tex.LoadImage(imageBytes);
                     Sprite sprite = Sprite.Create(tex, new Rect(0.0f, 0.0f, tex.width, tex.height), new Vector2(0.5f, 0.5f), 100.0f);
                     articulos[i].GetComponent<Image>().sprite = sprite;
-                    articulos[i].name = resultadoVenta.result[i].arma_id.ToString();
+                    articulos[i].name = resultadoVenta.result[i].medicamento_id.ToString();
                     ventas[i] = resultadoVenta.result[i];
-                }
-                if (resultadoVenta.count < 3)
-                {
-                    aviso.SetActive(true);
                 }
             }
         }

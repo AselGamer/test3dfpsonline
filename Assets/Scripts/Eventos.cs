@@ -13,6 +13,8 @@ public class Eventos : MonoBehaviour
     public GameObject panelArmas;
     public GameObject panelDetalle;
     public GameObject panelJugar;
+    public GameObject panelJugar2;
+    public GameObject panelJugar3;
     public GameObject empezar;
 
     public void jugarPartida()
@@ -33,6 +35,7 @@ public class Eventos : MonoBehaviour
     {
         panelInicio.SetActive(false);
         panelJugar.SetActive(true);
+        panelJugar.GetComponent<Seleccion>().aviso.SetActive(false);
         panelJugar.GetComponent<Seleccion>().GetDataArmas();
     }
     public void retrocederDePanelJugarAlPanelInicio()
@@ -41,14 +44,67 @@ public class Eventos : MonoBehaviour
         {
             Destroy(panelJugar.GetComponent<Seleccion>().articulos[i]);
         }
-        panelJugar.GetComponent<Seleccion>().articulos[0].transform.position = new Vector3(-7, -0.5f, panelJugar.GetComponent<Seleccion>().articulos[0].transform.position.z);
-        panelJugar.GetComponent<Seleccion>().articulos[0].GetComponent<Inventario>().click = 0;
-        for (int i = 0; i < panelJugar.GetComponent<Seleccion>().armasSeleccionadas.Length; i++)
+        if(panelJugar.GetComponent<Seleccion>().articulos.Length > 0)
         {
-            panelJugar.GetComponent<Seleccion>().armasSeleccionadas[i] = null;
+            panelJugar.GetComponent<Seleccion>().articulos[0].transform.position = new Vector3(-7, -0.5f, panelJugar.GetComponent<Seleccion>().articulos[0].transform.position.z);
+            panelJugar.GetComponent<Seleccion>().articulos[0].GetComponent<Inventario>().click = 0;
+            for (int i = 0; i < panelJugar.GetComponent<Seleccion>().armasSeleccionadas.Length; i++)
+            {
+                panelJugar.GetComponent<Seleccion>().armasSeleccionadas[i] = null;
+            }
         }
         panelJugar.SetActive(false);
         panelInicio.SetActive(true);
+    }
+    public void avanzarAlPanelJugar2()
+    {
+        panelJugar.SetActive(false);
+        panelJugar2.SetActive(true);
+        panelJugar2.GetComponent<SeleccionArmadura>().aviso.SetActive(false);
+        panelJugar2.GetComponent<SeleccionArmadura>().GetDataArmaduras();
+    }
+    public void retrocederAlPanelJugar()
+    {
+        for (int i = 1; i < panelJugar2.GetComponent<SeleccionArmadura>().articulos.Length; i++)
+        {
+            Destroy(panelJugar2.GetComponent<SeleccionArmadura>().articulos[i]);
+        }
+        if (panelJugar2.GetComponent<SeleccionArmadura>().articulos.Length > 0)
+        {
+            panelJugar2.GetComponent<SeleccionArmadura>().articulos[0].transform.position = new Vector3(-7, -0.5f, panelJugar2.GetComponent<SeleccionArmadura>().articulos[0].transform.position.z);
+            panelJugar2.GetComponent<SeleccionArmadura>().articulos[0].GetComponent<InventarioArmadura>().click = 0;
+            for (int i = 0; i < panelJugar2.GetComponent<SeleccionArmadura>().armadurasSeleccionadas.Length; i++)
+            {
+                panelJugar2.GetComponent<SeleccionArmadura>().armadurasSeleccionadas[i] = null;
+            }
+        }
+        panelJugar2.SetActive(false);
+        panelJugar.SetActive(true);
+    }
+    public void avanzarAlPanelJugar3()
+    {
+        panelJugar2.SetActive(false);
+        panelJugar3.SetActive(true);
+        panelJugar3.GetComponent<SeleccionMedicamento>().aviso.SetActive(false);
+        panelJugar3.GetComponent<SeleccionMedicamento>().GetDataMedicamentos();
+    }
+    public void retrocederAlPanelJugar2()
+    {
+        for (int i = 1; i < panelJugar3.GetComponent<SeleccionMedicamento>().articulos.Length; i++)
+        {
+            Destroy(panelJugar3.GetComponent<SeleccionMedicamento>().articulos[i]);
+        }
+        if (panelJugar3.GetComponent<SeleccionMedicamento>().articulos.Length > 0)
+        {
+            panelJugar3.GetComponent<SeleccionMedicamento>().articulos[0].transform.position = new Vector3(-7, -0.5f, panelJugar3.GetComponent<SeleccionMedicamento>().articulos[0].transform.position.z);
+            panelJugar3.GetComponent<SeleccionMedicamento>().articulos[0].GetComponent<InventarioMedicamento>().click = 0;
+            for (int i = 0; i < panelJugar3.GetComponent<SeleccionMedicamento>().medicamentosSeleccionados.Length; i++)
+            {
+                panelJugar3.GetComponent<SeleccionMedicamento>().medicamentosSeleccionados[i] = null;
+            }
+        }
+        panelJugar3.SetActive(false);
+        panelJugar2.SetActive(true);
     }
     public void avanzarAlPanelCompras()
     {
