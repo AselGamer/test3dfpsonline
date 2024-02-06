@@ -840,13 +840,20 @@ MonoBehaviour:
     id: 0
     result: 0
     error: 
+  respuestaUsuario:
+    jsonrpc: 
+    id: 0
+    result: 0
+    error: 
   idVenta: 0
+  resultadoPut: 0
   panelSesion: {fileID: 267594073}
   articulo: {fileID: 1248365935}
   id: {fileID: 429575504}
   tipoEquipamiento: {fileID: 1718890359}
   nombre: {fileID: 1884553963}
   precio: {fileID: 1534369352}
+  dinero: {fileID: 1542401361}
 --- !u!1 &37138754
 GameObject:
   m_ObjectHideFlags: 0
