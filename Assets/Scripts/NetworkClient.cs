@@ -1,3 +1,4 @@
+using AYellowpaper.SerializedCollections;
 using GetGunsScript;
 using NetworkMessages;
 using System.Collections;
@@ -23,7 +24,8 @@ public class NetworkClient : MonoBehaviour
     public GameObject interfaz;
     public GameObject interfazMuerte;
     public Transform deathCamPos;
-    public Dictionary<string, GameObject> simulatedPlayers;
+    [SerializedDictionary("id", "player")]
+    public SerializedDictionary<string, GameObject> simulatedPlayers;
     public float sensitivity;
     public short[] arrGuns;
     public bool muerto = false;
@@ -45,7 +47,7 @@ public class NetworkClient : MonoBehaviour
         m_Driver = NetworkDriver.Create();
         m_Connection = default(NetworkConnection);
         var endpoint = NetworkEndpoint.Parse(serverIp, serverPort);
-        simulatedPlayers = new Dictionary<string, GameObject>();
+        simulatedPlayers = new SerializedDictionary<string, GameObject>();
         pipeline = m_Driver.CreatePipeline(typeof(FragmentationPipelineStage),
             typeof(ReliableSequencedPipelineStage));
         m_Connection = m_Driver.Connect(endpoint);

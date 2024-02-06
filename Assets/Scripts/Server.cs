@@ -11,6 +11,7 @@ using NetworkObject;
 using GetGunsScript;
 using System.Security.Cryptography;
 using System.Text;
+using AYellowpaper.SerializedCollections;
 
 public class Server : MonoBehaviour
 {
@@ -26,7 +27,8 @@ public class Server : MonoBehaviour
     [Header("Player variables")]
     private GetGuns getGuns = new GetGuns();
     public GameObject playerPrefab;
-    public Dictionary<string, GameObject> simulatedPlayers;
+    [SerializedDictionary("id", "player")]
+    public SerializedDictionary<string, GameObject> simulatedPlayers;
     public Dictionary<GameObject, string> simulatedPlayersInverse;
     public List<Transform> spawnPoints;
     //This code is cringe
@@ -47,7 +49,7 @@ public class Server : MonoBehaviour
         m_Driver = NetworkDriver.Create();
         m_Connections = new NativeList<NetworkConnection>(16, Allocator.Persistent);
         var endpoint = NetworkEndpoint.AnyIpv4.WithPort(serverPort);
-        simulatedPlayers = new Dictionary<string, GameObject>();
+        simulatedPlayers = new SerializedDictionary<string, GameObject>();
         simulatedPlayersInverse = new Dictionary<GameObject, string>();
         playerConnection = new Dictionary<string, NetworkConnection>();
         pipeline = m_Driver.CreatePipeline(typeof(FragmentationPipelineStage),
