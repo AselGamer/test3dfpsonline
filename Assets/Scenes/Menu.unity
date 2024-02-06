@@ -1035,6 +1035,7 @@ GameObject:
   - component: {fileID: 45904066}
   - component: {fileID: 45904065}
   - component: {fileID: 45904064}
+  - component: {fileID: 45904069}
   m_Layer: 5
   m_Name: Articulo
   m_TagString: Untagged
@@ -1049,7 +1050,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 45904063}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8e4d58e9cb7a6c44eb7a0affe0a58411, type: 3}
   m_Name: 
@@ -1087,16 +1088,12 @@ MonoBehaviour:
   resultado:
     count: 0
     result: []
-  resultadoVenta:
-    count: 0
-    result: []
   articulos:
   - {fileID: 45904063}
   articulo: {fileID: 45904063}
   tipo: 
   armas: []
   armasSeleccionadas: []
-  ventas: []
   armaduras: []
   panelArmas: {fileID: 520085845}
   panelDetalle: {fileID: 1248365935}
@@ -1119,8 +1116,6 @@ MonoBehaviour:
     name: 
     x_dinero: 0
   dinero: {fileID: 0}
-  click: 0
-  pos: {x: 0, y: 0, z: 0}
 --- !u!114 &45904065
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1223,6 +1218,33 @@ RectTransform:
   m_AnchoredPosition: {x: 0.8999634, y: -0.38998032}
   m_SizeDelta: {x: 1.25, y: -0.7799988}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &45904069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 45904063}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35bdb93de1d3b1e4f829df6f7d2b735c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  panelJugar: {fileID: 520085845}
+  articulo: {fileID: 45904063}
+  arma:
+    id: 0
+    name: 
+    descripcion: 
+    danyo: 
+    velocidad: 0
+    precio: 0
+    imagen: 
+    ventas: 0
+    priority: 0
+  click: 0
+  pos: {x: 0, y: 0, z: 0}
+  json: 
 --- !u!1 &76246206
 GameObject:
   m_ObjectHideFlags: 0
@@ -3013,7 +3035,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.18861136, y: 0.36866835}
   m_AnchorMax: {x: 0.365, y: 0.42655447}
-  m_AnchoredPosition: {x: -0.29995728, y: 0.40000153}
+  m_AnchoredPosition: {x: -0.2999878, y: 0.40000153}
   m_SizeDelta: {x: 1, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &427125874
@@ -3862,7 +3884,6 @@ GameObject:
   - component: {fileID: 520085849}
   - component: {fileID: 520085848}
   - component: {fileID: 520085847}
-  - component: {fileID: 520085846}
   - component: {fileID: 520085850}
   m_Layer: 5
   m_Name: Panel Jugar
@@ -3871,84 +3892,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
---- !u!114 &520085846
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 520085845}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e4d58e9cb7a6c44eb7a0affe0a58411, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outputArea: {fileID: 2142149448}
-  json: 
-  arma:
-    id: 0
-    name: 
-    descripcion: 
-    danyo: 
-    velocidad: 0
-    precio: 0
-    imagen: 
-    ventas: 0
-    priority: 0
-  armadura:
-    id: 0
-    name: 
-    descripcion: 
-    defensa: 0
-    precio: 0
-    imagen: 
-    ventas: 0
-    priority: 0
-  medicamento:
-    id: 0
-    name: 
-    descripcion: 
-    curacion: 0
-    precio: 0
-    imagen: 
-    ventas: 0
-    priority: 0
-  resultado:
-    count: 0
-    result: []
-  resultadoVenta:
-    count: 0
-    result: []
-  articulos: []
-  articulo: {fileID: 45904063}
-  tipo: 
-  armas: []
-  armasSeleccionadas: []
-  ventas: []
-  armaduras: []
-  panelArmas: {fileID: 520085845}
-  panelDetalle: {fileID: 0}
-  atras: {fileID: 0}
-  atrasArma: {fileID: 0}
-  atrasArmadura: {fileID: 0}
-  atrasMedicamento: {fileID: 0}
-  bienvenida: {fileID: 0}
-  id: {fileID: 0}
-  tipoEquipamiento: {fileID: 0}
-  nombre: {fileID: 0}
-  descripcion: {fileID: 0}
-  danyo: {fileID: 0}
-  velocidad: {fileID: 0}
-  precio: {fileID: 0}
-  defensa: {fileID: 0}
-  curacion: {fileID: 0}
-  usuario:
-    id: 0
-    name: 
-    x_dinero: 0
-  dinero: {fileID: 1542401361}
-  click: 0
-  pos: {x: 0, y: 0, z: 0}
 --- !u!114 &520085847
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4024,7 +3967,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f2ad7a29011e914aa7f4e18d83a80f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  json: 
+  articulo: {fileID: 45904063}
   armasSeleccionadas: []
+  resultadoVenta:
+    count: 0
+    result: []
+  articulos: []
+  ventas: []
 --- !u!1 &578040946
 GameObject:
   m_ObjectHideFlags: 0
@@ -4357,16 +4307,12 @@ MonoBehaviour:
   resultado:
     count: 0
     result: []
-  resultadoVenta:
-    count: 0
-    result: []
   articulos:
   - {fileID: 731508583}
   articulo: {fileID: 731508583}
   tipo: 
   armas: []
   armasSeleccionadas: []
-  ventas: []
   armaduras: []
   panelArmas: {fileID: 655979342}
   panelDetalle: {fileID: 1248365935}
@@ -4389,8 +4335,6 @@ MonoBehaviour:
     name: 
     x_dinero: 0
   dinero: {fileID: 0}
-  click: 0
-  pos: {x: 0, y: 0, z: 0}
 --- !u!114 &655979344
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4688,16 +4632,12 @@ MonoBehaviour:
   resultado:
     count: 0
     result: []
-  resultadoVenta:
-    count: 0
-    result: []
   articulos:
   - {fileID: 731508583}
   articulo: {fileID: 731508583}
   tipo: 
   armas: []
   armasSeleccionadas: []
-  ventas: []
   armaduras: []
   panelArmas: {fileID: 655979342}
   panelDetalle: {fileID: 1248365935}
@@ -4720,8 +4660,6 @@ MonoBehaviour:
     name: 
     x_dinero: 0
   dinero: {fileID: 0}
-  click: 0
-  pos: {x: 0, y: 0, z: 0}
 --- !u!1 &748800770
 GameObject:
   m_ObjectHideFlags: 0
@@ -5655,7 +5593,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.051111437, y: 0.040000003}
   m_AnchorMax: {x: 0.30125, y: 0.102000006}
-  m_AnchoredPosition: {x: -0.20996094, y: -0.3000183}
+  m_AnchoredPosition: {x: -0.20996094, y: -0.2999878}
   m_SizeDelta: {x: 0.9700012, y: -1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &907878900
@@ -9319,7 +9257,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.853891, y: 0}
   m_AnchorMax: {x: 1, y: 0.08866008}
-  m_AnchoredPosition: {x: 0.14001465, y: 0.1000061}
+  m_AnchoredPosition: {x: 0.14001465, y: 0.10003662}
   m_SizeDelta: {x: -0.29000854, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1542401363
@@ -11523,15 +11461,11 @@ MonoBehaviour:
   resultado:
     count: 0
     result: []
-  resultadoVenta:
-    count: 0
-    result: []
   articulos: []
   articulo: {fileID: 731508583}
   tipo: 
   armas: []
   armasSeleccionadas: []
-  ventas: []
   armaduras: []
   panelArmas: {fileID: 0}
   panelDetalle: {fileID: 0}
@@ -11554,8 +11488,6 @@ MonoBehaviour:
     name: 
     x_dinero: 0
   dinero: {fileID: 1542401361}
-  click: 0
-  pos: {x: 0, y: 0, z: 0}
 --- !u!1 &2065501786
 GameObject:
   m_ObjectHideFlags: 0
