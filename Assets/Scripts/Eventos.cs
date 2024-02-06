@@ -33,7 +33,7 @@ public class Eventos : MonoBehaviour
     {
         panelInicio.SetActive(false);
         panelJugar.SetActive(true);
-        panelJugar.GetComponent<GetMethod>().GetDataArmas("jugar");
+        panelJugar.GetComponent<Seleccion>().GetDataArmas();
     }
     public void retrocederDePanelJugarAlPanelInicio()
     {

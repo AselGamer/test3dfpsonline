@@ -17,13 +17,13 @@ public class GetMethod : MonoBehaviour
     public Armadura armadura;
     public Medicamento medicamento;
     public Resultado resultado;
-    public ResultadoVenta resultadoVenta;
+    //public ResultadoVenta resultadoVenta;
     public GameObject[] articulos;
     public GameObject articulo;
     public string tipo;
     public Arma[] armas;
     public Arma[] armasSeleccionadas;
-    public Venta[] ventas;
+    //public Venta[] ventas;
     public Armadura[] armaduras;
     public GameObject panelArmas;
     public GameObject panelDetalle;
@@ -33,13 +33,13 @@ public class GetMethod : MonoBehaviour
     public GameObject id, tipoEquipamiento, nombre, descripcion, danyo, velocidad, precio, defensa, curacion;
     public Usuario usuario;
     public GameObject dinero;
-    public int click;
-    public Vector3 pos;
+    //public int click;
+    //public Vector3 pos;
 
     public void Start()
     {
-        click = 0;
-        pos = articulo.transform.position;
+        //click = 0;
+        //pos = articulo.transform.position;
         articulo.GetComponent<Button>().onClick.AddListener(GetData);
     }
 
@@ -138,7 +138,7 @@ public class GetMethod : MonoBehaviour
                         armas[i] = resultado.result[i];
                     }
                 }
-                else if (accion == "jugar")
+                /*else if (accion == "jugar")
                 {
                     resultadoVenta = JsonUtility.FromJson<ResultadoVenta>(json);
                     articulos = new GameObject[resultadoVenta.count];
@@ -174,7 +174,7 @@ public class GetMethod : MonoBehaviour
                         articulos[i].name = resultadoVenta.result[i].arma_id.ToString();
                         ventas[i] = resultadoVenta.result[i];
                     }
-                }
+                }*/
             }
         }
     }
@@ -185,8 +185,8 @@ public class GetMethod : MonoBehaviour
         //articulo.name -> El id del articulo
         Debug.Log(articulo.name + "-------------");
         
-        if(panelArmas.name == "Panel Armas")
-        {
+        //if(panelArmas.name == "Panel Armas")
+        //{
             for (int i = 0; i < panelArmas.GetComponent<GetMethod>().articulos.Length; i++)
             {
                 if (articulo.name != panelArmas.GetComponent<GetMethod>().articulos[i].name)
@@ -284,8 +284,8 @@ public class GetMethod : MonoBehaviour
                     }
                 }
             }
-        }
-        else if (panelArmas.name == "Panel Jugar")
+        //}
+        /*else if (panelArmas.name == "Panel Jugar")
         {
             string uri = "https://retoiraitz.duckdns.org/api/arma/" + articulo.name + "/?query={id, name, descripcion, danyo, velocidad, precio, imagen, ventas, priority}";
             //string uri = "http://localhost:8069/api/arma/" + articulo.name + "/?query={id, name, descripcion, danyo, velocidad, precio, imagen, ventas, priority}";
@@ -300,16 +300,6 @@ public class GetMethod : MonoBehaviour
                 {
                     json = request.downloadHandler.text;
                     arma = JsonUtility.FromJson<Arma>(json);
-
-                    //Pasamos de Base64 a sprite
-                    /*danyo.SetActive(true);
-                    id.GetComponent<TextMeshProUGUI>().text = arma.id.ToString();
-                    tipoEquipamiento.GetComponent<TextMeshProUGUI>().text = tipo;
-                    nombre.GetComponent<TextMeshProUGUI>().text = arma.name;
-                    descripcion.GetComponent<TextMeshProUGUI>().text = arma.descripcion;
-                    danyo.GetComponent<TextMeshProUGUI>().text = "Daño: " + arma.danyo;
-                    velocidad.GetComponent<TextMeshProUGUI>().text = "Velocidad: " + arma.velocidad.ToString();
-                    precio.GetComponent<TextMeshProUGUI>().text = arma.precio.ToString();*/
 
                     click++;
                     if(click%2 == 1)
@@ -354,7 +344,7 @@ public class GetMethod : MonoBehaviour
                     }
                 }
             }
-        }
+        }*/
 
     }
 
