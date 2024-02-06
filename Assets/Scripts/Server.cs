@@ -139,6 +139,7 @@ public class Server : MonoBehaviour
                     playerConnection.Remove(idDisconnect);
                     cmd = NetworkEvent.Type.Empty;
                     SendToAllClients(JsonUtility.ToJson(pDisconnectMsg));
+                    i--;
                     continue;
                 }
                 if (m_Connections[i] != null)
