@@ -11,13 +11,17 @@ public class Compra : MonoBehaviour
     public GameObject comprar;
     public string json;
     public RespuestaVenta respuestaVenta;
+    public RespuestaUsuario respuestaUsuario;
     public int idVenta;
+    public bool resultadoPut;
     public GameObject panelSesion;
     public GameObject articulo;
     public GameObject id;
     public GameObject tipoEquipamiento;
     public GameObject nombre;
     public GameObject precio;
+    public GameObject dinero;
+    public int idUsuario;
 
     // Start is called before the first frame update
     void Start()
@@ -26,7 +30,7 @@ public class Compra : MonoBehaviour
     }
 
     void PostData() => StartCoroutine(PostData_Coroutine());
-    //void PostDataDinero(float precioVenta) => StartCoroutine(PostData_Coroutine_Dinero(precioVenta));/////////
+    void PutDataDinero(float precioVenta) => StartCoroutine(PutData_Coroutine_Dinero(precioVenta));
 
     IEnumerator PostData_Coroutine()
     {
@@ -68,7 +72,7 @@ public class Compra : MonoBehaviour
         yield return request.SendWebRequest();
         if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
         {
-            Debug.Log("Error++++++++++++");
+            Debug.Log(request.error);
         }
         else
         {
@@ -76,7 +80,7 @@ public class Compra : MonoBehaviour
             respuestaVenta = JsonUtility.FromJson<RespuestaVenta>(json);
             if (respuestaVenta.error != null)
             {
-                Debug.Log("Error++++++++++");
+                Debug.Log(request.error);
             }
             else
             {
@@ -84,26 +88,50 @@ public class Compra : MonoBehaviour
                 Debug.Log("idVenta--------->" + idVenta);
                 float precioVenta = float.Parse(precio.GetComponent<TextMeshProUGUI>().text);
                 Debug.Log("precio--------->" + precioVenta);
-                //PostDataDinero(precioVenta);//////////////////
+                PutDataDinero(precioVenta);
             }
         }
     }
 
-    /*IEnumerator PostData_Coroutine_Dinero(float precioVenta)///////////////
+    IEnumerator PutData_Coroutine_Dinero(float precioVenta)
     {
         string uri = "https://retoiraitz.duckdns.org/api/res.users/";
         //string uri = "http://localhost:8069/api/res.users/";
 
-        int dinero = 149800;
-        string jsonData = "{\"x_dinero\":" + dinero + "}";
+        int cartera = int.Parse(dinero.GetComponent<TextMeshProUGUI>().text);
+        cartera -= (int)precioVenta;
 
+        idUsuario = panelSesion.GetComponent<PostMethod>().idUsuario;
+
+        string jsonData = "{\"x_dinero\":" + cartera + "}";
         Debug.Log("jsonData---> " + jsonData);
-        string jsonParams = "{\"filter\": [[\"id\", \"=\", 7]], data\":\"" + jsonData + "\"}";
+        string jsonParams = "{\"filter\": [[\"id\", \"=\", " + idUsuario + " ]], \"data\":" + jsonData + "}";
         Debug.Log("jsonData---> " + jsonParams);
         byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes("{\"params\":" + jsonParams + "}");
-        UnityWebRequest request = UnityWebRequest.PostWwwForm(uri, "");
+        UnityWebRequest request = UnityWebRequest.Put(uri, "");
         request.uploadHandler = (UploadHandler)new UploadHandlerRaw(bodyRaw);
         request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
         request.SetRequestHeader("Content-Type", "application/json");
-    }*/
+
+        yield return request.SendWebRequest();
+        if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
+        {
+            Debug.Log(request.error);
+        }
+        else
+        {
+            json = request.downloadHandler.text;
+            respuestaUsuario = JsonUtility.FromJson<RespuestaUsuario>(json);
+            if (respuestaUsuario.error != null)
+            {
+                Debug.Log(request.error);
+            }
+            else
+            {
+                resultadoPut = respuestaUsuario.result;
+                Debug.Log("resultadoPut--------->" + resultadoPut);
+                dinero.GetComponent<TextMeshProUGUI>().text = cartera.ToString();
+            }
+        }
+    }
 }
