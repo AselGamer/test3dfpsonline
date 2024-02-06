@@ -39,7 +39,6 @@ public class GetMethod : MonoBehaviour
     public void Start()
     {
         click = 0;
-        armasSeleccionadas = new Arma[3];
         pos = articulo.transform.position;
         articulo.GetComponent<Button>().onClick.AddListener(GetData);
     }
@@ -315,37 +314,41 @@ public class GetMethod : MonoBehaviour
                     click++;
                     if(click%2 == 1)
                     {
-                        if (panelArmas.GetComponent<GetMethod>().armasSeleccionadas[0].id == 0)
+                        Debug.Log("-1");
+                        if (panelArmas.GetComponent<Seleccion>().armasSeleccionadas[0].id == 0)
                         {
-                            panelArmas.GetComponent<GetMethod>().armasSeleccionadas[0] = arma;
+                            Debug.Log("0");
+                            panelArmas.GetComponent<Seleccion>().armasSeleccionadas[0] = arma;
                             articulo.transform.position = new Vector3(3, -3.5f, articulo.transform.position.z);
                         }
-                        else if (panelArmas.GetComponent<GetMethod>().armasSeleccionadas[1].id == 0)
+                        else if (panelArmas.GetComponent<Seleccion>().armasSeleccionadas[1].id == 0)
                         {
-                            panelArmas.GetComponent<GetMethod>().armasSeleccionadas[1] = arma;
+                            Debug.Log("1");
+                            panelArmas.GetComponent<Seleccion>().armasSeleccionadas[1] = arma;
                             articulo.transform.position = new Vector3(5, -3.5f, articulo.transform.position.z);
                         }
-                        else if (panelArmas.GetComponent<GetMethod>().armasSeleccionadas[2].id == 0)
+                        else if (panelArmas.GetComponent<Seleccion>().armasSeleccionadas[2].id == 0)
                         {
-                            panelArmas.GetComponent<GetMethod>().armasSeleccionadas[2] = arma;
+                            Debug.Log("2");
+                            panelArmas.GetComponent<Seleccion>().armasSeleccionadas[2] = arma;
                             articulo.transform.position = new Vector3(7, -3.5f, articulo.transform.position.z);
                         }
                     }
                     else
                     {
-                        if (panelArmas.GetComponent<GetMethod>().armasSeleccionadas[2].id == arma.id)
+                        if (panelArmas.GetComponent<Seleccion>().armasSeleccionadas[2].id == arma.id)
                         {
-                            panelArmas.GetComponent<GetMethod>().armasSeleccionadas[2] = null;
+                            panelArmas.GetComponent<Seleccion>().armasSeleccionadas[2] = null;
                             articulo.transform.position = pos;
                         }
-                        else if (panelArmas.GetComponent<GetMethod>().armasSeleccionadas[1].id == arma.id)
+                        else if (panelArmas.GetComponent<Seleccion>().armasSeleccionadas[1].id == arma.id)
                         {
-                            panelArmas.GetComponent<GetMethod>().armasSeleccionadas[1] = null;
+                            panelArmas.GetComponent<Seleccion>().armasSeleccionadas[1] = null;
                             articulo.transform.position = pos;
                         }
-                        else if (panelArmas.GetComponent<GetMethod>().armasSeleccionadas[0].id == arma.id)
+                        else if (panelArmas.GetComponent<Seleccion>().armasSeleccionadas[0].id == arma.id)
                         {
-                            panelArmas.GetComponent<GetMethod>().armasSeleccionadas[0] = null;
+                            panelArmas.GetComponent<Seleccion>().armasSeleccionadas[0] = null;
                             articulo.transform.position = pos;
                         }
                     }
