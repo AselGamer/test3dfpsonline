@@ -37,6 +37,16 @@ public class Eventos : MonoBehaviour
     }
     public void retrocederDePanelJugarAlPanelInicio()
     {
+        for (int i = 1; i < panelJugar.GetComponent<Seleccion>().articulos.Length; i++)
+        {
+            Destroy(panelJugar.GetComponent<Seleccion>().articulos[i]);
+        }
+        panelJugar.GetComponent<Seleccion>().articulos[0].transform.position = new Vector3(-7, -0.5f, panelJugar.GetComponent<Seleccion>().articulos[0].transform.position.z);
+        panelJugar.GetComponent<Seleccion>().articulos[0].GetComponent<Inventario>().click = 0;
+        for (int i = 0; i < panelJugar.GetComponent<Seleccion>().armasSeleccionadas.Length; i++)
+        {
+            panelJugar.GetComponent<Seleccion>().armasSeleccionadas[i] = null;
+        }
         panelJugar.SetActive(false);
         panelInicio.SetActive(true);
     }
