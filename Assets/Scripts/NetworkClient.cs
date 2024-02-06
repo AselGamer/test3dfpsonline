@@ -54,6 +54,8 @@ public class NetworkClient : MonoBehaviour
         Debug.Log("Connecting to server");
         empezar = true;
 
+        arrGuns = PerfilJugador.Armas;
+
         /*
          * Place in a loop somewhere
         */

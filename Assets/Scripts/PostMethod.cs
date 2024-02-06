@@ -66,7 +66,7 @@ public class PostMethod : MonoBehaviour
             outputArea.text = request.error;
             mensaje.SetActive(true);
             mensaje.GetComponent<TextMeshProUGUI>().text = "Error de conexión";
-            Debug.Log("Error++++++++++++");
+            Debug.Log("Error de conexion");
         }
         else
         {
@@ -76,7 +76,7 @@ public class PostMethod : MonoBehaviour
             {
                 mensaje.SetActive(true);
                 mensaje.GetComponent<TextMeshProUGUI>().text = "Usuario o contraseña no válidos";
-                Debug.Log("Error++++++++++");
+                Debug.Log("Error de usuario " + respuesta.error);
             }
             else
             {
@@ -89,7 +89,6 @@ public class PostMethod : MonoBehaviour
                 dinero.SetActive(true);
                 bienvenida.text = "Hola " + nombre;
                 isUsuario = true;
-                Debug.Log("Entra+++++++++");
                 panelInicio.GetComponent<GetMethod>().GetDataDinero(idUsuario);
             }
         }
