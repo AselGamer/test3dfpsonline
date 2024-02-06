@@ -286,6 +286,7 @@ public class NetworkClient : MonoBehaviour
             case Commands.PLAYER_DISCONNECT:
                 PlayerDisconnectMsg pDisconnectMsg = JsonUtility.FromJson<PlayerDisconnectMsg>(recMsg);
                 Debug.Log("Player " + pDisconnectMsg.id + " disconnected");
+                Debug.Log(simulatedPlayers.ContainsKey(pDisconnectMsg.id));
                 var playerAux5 = simulatedPlayers[pDisconnectMsg.id];
                 simulatedPlayers.Remove(pDisconnectMsg.id);
                 Destroy(playerAux5);

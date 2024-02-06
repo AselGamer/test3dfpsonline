@@ -12,6 +12,7 @@ using GetGunsScript;
 using System.Security.Cryptography;
 using System.Text;
 using AYellowpaper.SerializedCollections;
+using System.Text.RegularExpressions;
 
 public class Server : MonoBehaviour
 {
@@ -33,6 +34,7 @@ public class Server : MonoBehaviour
     public List<Transform> spawnPoints;
     //This code is cringe
     public Dictionary<string, NetworkConnection> playerConnection;
+    public Dictionary<string, string> playerConnectionInverse;
     public List<GameObject> guns;
     
 
@@ -52,6 +54,7 @@ public class Server : MonoBehaviour
         simulatedPlayers = new SerializedDictionary<string, GameObject>();
         simulatedPlayersInverse = new Dictionary<GameObject, string>();
         playerConnection = new Dictionary<string, NetworkConnection>();
+        playerConnectionInverse = new Dictionary<string, string>();
         pipeline = m_Driver.CreatePipeline(typeof(FragmentationPipelineStage),
             typeof(ReliableSequencedPipelineStage));
 
@@ -125,10 +128,9 @@ public class Server : MonoBehaviour
                 else if (cmd == NetworkEvent.Type.Disconnect)
                 {
                     Debug.Log("Client disconnected from server");
-                    //Might need to handle when a player crashes on join
+                    var idDisconnect = m_Connections[i].ToString();
                     m_Driver.Disconnect(m_Connections[i]);
                     m_Connections.RemoveAtSwapBack(i);
-                    var idDisconnect = m_Players[i].id;
                     m_Players.RemoveAt(i);
                     var playerAux = simulatedPlayers[idDisconnect];
                     simulatedPlayers.Remove(idDisconnect);
@@ -222,6 +224,7 @@ public class Server : MonoBehaviour
                 Debug.Log(m_Players.Count + " players connected");
 
                 playerConnection.Add(hsMsg.player.id, m_Connections[numJugador]);
+                playerConnectionInverse.Add(m_Connections[numJugador].ToString(), hsMsg.player.id);
 
                 //Message to spawn new player
                 PlayerSpawnMsg pSpawnMsg = new PlayerSpawnMsg();
@@ -357,7 +360,7 @@ public class Server : MonoBehaviour
         Debug.Log("Accepted a connection");
 
         HandshakeMsg m = new HandshakeMsg();
-        m.player.id = Guid.NewGuid().ToString();
+        m.player.id = c.ToString();
         SendToClient(JsonUtility.ToJson(m), c);
     }
 
