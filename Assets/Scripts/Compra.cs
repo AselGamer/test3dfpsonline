@@ -26,8 +26,8 @@ public class Compra : MonoBehaviour
     }
 
     void PostData() => StartCoroutine(PostData_Coroutine());
-    //void PostDataDinero(float precioVenta) => StartCoroutine(PostData_Coroutine_Dinero(precioVenta));
-    ////////////////////////////////////////////////////////////////
+    //void PostDataDinero(float precioVenta) => StartCoroutine(PostData_Coroutine_Dinero(precioVenta));/////////
+
     IEnumerator PostData_Coroutine()
     {
         string uri = "https://retoiraitz.duckdns.org/api/venta/";
@@ -84,15 +84,26 @@ public class Compra : MonoBehaviour
                 Debug.Log("idVenta--------->" + idVenta);
                 float precioVenta = float.Parse(precio.GetComponent<TextMeshProUGUI>().text);
                 Debug.Log("precio--------->" + precioVenta);
-                //PostDataDinero(precioVenta);/////////////////////
+                //PostDataDinero(precioVenta);//////////////////
             }
         }
     }
 
-    /*IEnumerator PostData_Coroutine_Dinero(float precioVenta)//////////////////////////
+    /*IEnumerator PostData_Coroutine_Dinero(float precioVenta)///////////////
     {
         string uri = "https://retoiraitz.duckdns.org/api/res.users/";
         //string uri = "http://localhost:8069/api/res.users/";
 
+        int dinero = 149800;
+        string jsonData = "{\"x_dinero\":" + dinero + "}";
+
+        Debug.Log("jsonData---> " + jsonData);
+        string jsonParams = "{\"filter\": [[\"id\", \"=\", 7]], data\":\"" + jsonData + "\"}";
+        Debug.Log("jsonData---> " + jsonParams);
+        byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes("{\"params\":" + jsonParams + "}");
+        UnityWebRequest request = UnityWebRequest.PostWwwForm(uri, "");
+        request.uploadHandler = (UploadHandler)new UploadHandlerRaw(bodyRaw);
+        request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+        request.SetRequestHeader("Content-Type", "application/json");
     }*/
 }

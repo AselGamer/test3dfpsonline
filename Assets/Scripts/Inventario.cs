@@ -74,17 +74,17 @@ public class Inventario : MonoBehaviour
                 }
                 else
                 {
-                    if (panelJugar.GetComponent<Seleccion>().armasSeleccionadas[2].id == arma.id)
+                    if (panelJugar.GetComponent<Seleccion>().armasSeleccionadas[2] != null && panelJugar.GetComponent<Seleccion>().armasSeleccionadas[2].id == arma.id)
                     {
                         panelJugar.GetComponent<Seleccion>().armasSeleccionadas[2] = null;
                         articulo.transform.position = pos;
                     }
-                    else if (panelJugar.GetComponent<Seleccion>().armasSeleccionadas[1].id == arma.id)
+                    else if (panelJugar.GetComponent<Seleccion>().armasSeleccionadas[2] != null && panelJugar.GetComponent<Seleccion>().armasSeleccionadas[1].id == arma.id)
                     {
                         panelJugar.GetComponent<Seleccion>().armasSeleccionadas[1] = null;
                         articulo.transform.position = pos;
                     }
-                    else if (panelJugar.GetComponent<Seleccion>().armasSeleccionadas[0].id == arma.id)
+                    else if (panelJugar.GetComponent<Seleccion>().armasSeleccionadas[2] != null && panelJugar.GetComponent<Seleccion>().armasSeleccionadas[0].id == arma.id)
                     {
                         panelJugar.GetComponent<Seleccion>().armasSeleccionadas[0] = null;
                         articulo.transform.position = pos;
