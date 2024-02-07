@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UIScript : MonoBehaviour
@@ -11,8 +12,11 @@ public class UIScript : MonoBehaviour
 
     public int health;
 
+    public int kills;
+
     public Slider healthPoints;
     public TextMeshProUGUI ammoCounter;
+    public TextMeshProUGUI killCount;
     public GameObject pointsGained;
 
     private bool pointsActive = false;
@@ -21,7 +25,14 @@ public class UIScript : MonoBehaviour
     {
         healthPoints.value = health;
         ammoCounter.text = ammoInMag.ToString() + "|" + ammoCount.ToString();
+        killCount.text = kills.ToString();
         pointsActive = pointsGained.activeSelf;
+
+        if (kills >= 10)
+        {
+            SceneManager.LoadScene("Final");
+            SceneManager.UnloadSceneAsync("Client");
+        }
     }
 
     public IEnumerator ShowPoints()

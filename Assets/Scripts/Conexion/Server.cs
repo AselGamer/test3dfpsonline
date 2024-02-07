@@ -170,7 +170,7 @@ public class Server : MonoBehaviour
                 playerScript.RestoreAmmo();
                 player.GetComponent<CapsuleCollider>().enabled = false;
                 player.GetComponent<Rigidbody>().useGravity = false;
-                int randomSpawnIndex = UnityEngine.Random.Range(0, spawnPoints.Count - 1);
+                int randomSpawnIndex = UnityEngine.Random.Range(0, spawnPoints.Count);
                 player.transform.position = spawnPoints[randomSpawnIndex].position;
                 PlayerKillMsg pKillMsg = new PlayerKillMsg();
                 pKillMsg.id = playerId;
@@ -184,7 +184,6 @@ public class Server : MonoBehaviour
                 player.GetComponent<PlayerScript>().dead = false;
                 PlayerRespawnMsg pRespawnMsg = new PlayerRespawnMsg();
                 pRespawnMsg.id = playerKvp.Key;
-                Debug.Log(pRespawnMsg.id);
                 SendToAllClients(JsonUtility.ToJson(pRespawnMsg));
             }
 
@@ -455,8 +454,13 @@ public class Server : MonoBehaviour
 
     public void SendPointsToKiller(PlayerPointsMsg pPointsMsg)
     {
-        Debug.Log(pPointsMsg.id);
         SendToClient(JsonUtility.ToJson(pPointsMsg), playerConnection[pPointsMsg.id]);
+    }
+
+    public void IncreasePlayerKills(string idKiller)
+    {
+        var playerAux = FindPlayerById(idKiller);
+        playerAux.GetComponent<PlayerScript>().kills++;
     }
 
 }

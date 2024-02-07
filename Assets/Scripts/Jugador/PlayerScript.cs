@@ -29,8 +29,14 @@ public class PlayerScript : MonoBehaviour
 
     public float timeUntilRespawn = 0f;
 
+    public int kills = 0;
+
     [Header("Controller variables")]
 
+    /*
+     * Holy shit i just realized half of these can be turned private
+     * Are you fucking kidding this must take 20% of the frame time why did i never reformat this
+    */
     public float speedQuantity = 1;
     public float moveSpeed;
     public float jumpForce;
@@ -78,15 +84,11 @@ public class PlayerScript : MonoBehaviour
 
     void FixedUpdate()
     {
-
         miAnimator.SetFloat("walk_axis", Mathf.Clamp01(Mathf.Abs(horizontalInput) + Mathf.Abs(verticalInput)));
-        //miAnimator.SetFloat("fire_aim_axis", Mathf.Clamp01(Mathf.Abs(playFireAnimation) + Mathf.Abs(aimInput)));
         miAnimator.SetFloat("velocidad_x", horizontalInput);
         miAnimator.SetFloat("velocidad_y", verticalInput);
-        //miAnimator.SetFloat("aim_axis", aimInput);
         miAnimator.SetFloat("fire_axis", playFireAnimation);
         miAnimator.SetFloat("jump_axis", isGrounded ? 0 : 1);
-        //miAnimator.SetBool("isGrounded", isGrounded);
 
         NetworkAnimation networkAnimation = new NetworkAnimation();
         networkAnimation.velocidad_x = horizontalInput;
@@ -130,11 +132,12 @@ public class PlayerScript : MonoBehaviour
 
         rotationZ = Mathf.Lerp(rotationZ, 30f * leanInput, 10f * Time.deltaTime);
 
-        Vector3 moveDirection = new Vector3(verticalInput, 0, horizontalInput);
+        Vector3 moveDirection = (transform.forward * (horizontalInput * 100) + transform.right * (verticalInput * 100));
 
         Vector3 movement = moveDirection * (moveSpeed * speedQuantity) * Time.deltaTime;
 
-        if (isGrounded && jumpInput && leanInput==0)
+
+        if (isGrounded && jumpInput && leanInput == 0)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
@@ -145,7 +148,7 @@ public class PlayerScript : MonoBehaviour
 
         camara.GetComponent<CameraScript>().Zrotation = this.rotationZ;
 
-        transform.Translate(movement);
+        rb.velocity = new Vector3(movement.x, rb.velocity.y, movement.z);
 
         if (activeGun.TryGetComponent<GunScript>(out GunScript gunScript))
         {
@@ -293,6 +296,8 @@ public class PlayerScript : MonoBehaviour
             playerPointsMsg.id = idShotter;
             playerPointsMsg.points = 100;
             server.SendPointsToKiller(playerPointsMsg);
+
+            server.IncreasePlayerKills(idShotter);
         }
     }
 
@@ -346,5 +351,10 @@ public class PlayerScript : MonoBehaviour
         }
 
         colldier.gameObject.SetActive(false);
+    }
+
+    public void EndGame()
+    {
+        //Change player to end scene
     }
 }

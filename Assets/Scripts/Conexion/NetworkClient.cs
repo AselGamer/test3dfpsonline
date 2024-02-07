@@ -385,6 +385,7 @@ public class NetworkClient : MonoBehaviour
 
                 StartCoroutine(UpdateDinero(pPointsMsg));
 
+                interfaz.GetComponent<UIScript>().kills += 1;
                 StartCoroutine(interfaz.GetComponent<UIScript>().ShowPoints());
                 break;
             default:
