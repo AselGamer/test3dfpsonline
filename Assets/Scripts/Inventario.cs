@@ -77,9 +77,10 @@ public class Inventario : MonoBehaviour
                     }
                 }
 
-                if((panelJugar.GetComponent<Seleccion>().armasSeleccionadas[0].id != 0) &&
-                    (panelJugar.GetComponent<Seleccion>().armasSeleccionadas[1].id != 0) &&
-                    (panelJugar.GetComponent<Seleccion>().armasSeleccionadas[2].id != 0))
+                Debug.Log("id---->" + panelJugar.GetComponent<Seleccion>().armasSeleccionadas[0]);
+                if(panelJugar.GetComponent<Seleccion>().armasSeleccionadas[0] != null && panelJugar.GetComponent<Seleccion>().armasSeleccionadas[0].id != 0 &&
+                    panelJugar.GetComponent<Seleccion>().armasSeleccionadas[1] != null && panelJugar.GetComponent<Seleccion>().armasSeleccionadas[1].id != 0 &&
+                    panelJugar.GetComponent<Seleccion>().armasSeleccionadas[2] != null && panelJugar.GetComponent<Seleccion>().armasSeleccionadas[2].id != 0)
                 {
                     siguiente.SetActive(true);
                 }

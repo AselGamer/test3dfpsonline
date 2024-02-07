@@ -165,7 +165,7 @@ public class Eventos : MonoBehaviour
         {
             Destroy(panelArmas.GetComponent<GetMethod>().articulos[i]);
         }
-        if(tipo == "arma")
+        if (tipo == "arma")
         {
             panelArmas.GetComponent<GetMethod>().GetDataArmas();
         }else if (tipo == "armadura")

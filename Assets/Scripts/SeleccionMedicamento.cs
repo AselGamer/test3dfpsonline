@@ -80,6 +80,10 @@ public class SeleccionMedicamento : MonoBehaviour
                     articulos[i].name = resultadoVenta.result[i].medicamento_id.ToString();
                     ventas[i] = resultadoVenta.result[i];
                 }
+                if (resultadoVenta.count < 1)
+                {
+                    articulo.SetActive(false);
+                }
             }
         }
     }
