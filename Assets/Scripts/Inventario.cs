@@ -12,6 +12,7 @@ public class Inventario : MonoBehaviour
     public int click;
     public Vector3 pos;
     public string json;
+    public GameObject siguiente;
 
     // Start is called before the first frame update
     void Start()
@@ -38,9 +39,8 @@ public class Inventario : MonoBehaviour
             {
                 json = request.downloadHandler.text;
                 arma = JsonUtility.FromJson<Arma>(json);
-
                 click++;
-                if (click % 2 == 1)
+                if (click%2 == 1)
                 {
                     if (panelJugar.GetComponent<Seleccion>().armasSeleccionadas[0] == null || panelJugar.GetComponent<Seleccion>().armasSeleccionadas[0].id == 0)
                     {
@@ -65,16 +65,27 @@ public class Inventario : MonoBehaviour
                         panelJugar.GetComponent<Seleccion>().armasSeleccionadas[2] = null;
                         articulo.transform.position = pos;
                     }
-                    else if (panelJugar.GetComponent<Seleccion>().armasSeleccionadas[2] != null && panelJugar.GetComponent<Seleccion>().armasSeleccionadas[1].id == arma.id)
+                    else if (panelJugar.GetComponent<Seleccion>().armasSeleccionadas[1] != null && panelJugar.GetComponent<Seleccion>().armasSeleccionadas[1].id == arma.id)
                     {
                         panelJugar.GetComponent<Seleccion>().armasSeleccionadas[1] = null;
                         articulo.transform.position = pos;
                     }
-                    else if (panelJugar.GetComponent<Seleccion>().armasSeleccionadas[2] != null && panelJugar.GetComponent<Seleccion>().armasSeleccionadas[0].id == arma.id)
+                    else if (panelJugar.GetComponent<Seleccion>().armasSeleccionadas[0] != null && panelJugar.GetComponent<Seleccion>().armasSeleccionadas[0].id == arma.id)
                     {
                         panelJugar.GetComponent<Seleccion>().armasSeleccionadas[0] = null;
                         articulo.transform.position = pos;
                     }
+                }
+
+                if((panelJugar.GetComponent<Seleccion>().armasSeleccionadas[0].id != 0) &&
+                    (panelJugar.GetComponent<Seleccion>().armasSeleccionadas[1].id != 0) &&
+                    (panelJugar.GetComponent<Seleccion>().armasSeleccionadas[2].id != 0))
+                {
+                    siguiente.SetActive(true);
+                }
+                else
+                {
+                    siguiente.SetActive(false);
                 }
             }
         }

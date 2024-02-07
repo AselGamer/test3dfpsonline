@@ -44,6 +44,7 @@ public class SeleccionMedicamento : MonoBehaviour
             }
             else
             {
+                articulo.SetActive(true);
                 json = request.downloadHandler.text;
                 resultadoVenta = JsonUtility.FromJson<ResultadoVenta>(json);
                 articulos = new GameObject[resultadoVenta.count];

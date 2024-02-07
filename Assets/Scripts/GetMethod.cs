@@ -45,45 +45,42 @@ public class GetMethod : MonoBehaviour
 
     public void GetData() => StartCoroutine(GetData_Coroutine());
     
-    public void GetDataArmas(string accion) => StartCoroutine(GetData_Coroutine_Armas(accion, "arma"));
-    public void GetDataArmaduras(string accion) => StartCoroutine(GetData_Coroutine_Armas(accion, "armadura"));
-    public void GetDataMedicamentos(string accion) => StartCoroutine(GetData_Coroutine_Armas(accion, "medicamento"));
+    public void GetDataArmas() => StartCoroutine(GetData_Coroutine_Armas("arma"));
+    public void GetDataArmaduras() => StartCoroutine(GetData_Coroutine_Armas("armadura"));
+    public void GetDataMedicamentos() => StartCoroutine(GetData_Coroutine_Armas("medicamento"));
 
     public void GetDataDinero(int idUsuario) => StartCoroutine(GetData_Coroutine_Dinero(idUsuario));
 
     //Obtener todas las armas
-    public IEnumerator GetData_Coroutine_Armas(string accion, string tipo)
+    public IEnumerator GetData_Coroutine_Armas(string tipo)
     {
         this.tipo = tipo;
         articulo.GetComponent<GetMethod>().tipo = tipo;
         outputArea.text = "Loading...";
         string uri = "";
-        if(accion == "comprar")
+        if (tipo == "arma")
         {
-            if (tipo == "arma")
-            {
-                atrasArma.SetActive(true);
-                atrasArmadura.SetActive(false);
-                atrasMedicamento.SetActive(false);
-                uri = "https://retoiraitz.duckdns.org/api/arma/?query={id, name, descripcion, danyo, velocidad, precio, imagen, ventas, priority}";
-                //uri = "http://localhost:8069/api/arma/?query={id, name, descripcion, danyo, velocidad, precio, imagen, ventas, priority}";
-            }
-            else if (tipo == "armadura")
-            {
-                atrasArma.SetActive(false);
-                atrasArmadura.SetActive(true);
-                atrasMedicamento.SetActive(false);
-                uri = "https://retoiraitz.duckdns.org/api/armadura/?query={id, name, descripcion, defensa, precio, imagen, ventas, priority}";
-                //uri = "http://localhost:8069/api/armadura/?query={id, name, descripcion, defensa, precio, imagen, ventas, priority}";
-            }
-            else if (tipo == "medicamento")
-            {
-                atrasArma.SetActive(false);
-                atrasArmadura.SetActive(false);
-                atrasMedicamento.SetActive(true);
-                uri = "https://retoiraitz.duckdns.org/api/medicamento/?query={id, name, descripcion, curacion, precio, imagen, ventas, priority}";
-                //uri = "http://localhost:8069/api/medicamento/?query={id, name, descripcion, curacion, precio, imagen, ventas, priority}";
-            }
+            atrasArma.SetActive(true);
+            atrasArmadura.SetActive(false);
+            atrasMedicamento.SetActive(false);
+            uri = "https://retoiraitz.duckdns.org/api/arma/?query={id, name, descripcion, danyo, velocidad, precio, imagen, ventas, priority}";
+            //uri = "http://localhost:8069/api/arma/?query={id, name, descripcion, danyo, velocidad, precio, imagen, ventas, priority}";
+        }
+        else if (tipo == "armadura")
+        {
+            atrasArma.SetActive(false);
+            atrasArmadura.SetActive(true);
+            atrasMedicamento.SetActive(false);
+            uri = "https://retoiraitz.duckdns.org/api/armadura/?query={id, name, descripcion, defensa, precio, imagen, ventas, priority}";
+            //uri = "http://localhost:8069/api/armadura/?query={id, name, descripcion, defensa, precio, imagen, ventas, priority}";
+        }
+        else if (tipo == "medicamento")
+        {
+            atrasArma.SetActive(false);
+            atrasArmadura.SetActive(false);
+            atrasMedicamento.SetActive(true);
+            uri = "https://retoiraitz.duckdns.org/api/medicamento/?query={id, name, descripcion, curacion, precio, imagen, ventas, priority}";
+            //uri = "http://localhost:8069/api/medicamento/?query={id, name, descripcion, curacion, precio, imagen, ventas, priority}";
         }
 
         using (UnityWebRequest request = UnityWebRequest.Get(uri))
@@ -95,43 +92,41 @@ public class GetMethod : MonoBehaviour
             }
             else
             {
+                articulo.SetActive(true);
                 json = request.downloadHandler.text;
-                if (accion == "comprar")
-                {
-                    resultado = JsonUtility.FromJson<Resultado>(json);
-                    articulos = new GameObject[resultado.count];
-                    armas = new Arma[resultado.count];
+                resultado = JsonUtility.FromJson<Resultado>(json);
+                articulos = new GameObject[resultado.count];
+                armas = new Arma[resultado.count];
 
-                    //Pasamos de Base64 a sprite
-                    for (int i = 0; i < resultado.count; i++)
+                //Pasamos de Base64 a sprite
+                for (int i = 0; i < resultado.count; i++)
+                {
+                    Debug.Log(i + "++++++++++++");
+                    if (i == 0)
                     {
-                        Debug.Log(i + "++++++++++++");
-                        if (i == 0)
+                        articulos[i] = articulo;
+                    }
+                    else
+                    {
+                        articulos[i] = Instantiate(articulo, articulo.transform.parent);
+                        if (i <= 5)
                         {
-                            articulos[i] = articulo;
+                            articulos[i].transform.position = new Vector3(articulos[i - 1].transform.position.x + 3,
+                                articulos[i].transform.position.y, articulos[i].transform.position.z);
                         }
                         else
                         {
-                            articulos[i] = Instantiate(articulo, articulo.transform.parent);
-                            if (i <= 5)
-                            {
-                                articulos[i].transform.position = new Vector3(articulos[i - 1].transform.position.x + 3,
-                                    articulos[i].transform.position.y, articulos[i].transform.position.z);
-                            }
-                            else
-                            {
-                                articulos[i].transform.position = new Vector3(articulos[i - 6].transform.position.x,
-                                    articulos[i - 6].transform.position.y - 2, articulos[i].transform.position.z);
-                            }
+                            articulos[i].transform.position = new Vector3(articulos[i - 6].transform.position.x,
+                                articulos[i - 6].transform.position.y - 2, articulos[i].transform.position.z);
                         }
-                        byte[] imageBytes = Convert.FromBase64String(resultado.result[i].imagen);
-                        Texture2D tex = new Texture2D(2, 2);
-                        tex.LoadImage(imageBytes);
-                        Sprite sprite = Sprite.Create(tex, new Rect(0.0f, 0.0f, tex.width, tex.height), new Vector2(0.5f, 0.5f), 100.0f);
-                        articulos[i].GetComponent<Image>().sprite = sprite;
-                        articulos[i].name = resultado.result[i].id.ToString();
-                        armas[i] = resultado.result[i];
                     }
+                    byte[] imageBytes = Convert.FromBase64String(resultado.result[i].imagen);
+                    Texture2D tex = new Texture2D(2, 2);
+                    tex.LoadImage(imageBytes);
+                    Sprite sprite = Sprite.Create(tex, new Rect(0.0f, 0.0f, tex.width, tex.height), new Vector2(0.5f, 0.5f), 100.0f);
+                    articulos[i].GetComponent<Image>().sprite = sprite;
+                    articulos[i].name = resultado.result[i].id.ToString();
+                    armas[i] = resultado.result[i];
                 }
             }
         }

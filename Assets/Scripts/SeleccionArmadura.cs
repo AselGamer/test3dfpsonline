@@ -44,6 +44,7 @@ public class SeleccionArmadura : MonoBehaviour
             }
             else
             {
+                articulo.SetActive(true);
                 json = request.downloadHandler.text;
                 resultadoVenta = JsonUtility.FromJson<ResultadoVenta>(json);
                 articulos = new GameObject[resultadoVenta.count];
@@ -78,6 +79,10 @@ public class SeleccionArmadura : MonoBehaviour
                     articulos[i].GetComponent<Image>().sprite = sprite;
                     articulos[i].name = resultadoVenta.result[i].armadura_id.ToString();
                     ventas[i] = resultadoVenta.result[i];
+                }
+                if (resultadoVenta.count < 1)
+                {
+                    articulo.SetActive(false);
                 }
             }
         }

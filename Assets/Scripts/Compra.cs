@@ -32,73 +32,8 @@ public class Compra : MonoBehaviour
         comprar.GetComponent<Button>().onClick.AddListener(PostData);
     }
 
-    //void GetData() => StartCoroutine(GetData_Coroutine());
     void PostData() => StartCoroutine(PostData_Coroutine());
     void PutDataDinero(float precioVenta) => StartCoroutine(PutData_Coroutine_Dinero(precioVenta));
-
-    /*IEnumerator GetData_Coroutine()
-    {
-        string uri = "";
-        int usuario_id = panelSesion.GetComponent<PostMethod>().idUsuario;
-        string tipo = tipoEquipamiento.GetComponent<TextMeshProUGUI>().text;
-        uri = "https://retoiraitz.duckdns.org/api/venta/?query={*}&filter=[[\"usuario_id\", \"=\", " + usuario_id + "], [\"tipo\", \"=\", \"" + tipo + "\"], [\"state\", \"=\", \"comprado\"]]";
-        //uri = "http://localhost:8069/api/venta/?query={*}&filter=[[\"usuario_id\", \"=\", " + usuario_id + "], [\"tipo\", \"=\", \"arma\"], [\"state\", \"=\", \"comprado\"]]";
-
-        using (UnityWebRequest request = UnityWebRequest.Get(uri))
-        {
-            yield return request.SendWebRequest();
-            if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
-            {
-                Debug.Log(request.error);
-            }
-            else
-            {
-                json = request.downloadHandler.text;
-                resultadoVenta = JsonUtility.FromJson<ResultadoVenta>(json);
-                ventas = new Venta[resultadoVenta.count];
-
-                int equipamiento_id = int.Parse(id.GetComponent<TextMeshProUGUI>().text);
-                bool encontrado = false;
-
-                for (int i = 0; i < resultadoVenta.count; i++)
-                {
-                    if(tipo == "arma")
-                    {
-                        if (equipamiento_id == resultadoVenta.result[i].arma_id)
-                        {
-                            encontrado = true;
-                            break;
-                        }
-                    }else if(tipo == "armadura")
-                    {
-                        if (equipamiento_id == resultadoVenta.result[i].armadura_id)
-                        {
-                            encontrado = true;
-                            break;
-                        }
-                    }
-                    else if (tipo == "medicamento")
-                    {
-                        if (equipamiento_id == resultadoVenta.result[i].medicamento_id)
-                        {
-                            encontrado = true;
-                            break;
-                        }
-                    }
-                }
-
-                if (encontrado)
-                {
-                    aviso.SetActive(true);
-                }
-                else
-                {
-                    aviso.SetActive(false);
-                    PostData();
-                }
-            }
-        }
-    }*/
 
     IEnumerator PostData_Coroutine()
     {

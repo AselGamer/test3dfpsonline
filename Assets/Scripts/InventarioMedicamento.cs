@@ -45,7 +45,7 @@ public class InventarioMedicamento : MonoBehaviour
                     if (panelJugar3.GetComponent<SeleccionMedicamento>().medicamentosSeleccionados[0] == null || panelJugar3.GetComponent<SeleccionMedicamento>().medicamentosSeleccionados[0].id == 0)
                     {
                         panelJugar3.GetComponent<SeleccionMedicamento>().medicamentosSeleccionados[0] = medicamento;
-                        articulo.transform.position = new Vector3(3, -3.5f, articulo.transform.position.z);
+                        articulo.transform.position = new Vector3(4, -3.5f, articulo.transform.position.z);
                     }
                 }
                 else
