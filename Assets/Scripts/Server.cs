@@ -59,6 +59,7 @@ public class Server : MonoBehaviour
             typeof(ReliableSequencedPipelineStage));
 
         getGuns.FetchGuns();
+        Debug.Log(getGuns.GetGun(4).GetPrefabClient().name);
 
         for (int i = 0; i < bulletHolePoolSize; i++)
         {
