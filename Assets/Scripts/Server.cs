@@ -208,7 +208,8 @@ public class Server : MonoBehaviour
     {
         NativeArray<byte> bytes = new NativeArray<byte>(stream.Length, Allocator.Temp);
         stream.ReadBytes(bytes);
-        string recMsg = System.Text.Encoding.ASCII.GetString(bytes);
+        string encRecMsg = System.Text.Encoding.ASCII.GetString(bytes);
+        string recMsg = Aes256CbcEncrypter.DecryptString(encRecMsg);
         NetworkHeader header = JsonUtility.FromJson<NetworkHeader>(recMsg);
 
         switch (header.command)
@@ -365,6 +366,7 @@ public class Server : MonoBehaviour
         SendToClient(JsonUtility.ToJson(m), c);
     }
 
+
     private void SendToClient(string message, NetworkConnection c)
     {
         if (!c.IsCreated)
@@ -449,6 +451,12 @@ public class Server : MonoBehaviour
         {
             StopCoroutine(coroutine);
         }
+    }
+
+    public void SendPointsToKiller(PlayerPointsMsg pPointsMsg)
+    {
+        Debug.Log(pPointsMsg.id);
+        SendToClient(JsonUtility.ToJson(pPointsMsg), playerConnection[pPointsMsg.id]);
     }
 
 }

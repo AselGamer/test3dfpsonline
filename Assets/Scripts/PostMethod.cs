@@ -81,6 +81,7 @@ public class PostMethod : MonoBehaviour
             else
             {
                 idUsuario = respuesta.result.uid;
+                PerfilJugador.Id = respuesta.result.uid;
                 outputArea.text = request.downloadHandler.text;
                 mensaje.SetActive(false);
                 panelSesion.SetActive(false);

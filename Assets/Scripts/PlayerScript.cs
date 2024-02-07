@@ -272,7 +272,7 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
-    public void TakeDamage(float damage, float distance)
+    public void TakeDamage(float damage, float distance, string idShotter)
     {
         //TODO: Add this to the weapon script
         float closeRange = 5f; 
@@ -286,6 +286,14 @@ public class PlayerScript : MonoBehaviour
         float finalDamage = damage * (1f + closeRangeBonus) * (1f - farRangePenalty);
 
         health -= (int)finalDamage;
+
+        if (health <= 0)
+        {
+            PlayerPointsMsg playerPointsMsg = new PlayerPointsMsg();
+            playerPointsMsg.id = idShotter;
+            playerPointsMsg.points = 100;
+            server.SendPointsToKiller(playerPointsMsg);
+        }
     }
 
     void StopGunFireAnimation()

@@ -40,6 +40,7 @@ public class GunScript : MonoBehaviour
 
         transform.localPosition = overridePosition;
         transform.localEulerAngles = overrideEulerAngles;
+        idPlayer = GetComponentInParent<PlayerScript>().playerId;
         StartCoroutineReload();
     }
 
@@ -64,7 +65,7 @@ public class GunScript : MonoBehaviour
                 }
                 else 
                 {
-                    hit.collider.gameObject.GetComponent<PlayerScript>().TakeDamage(damage, hit.distance);
+                    hit.collider.gameObject.GetComponent<PlayerScript>().TakeDamage(damage, hit.distance, idPlayer);
                 }
             }
         ammoInMag--;

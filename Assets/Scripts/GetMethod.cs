@@ -320,6 +320,7 @@ public class GetMethod : MonoBehaviour
                 usuario = JsonUtility.FromJson<Usuario>(json);
 
                 dinero.GetComponent<TextMeshProUGUI>().text = usuario.x_dinero.ToString();
+                PerfilJugador.Dinero = usuario.x_dinero;
             }
         }
     }

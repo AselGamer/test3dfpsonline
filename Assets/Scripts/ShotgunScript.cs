@@ -27,7 +27,7 @@ public class ShotgunScript : GunScript
                 }
                 else 
                 {
-                    hit.collider.gameObject.GetComponent<PlayerScript>().TakeDamage(damage, hit.distance);
+                    hit.collider.gameObject.GetComponent<PlayerScript>().TakeDamage(damage, hit.distance, idPlayer);
                 }
             }
 

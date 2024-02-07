@@ -1,12 +1,14 @@
 using AYellowpaper.SerializedCollections;
 using GetGunsScript;
 using NetworkMessages;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Collections;
 using Unity.Networking.Transport;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class NetworkClient : MonoBehaviour
 {
@@ -42,6 +44,8 @@ public class NetworkClient : MonoBehaviour
 
     [Header("Items list")]
     public List<GameObject> itemsList;
+
+    private bool updateDinero = false;
 
     void Start()
     {
@@ -376,6 +380,13 @@ public class NetworkClient : MonoBehaviour
                 StateItemMsg iStateMsg = JsonUtility.FromJson<StateItemMsg>(recMsg);
                 itemsList[iStateMsg.itemId].SetActive(iStateMsg.enabled);
                 break;
+            case Commands.PLAYER_POINTS:
+                PlayerPointsMsg pPointsMsg = JsonUtility.FromJson<PlayerPointsMsg>(recMsg);
+
+                StartCoroutine(UpdateDinero(pPointsMsg));
+
+                StartCoroutine(interfaz.GetComponent<UIScript>().ShowPoints());
+                break;
             default:
                 break;
         }
@@ -415,8 +426,9 @@ public class NetworkClient : MonoBehaviour
     private void SendToServer(string message)
     {
         DataStreamWriter writer;
+        var encMessage = Aes256CbcEncrypter.EncryptString(message);
         m_Driver.BeginSend(pipeline, m_Connection, out writer);
-        NativeArray<byte> bytes = new NativeArray<byte>(System.Text.Encoding.ASCII.GetBytes(message), Allocator.Temp);
+        NativeArray<byte> bytes = new NativeArray<byte>(System.Text.Encoding.ASCII.GetBytes(encMessage), Allocator.Temp);
         writer.WriteBytes(bytes);
         m_Driver.EndSend(writer);
     }
@@ -445,5 +457,38 @@ public class NetworkClient : MonoBehaviour
             }
             yield return new WaitForSeconds(5f);
         }
+    }
+
+    private IEnumerator UpdateDinero(PlayerPointsMsg pPointsMsg)
+    {
+        if (updateDinero)
+        {
+            yield break;
+        }
+        updateDinero = true;
+
+        string uri = "https://retoiraitz.duckdns.org/api/res.users/";
+
+        var newDinero = PerfilJugador.Dinero + pPointsMsg.points;
+
+        Debug.Log(PerfilJugador.Id);
+
+        string jsonData = "{\"x_dinero\":" + newDinero + "}";
+        string jsonParams = "{\"filter\": [[\"id\", \"=\", " + PerfilJugador.Id + " ]], \"data\":" + jsonData + "}";
+
+
+        byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes("{\"params\":" + jsonParams + "}");
+
+        UnityWebRequest request = UnityWebRequest.Put(uri, "");
+        request.uploadHandler = (UploadHandler)new UploadHandlerRaw(bodyRaw);
+        request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+        request.SetRequestHeader("Content-Type", "application/json");
+
+        yield return request.SendWebRequest();
+
+        Debug.Log(request.result);
+
+        PerfilJugador.Dinero = newDinero;
+        updateDinero = false;
     }
 }

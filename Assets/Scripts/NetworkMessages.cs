@@ -60,6 +60,7 @@ namespace NetworkMessages
         PLAYER_INVENTORY,
         PLAYER_SWITCH_GUN,
         PLAYER_DISCONNECT,
+        PLAYER_POINTS,
         PLAYER_KILL,
         PLAYER_RESPAWN,
         PLAYER_ANIMATION,
@@ -297,6 +298,19 @@ namespace NetworkMessages
             command = Commands.ITEM_STATE;
             itemId = 0;
             enabled = false;
+        }
+    }
+
+    [System.Serializable]
+    public class PlayerPointsMsg : NetworkHeader
+    {
+        public string id;
+        public int points;
+        public PlayerPointsMsg()
+        {
+            command = Commands.PLAYER_POINTS;
+            id = "";
+            points = 0;
         }
     }
 }

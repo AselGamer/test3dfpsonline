@@ -13,11 +13,25 @@ public class UIScript : MonoBehaviour
 
     public Slider healthPoints;
     public TextMeshProUGUI ammoCounter;
+    public GameObject pointsGained;
+
+    private bool pointsActive = false;
 
     void Update()
     {
         healthPoints.value = health;
         ammoCounter.text = ammoInMag.ToString() + "|" + ammoCount.ToString();
-        
+        pointsActive = pointsGained.activeSelf;
+    }
+
+    public IEnumerator ShowPoints()
+    {
+        if (pointsActive)
+        {
+            yield break;
+        }
+        pointsGained.SetActive(true);
+        yield return new WaitForSeconds(2f);
+        pointsGained.SetActive(false);
     }
 }
