@@ -19,7 +19,7 @@ public class Eventos : MonoBehaviour
 
     public void jugarPartida()
     {
-        SceneManager.LoadScene("Client");
+        SceneManager.LoadScene("Client", LoadSceneMode.Single);
     }
     public void retrocederAlPanelSesion()
     {
