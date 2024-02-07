@@ -20,6 +20,7 @@ public class PostMethod : MonoBehaviour
     public TextMeshProUGUI bienvenida;
     public GameObject moneda;
     public GameObject dinero;
+    public GameObject crearUsuario;
     public int idUsuario;
 
     void Start()
@@ -27,7 +28,7 @@ public class PostMethod : MonoBehaviour
         nombre = GameObject.Find("Login Usuario").GetComponent<TMP_InputField>().text;
         password = GameObject.Find("Login Password").GetComponent<TMP_InputField>().text;
         GameObject.Find("Iniciar Sesion").GetComponent<Button>().onClick.AddListener(PostData);
-        GameObject.Find("Crear Usuario").GetComponent<Button>().onClick.AddListener(PostData_Crear);
+        crearUsuario.GetComponent<Button>().onClick.AddListener(PostData_Crear);
         isUsuario = false;
     }
 
@@ -45,7 +46,6 @@ public class PostMethod : MonoBehaviour
 
     IEnumerator PostData_Coroutine()
     {
-        outputArea.text = "Loading...";
         string uri = "https://retoiraitz.duckdns.org/auth";
         //string uri = "http://localhost:8069/auth";
         string db = "almi";
@@ -60,10 +60,9 @@ public class PostMethod : MonoBehaviour
         yield return request.SendWebRequest();
         if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
         {
-            outputArea.text = request.error;
+            Debug.Log(request.error);
             mensaje.SetActive(true);
             mensaje.GetComponent<TextMeshProUGUI>().text = "Error de conexión";
-            Debug.Log("Error++++++++++++");
         }
         else
         {
@@ -71,9 +70,9 @@ public class PostMethod : MonoBehaviour
             respuesta = JsonUtility.FromJson<Respuesta>(json);
             if (respuesta.error != null)
             {
+                Debug.Log(respuesta.error);
                 mensaje.SetActive(true);
                 mensaje.GetComponent<TextMeshProUGUI>().text = "Usuario o contraseña no válidos";
-                Debug.Log("Error++++++++++");
             }
             else
             {
@@ -86,7 +85,6 @@ public class PostMethod : MonoBehaviour
                 dinero.SetActive(true);
                 bienvenida.text = "Hola " + nombre;
                 isUsuario = true;
-                Debug.Log("Entra+++++++++");
                 panelInicio.GetComponent<GetMethod>().GetDataDinero(idUsuario);
             }
         }
@@ -94,7 +92,6 @@ public class PostMethod : MonoBehaviour
 
     IEnumerator PostData_Coroutine_Crear()
     {
-        outputArea.text = "Loading...";
         string uri = "https://retoiraitz.duckdns.org/auth";
         //string uri = "http://localhost:8069/auth";
         string nombre = "Almi";
@@ -111,10 +108,9 @@ public class PostMethod : MonoBehaviour
         yield return request.SendWebRequest();
         if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
         {
-            outputArea.text = request.error;
+            Debug.Log(request.error);
             mensaje.SetActive(true);
             mensaje.GetComponent<TextMeshProUGUI>().text = "Error de conexión";
-            Debug.Log("Error++++++++++++");
         }
         else
         {
@@ -122,9 +118,9 @@ public class PostMethod : MonoBehaviour
             respuesta = JsonUtility.FromJson<Respuesta>(json);
             if (respuesta.error != null)
             {
+                Debug.Log(respuesta.error);
                 mensaje.SetActive(true);
                 mensaje.GetComponent<TextMeshProUGUI>().text = "Error de conexión";
-                Debug.Log("Error++++++++++");
             }
             else
             {

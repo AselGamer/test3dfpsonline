@@ -53,7 +53,6 @@ public class SeleccionMedicamento : MonoBehaviour
                 //Pasamos de Base64 a sprite
                 for (int i = 0; i < resultadoVenta.count; i++)
                 {
-                    Debug.Log(i + "++++++++++++");
                     if (i == 0)
                     {
                         articulos[i] = articulo;

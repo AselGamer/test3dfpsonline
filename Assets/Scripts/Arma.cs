@@ -15,9 +15,3 @@ public class Arma
     public int ventas;
     public int priority;
 }
-
-/*[System.Serializable]
-public class BaseDatosArma
-{
-    public List<Arma> baseDatos;
-}*/
