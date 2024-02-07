@@ -15,6 +15,7 @@ public class PostMethod : MonoBehaviour
     public bool isUsuario;
     public GameObject panelSesion;
     public GameObject panelInicio;
+    public GameObject panelRegistro;
     public GameObject mensaje;
     public TextMeshProUGUI bienvenida;
     public GameObject moneda;
@@ -26,6 +27,7 @@ public class PostMethod : MonoBehaviour
         nombre = GameObject.Find("Login Usuario").GetComponent<TMP_InputField>().text;
         password = GameObject.Find("Login Password").GetComponent<TMP_InputField>().text;
         GameObject.Find("Iniciar Sesion").GetComponent<Button>().onClick.AddListener(PostData);
+        GameObject.Find("Crear Usuario").GetComponent<Button>().onClick.AddListener(PostData_Crear);
         isUsuario = false;
     }
 
@@ -39,18 +41,13 @@ public class PostMethod : MonoBehaviour
     }
 
     void PostData() => StartCoroutine(PostData_Coroutine());
+    void PostData_Crear() => StartCoroutine(PostData_Coroutine_Crear());
 
     IEnumerator PostData_Coroutine()
     {
         outputArea.text = "Loading...";
         string uri = "https://retoiraitz.duckdns.org/auth";
         //string uri = "http://localhost:8069/auth";
-        //WWWForm form = new WWWForm();
-        //form.AddField("params", body);
-        //using (UnityWebRequest request = UnityWebRequest.Post(uri, form))
-        //{
-        /*string login = "admin";
-        string contrasena = "Almi123";*/
         string db = "almi";
 
         string jsonParams = "{\"login\":\"" + nombre + "\", \"password\":\"" + password + "\", \"db\":\"" + db + "\"}";
@@ -93,6 +90,50 @@ public class PostMethod : MonoBehaviour
                 panelInicio.GetComponent<GetMethod>().GetDataDinero(idUsuario);
             }
         }
-        //}
+    }
+
+    IEnumerator PostData_Coroutine_Crear()
+    {
+        outputArea.text = "Loading...";
+        string uri = "https://retoiraitz.duckdns.org/auth";
+        //string uri = "http://localhost:8069/auth";
+        string nombre = "Almi";
+        string password = "Almi123";
+        string db = "almi";
+
+        string jsonParams = "{\"login\":\"" + nombre + "\", \"password\":\"" + password + "\", \"db\":\"" + db + "\"}";
+        byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes("{\"params\":" + jsonParams + "}");
+        UnityWebRequest request = UnityWebRequest.PostWwwForm(uri, "");
+        request.uploadHandler = (UploadHandler)new UploadHandlerRaw(bodyRaw);
+        request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+        request.SetRequestHeader("Content-Type", "application/json");
+
+        yield return request.SendWebRequest();
+        if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
+        {
+            outputArea.text = request.error;
+            mensaje.SetActive(true);
+            mensaje.GetComponent<TextMeshProUGUI>().text = "Error de conexión";
+            Debug.Log("Error++++++++++++");
+        }
+        else
+        {
+            json = request.downloadHandler.text;
+            respuesta = JsonUtility.FromJson<Respuesta>(json);
+            if (respuesta.error != null)
+            {
+                mensaje.SetActive(true);
+                mensaje.GetComponent<TextMeshProUGUI>().text = "Error de conexión";
+                Debug.Log("Error++++++++++");
+            }
+            else
+            {
+                idUsuario = respuesta.result.uid;
+                outputArea.text = request.downloadHandler.text;
+                mensaje.SetActive(false);
+                panelSesion.SetActive(false);
+                panelRegistro.SetActive(true);
+            }
+        }
     }
 }
