@@ -306,7 +306,7 @@ public class GetMethod : MonoBehaviour
             yield return request.SendWebRequest();
             if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
             {
-                outputArea.text = request.error;
+                Debug.Log(request.error);
             }
             else
             {
@@ -315,6 +315,7 @@ public class GetMethod : MonoBehaviour
 
                 dinero.GetComponent<TextMeshProUGUI>().text = usuario.x_dinero.ToString();
                 PerfilJugador.Dinero = usuario.x_dinero;
+                Debug.Log("idUsuario--->" + usuario.x_dinero);
             }
         }
     }

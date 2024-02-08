@@ -44,10 +44,9 @@ public class CrearUsuario : MonoBehaviour
             string uri = "https://retoiraitz.duckdns.org/api/res.users/";
             //string uri = "http://localhost:8069/api/res.users/";
             int x_dinero = 10000;
-            int permiso = 14;
 
             string jsonData = "{\"name\":\"" + nombre + "\", \"login\":\"" + nombre + "\", \"password\":\"" + password + "\"," +
-                " \"x_dinero\":" + x_dinero + ", \"sel_groups_14_15\":\"" + permiso + "\"}";
+                " \"x_dinero\":" + x_dinero + "}";
             string jsonParams = "{\"data\":" + jsonData + "}";
             byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes("{\"params\":" + jsonParams + "}");
             UnityWebRequest request = UnityWebRequest.PostWwwForm(uri, "");
