@@ -163,8 +163,8 @@ MonoBehaviour:
   magSize: 4
   ammoInMag: 0
   damage: 10
-  fireRate: 1
-  reloadTime: 1.2
+  fireRate: 1.5
+  reloadTime: 0.3
   reloading: 0
   gunType: Shotgun
   pelletsCount: 10

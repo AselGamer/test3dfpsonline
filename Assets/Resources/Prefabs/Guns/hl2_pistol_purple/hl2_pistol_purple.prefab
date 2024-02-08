@@ -168,12 +168,12 @@ MonoBehaviour:
   handlePoint: {fileID: 4755914445058015076}
   overrideEulerAngles: {x: 53, y: 0, z: 90}
   overridePosition: {x: -0.073, y: 0.0519, z: 0.0121}
-  startingAmmo: 160
+  startingAmmo: 32
   ammoCount: 50
-  magSize: 18
+  magSize: 12
   ammoInMag: 0
-  damage: 10
-  fireRate: 2
-  reloadTime: 0.8
+  damage: 50
+  fireRate: 1
+  reloadTime: 1
   reloading: 0
   gunType: Pistol
