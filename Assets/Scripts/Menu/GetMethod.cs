@@ -56,7 +56,6 @@ public class GetMethod : MonoBehaviour
     {
         this.tipo = tipo;
         articulo.GetComponent<GetMethod>().tipo = tipo;
-        outputArea.text = "Loading...";
         string uri = "";
         if (tipo == "arma")
         {
@@ -88,7 +87,7 @@ public class GetMethod : MonoBehaviour
             yield return request.SendWebRequest();
             if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
             {
-                outputArea.text = request.error;
+                Debug.Log(request.error);
             }
             else
             {
@@ -101,7 +100,6 @@ public class GetMethod : MonoBehaviour
                 //Pasamos de Base64 a sprite
                 for (int i = 0; i < resultado.count; i++)
                 {
-                    Debug.Log(i + "++++++++++++");
                     if (i == 0)
                     {
                         articulos[i] = articulo;
@@ -136,7 +134,6 @@ public class GetMethod : MonoBehaviour
     public IEnumerator GetData_Coroutine()
     {
         //articulo.name -> El id del articulo
-        Debug.Log(articulo.name + "-------------");
         comprar.SetActive(false);
         aviso.SetActive(false);
 
@@ -153,8 +150,6 @@ public class GetMethod : MonoBehaviour
         bienvenida.SetActive(false);
         panelDetalle.SetActive(true);
 
-        outputArea.text = "Loading...";
-
         string uri = "";
         if (tipo == "arma")
         {
@@ -165,7 +160,7 @@ public class GetMethod : MonoBehaviour
                 yield return request.SendWebRequest();
                 if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
                 {
-                    outputArea.text = request.error;
+                    Debug.Log(request.error);
                 }
                 else
                 {
@@ -193,7 +188,7 @@ public class GetMethod : MonoBehaviour
                 yield return request.SendWebRequest();
                 if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
                 {
-                    outputArea.text = request.error;
+                    Debug.Log(request.error);
                 }
                 else
                 {
@@ -220,7 +215,7 @@ public class GetMethod : MonoBehaviour
                 yield return request.SendWebRequest();
                 if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
                 {
-                    outputArea.text = request.error;
+                    Debug.Log(request.error);
                 }
                 else
                 {
@@ -297,7 +292,6 @@ public class GetMethod : MonoBehaviour
                 {
                     aviso.SetActive(false);
                     comprar.SetActive(true);
-                    //PostData();
                 }
             }
         }
