@@ -162,15 +162,15 @@ MonoBehaviour:
   handlePoint: {fileID: 4619086558392662828}
   overrideEulerAngles: {x: 45, y: 0, z: 90}
   overridePosition: {x: -0.014, y: 0.293, z: -0.252}
-  startingAmmo: 24
+  startingAmmo: 32
   ammoCount: 20
-  magSize: 4
+  magSize: 8
   ammoInMag: 0
-  damage: 10
-  fireRate: 1
-  reloadTime: 1.2
+  damage: 1
+  fireRate: 2
+  reloadTime: 0.1
   reloading: 0
   gunType: Shotgun
-  pelletsCount: 10
-  spreadAngle: 30
+  pelletsCount: 50
+  spreadAngle: 100
   shotRange: 10
