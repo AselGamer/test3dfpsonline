@@ -134,7 +134,6 @@ public class GetMethod : MonoBehaviour
     public IEnumerator GetData_Coroutine()
     {
         //articulo.name -> El id del articulo
-        Debug.Log(articulo.name + "-------------");
         comprar.SetActive(false);
         aviso.SetActive(false);
 
