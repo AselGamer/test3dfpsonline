@@ -60,6 +60,7 @@ public class PostMethod : MonoBehaviour
         yield return request.SendWebRequest();
         if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
         {
+
             Debug.Log(request.error);
             mensaje.SetActive(true);
             mensaje.GetComponent<TextMeshProUGUI>().text = "Error de conexión";
@@ -77,6 +78,7 @@ public class PostMethod : MonoBehaviour
             else
             {
                 idUsuario = respuesta.result.uid;
+                PerfilJugador.Id = respuesta.result.uid;
                 outputArea.text = request.downloadHandler.text;
                 mensaje.SetActive(false);
                 panelSesion.SetActive(false);

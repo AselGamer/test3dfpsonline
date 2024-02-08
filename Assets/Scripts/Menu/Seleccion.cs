@@ -24,6 +24,20 @@ public class Seleccion : MonoBehaviour
         armasSeleccionadas = new Arma[3];
     }
 
+    private void FixedUpdate()
+    {
+        var arrArmasJug = new short[3];
+        for (int i = 0; i < armasSeleccionadas.Length; i++)
+        {
+            if (armasSeleccionadas[i] != null)
+            {
+                arrArmasJug[i] = (short)armasSeleccionadas[i].id;
+            }
+            
+        }
+        PerfilJugador.Armas = arrArmasJug;
+    }
+    
     public void GetDataArmas() => StartCoroutine(GetData_Coroutine_Armas());
 
     public IEnumerator GetData_Coroutine_Armas()

@@ -20,6 +20,7 @@ public class Eventos : MonoBehaviour
 
     public void jugarPartida()
     {
+
         SceneManager.LoadScene("Client");
     }
     public void retrocederAlPanelSesion()
@@ -33,6 +34,7 @@ public class Eventos : MonoBehaviour
         GameObject.Find("Login Usuario").GetComponent<TMP_InputField>().text = "";
         GameObject.Find("Login Password").GetComponent<TMP_InputField>().text = "";
     }
+
     public void retrocederDePanelRegistroAlPanelSesion()
     {
         panelRegistro.SetActive(false);
